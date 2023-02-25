@@ -6,6 +6,6 @@ class EstablishmentViewsController extends Controller
 {
     public function control_panel()
     {
-        return view('administrator.admin');
+        return view('administrator.control-panel');
     }
 }
