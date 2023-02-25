@@ -18,7 +18,7 @@ return [
     |
      */
 
-    'name' => 'Pojrto X',
+    'name' => 'Projeto X',
     'version' => 'V1.0',
 
     /*

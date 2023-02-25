@@ -9031,7 +9031,7 @@
             '_'
         ),
         weekdaysShort: 'dom_seg_ter_qua_qui_sex_sáb'.split('_'),
-        weekdaysMin: 'do_2ª_3ª_4ª_5ª_6ª_sá'.split('_'),
+        weekdaysMin: 'D_S_T_Q_Q_S_S'.split('_'),
         weekdaysParseExact: true,
         longDateFormat: {
             LT: 'HH:mm',
