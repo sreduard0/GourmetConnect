@@ -10,6 +10,18 @@ class EstablishmentViewsController extends Controller
     }
     public function requests()
     {
-        return view('app.control-panel');
+        return view('app.requests');
+    }
+    public function menu()
+    {
+        return view('app.menu');
+    }
+    public function users()
+    {
+        return view('app.users');
+    }
+    public function app_settings()
+    {
+        return view('app.app-settings');
     }
 }

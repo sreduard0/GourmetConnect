@@ -4564,6 +4564,105 @@ input[type="button"].btn-block {
     background-color: #007bff;
 }
 
+.accent-warning .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #f0b400;
+}
+
+
+.accent-primary .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #007bff;
+}
+
+.accent-orange .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #fd7e14;
+}
+
+.accent-info .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #17a2b8;
+}
+
+.accent-danger .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #dc3545;
+}
+
+.accent-success .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #28a745;
+}
+
+.accent-indigo .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #6610f2;
+}
+
+.accent-lightblue .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #3c8dbc;
+}
+
+.accent-navy .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #001f3f;
+}
+
+.accent-purple .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #6f42c1;
+}
+
+.accent-fuchsia .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #f012be;
+}
+
+
+.accent-pink .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #e83e8c;
+}
+
+.accent-maroon .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #d81b60;
+}
+
+.accent-lime .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #01ff70;
+}
+
+.accent-teal .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #20c997;
+}
+
+.accent-olive .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #3d9970;
+}
+
+
 .nav-fill>.nav-link,
 .nav-fill .nav-item {
     -ms-flex: 1 1 auto;
@@ -13610,6 +13709,15 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
     outline: none;
 }
 
+[class*="sidebar-dark"] .user-name {
+    color: #fff;
+}
+
+[class*="sidebar-light"] .user-name {
+    color: #000;
+}
+
+
 .sidebar {
     height: calc(100% - (3.5rem + 1px));
     overflow-x: hidden;
@@ -16556,6 +16664,72 @@ body.text-sm .control-sidebar {
 
 .nav-pills .nav-link:not(.active):hover {
     color: #007bff;
+}
+
+.accent-warning .nav-pills .nav-link:not(.active):hover {
+    color: #ffc107;
+}
+
+
+.accent-primary .nav-pills .nav-link:not(.active):hover {
+    color: #007bff;
+}
+
+.accent-orange .nav-pills .nav-link:not(.active):hover {
+    color: #fd7e14;
+}
+
+.accent-info .nav-pills .nav-link:not(.active):hover {
+    color: #17a2b8;
+}
+
+.accent-danger .nav-pills .nav-link:not(.active):hover {
+    color: #dc3545;
+}
+
+.accent-success .nav-pills .nav-link:not(.active):hover {
+    color: #28a745;
+}
+
+.accent-indigo .nav-pills .nav-link:not(.active):hover {
+    color: #6610f2;
+}
+
+.accent-lightblue .nav-pills .nav-link:not(.active):hover {
+    color: #3c8dbc;
+}
+
+.accent-navy .nav-pills .nav-link:not(.active):hover {
+    color: #001f3f;
+}
+
+.accent-purple .nav-pills .nav-link:not(.active):hover {
+    color: #6f42c1;
+}
+
+.accent-fuchsia .nav-pills .nav-link:not(.active):hover {
+    color: #f012be;
+}
+
+
+.accent-pink .nav-pills .nav-link:not(.active):hover {
+    color: #e83e8c;
+}
+
+.accent-maroon .nav-pills .nav-link:not(.active):hover {
+    color: #d81b60;
+}
+
+.accent-lime .nav-pills .nav-link:not(.active):hover {
+    color: #01ff70;
+}
+
+.accent-teal .nav-pills .nav-link:not(.active):hover {
+    color: #20c997;
+}
+
+.accent-olive .nav-pills .nav-link:not(.active):hover {
+    color: #3d9970;
 }
 
 .nav-pills .nav-item.dropdown.show .nav-link:hover {

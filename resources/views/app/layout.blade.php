@@ -1,6 +1,3 @@
-{{-- @php
-$perm = ['Cmt da Guarda', 'Pel Manut e Transp', 'Adjunto', 'COST', 'Fisc Adm', 'Auditor', 'Administrador'];
-@endphp --}}
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -13,7 +10,10 @@ $perm = ['Cmt da Guarda', 'Pel Manut e Transp', 'Adjunto', 'COST', 'Fisc Adm', '
     {{-- ==================================== CSS/JS ===================================== --}}
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="{{ asset('css/gfonts.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@200..900&display=swap">
+
+
+    {{-- <link rel="stylesheet" href="{{ asset('css/gfonts.css') }}"> --}}
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome/css/all.min.css') }}">
     <!-- Tempusdominus Bootstrap 4 -->
@@ -49,7 +49,9 @@ $perm = ['Cmt da Guarda', 'Pel Manut e Transp', 'Adjunto', 'COST', 'Fisc Adm', '
 
 </head>
 
-<body class=" @if (session('theme') == 1) dark-mode @endif hold-transition sidebar-mini layout-fixed">
+<body class="{{ session('theme')['background'] }} {{ session('theme')['accent-color'] }} hold-transition sidebar-mini layout-fixed">
+
+
     <div class="wrapper">
         @if (session('animation') == 0)
         <div class="preloader flex-column justify-content-center align-items-center">
@@ -61,51 +63,60 @@ $perm = ['Cmt da Guarda', 'Pel Manut e Transp', 'Adjunto', 'COST', 'Fisc Adm', '
         session()->put('animation', 1);
         @endphp
         @endif
-        <aside class="main-sidebar sidebar-light-lightblue elevation-5">
-
-            <a class="brand-link">
+        <aside class="main-sidebar {{ session('theme')['sidebar'] }} elevation-5">
+            <div class="brand-link">
                 <img src="{{ asset('img/AdminLTELogo.png') }}" alt="{{ config('app.establishment_name') }}" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">{{ config('app.establishment_name') }}</span>
 
-            </a>
+            </div>
             <div class="sidebar">
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="{{ asset('img/avatar.png') }}" class="img-circle elevation-2" alt="User Image">
+                        <img src="{{ asset(session('user')['photo']) }}" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <span class="bold">Nome Usuário</span><br>
-                        <span style="color:darkgray">PERMISSÃO</span>
+                        <span class="user-name bold">{{ session('user')['name'] }}</span><br>
+
                     </div>
                 </div>
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        @if(session('user')['permissions']['dashboard'])
                         <li class="nav-item ">
-                            <a href="" class="nav-link @yield('control-panel')">
+                            <a href="{{ route('control_panel') }}" class="nav-link @yield('control-panel')">
                                 <i class="nav-icon fa-duotone fa-chart-bar"></i>
                                 <p>
                                     Painel de controle
                                 </p>
                             </a>
                         </li>
+                        @endif
+                        @if(session('user')['permissions']['requests'])
                         <li class="nav-item ">
-                            <a href="" class="nav-link @yield('requests')">
+                            <a href="{{ route('requests') }}" class="nav-link @yield('requests')">
                                 <i class="nav-icon fa-duotone fa-burger-soda"></i>
                                 <p>
                                     Pedidos
                                 </p>
                             </a>
                         </li>
+                        @endif
+                        @if(session('user')['permissions']['menu'])
                         <li class="nav-item ">
-                            <a href="" class="nav-link @yield('requests')">
+                            <a href="{{ route('menu') }}" class="nav-link @yield('menu')">
                                 <i class="nav-icon fa-duotone fa-list-radio"></i>
                                 <p>
                                     Cardápio
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item menu-is-opening {{--menu-open --}}">
-                            <a href="#" class="nav-link {{--active--}}">
+                        @endif
+                        @if(session('user')['permissions']['users'] || session('user')['permissions']['app'] || session('user')['permissions']['site'])
+                        <li class="nav-item @yield('config')">
+
+                            <a href="#" class="nav-link @yield('users')@yield('app-settings')@yield('site')">
+
+
                                 <i class="nav-icon fa-duotone fa-gears"></i>
                                 <p>
                                     Configurações
@@ -113,27 +124,39 @@ $perm = ['Cmt da Guarda', 'Pel Manut e Transp', 'Adjunto', 'COST', 'Fisc Adm', '
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
+
+                                @if(session('user')['permissions']['users'])
                                 <li class="nav-item">
-                                    <a href="" class="nav-link {{--active--}}">
+                                    <a href="{{ route('users') }}" class="nav-link  @yield('users')">
+
                                         <i class="fa-duotone fa-users nav-icon"></i>
                                         <p>Usuários</p>
                                     </a>
                                 </li>
+                                @endif
+                                @if(session('user')['permissions']['app'])
                                 <li class="nav-item">
-                                    <a href="" class="nav-link">
+                                    <a href="{{ route('app_settings') }}" class="nav-link @yield('app-settings')">
                                         <i class="fa-duotone fa-sliders nav-icon"></i>
-                                        <p>Dashboard</p>
+                                        <p>Aplicativo</p>
                                     </a>
                                 </li>
+                                @endif
+                                @if(session('user')['permissions']['site'])
                                 <li class="nav-item">
                                     <a href="" class="nav-link">
                                         <i class="fa-duotone fa-globe nav-icon"></i>
                                         <p>Site</p>
                                     </a>
                                 </li>
+                                @endif
+
 
                             </ul>
                         </li>
+                        @endif
+
+
                         <li class="nav-item ">
                             <a href="" class="nav-link">
                                 <i class="nav-icon fa-duotone fa-sign-out-alt"></i>
@@ -146,13 +169,14 @@ $perm = ['Cmt da Guarda', 'Pel Manut e Transp', 'Adjunto', 'COST', 'Fisc Adm', '
                 </nav>
             </div>
         </aside>
-
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+
+                        <div class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></div>
+
                         <div class="col-sm-6">
                             <h1 class="m-0">@yield('title-header')</h1>
                         </div><!-- /.col -->
