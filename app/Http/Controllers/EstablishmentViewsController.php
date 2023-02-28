@@ -12,6 +12,10 @@ class EstablishmentViewsController extends Controller
     {
         return view('app.requests');
     }
+    public function tables()
+    {
+        return view('app.tables');
+    }
     public function menu()
     {
         return view('app.menu');
@@ -23,5 +27,9 @@ class EstablishmentViewsController extends Controller
     public function app_settings()
     {
         return view('app.app-settings');
+    }
+    public function site_settings()
+    {
+        return view('app.site-settings');
     }
 }

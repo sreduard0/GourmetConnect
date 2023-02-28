@@ -15,6 +15,7 @@ class LoginController extends Controller
                 'permissions' => [
                     'dashboard' => true,
                     'requests' => true,
+                    'tables' => true,
                     'menu' => true,
                     'users' => true,
                     'site' => true,
@@ -25,8 +26,8 @@ class LoginController extends Controller
 
             'theme' => [
                 'background' => 'dark-mode',
-                'sidebar' => 'sidebar-dark-danger',
-                'accent-color' => 'accent-danger',
+                'sidebar' => 'sidebar-dark-orange',
+                'accent-color' => 'accent-orange',
 
             ],
 

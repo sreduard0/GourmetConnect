@@ -101,6 +101,16 @@
                             </a>
                         </li>
                         @endif
+                        @if(session('user')['permissions']['tables'])
+                        <li class="nav-item ">
+                            <a href="{{ route('tables') }}" class="nav-link @yield('tables')">
+                                <i class="nav-icon fa-duotone fa-table-picnic"></i>
+                                <p>
+                                    Mesas
+                                </p>
+                            </a>
+                        </li>
+                        @endif
                         @if(session('user')['permissions']['menu'])
                         <li class="nav-item ">
                             <a href="{{ route('menu') }}" class="nav-link @yield('menu')">
@@ -114,7 +124,7 @@
                         @if(session('user')['permissions']['users'] || session('user')['permissions']['app'] || session('user')['permissions']['site'])
                         <li class="nav-item @yield('config')">
 
-                            <a href="#" class="nav-link @yield('users')@yield('app-settings')@yield('site')">
+                            <a href="#" class="nav-link @yield('users')@yield('app-settings')@yield('site-settings')">
 
 
                                 <i class="nav-icon fa-duotone fa-gears"></i>
@@ -144,7 +154,7 @@
                                 @endif
                                 @if(session('user')['permissions']['site'])
                                 <li class="nav-item">
-                                    <a href="" class="nav-link">
+                                    <a href="{{ route('site_settings') }}" class="nav-link @yield('site-settings')">
                                         <i class="fa-duotone fa-globe nav-icon"></i>
                                         <p>Site</p>
                                     </a>
@@ -219,6 +229,7 @@
         $.widget.bridge('uibutton', $.ui.button)
 
     </script>
+
     <!-- Bootstrap 4 -->
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- Tempusdominus Bootstrap 4 -->
@@ -226,6 +237,7 @@
     <script src="{{ asset('plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     <script src="{{ asset('plugins/moment/locales.js') }}"></script>
     <script src="{{ asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
     <!-- SweetAlert2 -->
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
@@ -252,6 +264,7 @@
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('js/inputmask.js') }}"></script>
 
     @yield('plugins')
     {{-- ====================================/ PLUGINS ===================================== --}}
