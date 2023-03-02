@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-class EstablishmentViewsController extends Controller
+use App\Models\AppSettingsModel;
+
+class AppViewsController extends Controller
 {
     public function control_panel()
     {
@@ -26,10 +28,15 @@ class EstablishmentViewsController extends Controller
     }
     public function app_settings()
     {
-        return view('app.app-settings');
+        $data = [
+            'app_settings' => AppSettingsModel::all()->first(),
+        ];
+
+        return view('app.app-settings', $data);
     }
     public function site_settings()
     {
+
         return view('app.site-settings');
     }
 }

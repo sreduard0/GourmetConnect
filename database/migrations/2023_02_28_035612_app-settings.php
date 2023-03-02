@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('cnpj', 14)->nullable();
             $table->string('address', 255)->nullable();
             $table->integer('number')->nullable();
+            $table->string('neighborhood', 255)->nullable();
             $table->string('city', 255)->nullable();
             $table->string('state', 3)->nullable();
             $table->string('theme_background', 255)->nullable();

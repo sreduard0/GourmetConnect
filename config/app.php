@@ -3,10 +3,6 @@
 use Illuminate\Support\Facades\Facade;
 
 return [
-
-    // Nome do estabelecimento
-    'establishment_name' => 'Projeto XIS',
-
     /*
     |--------------------------------------------------------------------------
     | Application Name
