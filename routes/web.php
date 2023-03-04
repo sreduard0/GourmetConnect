@@ -27,6 +27,7 @@ Route::post('administrator/post/save/general-settings', [AppSettingsController::
 //App Menu Routes
 Route::post('/administrator/post/save/menu/type/new', [MenuController::class, 'save_new_type_item']);
 Route::post('/administrator/post/table/menu/type', [MenuController::class, 'table_type_item'])->name('table_type_item');
+Route::post('/administrator/post/table/menu/items', [MenuController::class, 'table_item'])->name('table_item');
 
 //ROTA DE INSTALAÇÃO DO SISTEMA
 // Esta rota so pode ser acessada caso o sistema ainda não tenha sido instalado no servidor

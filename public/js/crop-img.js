@@ -23,7 +23,8 @@ function checkExt($input) {
         return false;
     }
 }
-//===================== CORTE DE IMAGEM FORM NOVO VISITANTE
+
+//====================== INICIALIZANDO MODULO CROP
 $(document).ready(function () {
     $image = $('#image_demo').croppie({
         enableExif: true,
@@ -37,8 +38,10 @@ $(document).ready(function () {
             height: 400
         }
     });
-
-    $('#upload_image').on('change', function () {
+});
+//===================== CORTE DE IMAGEM FORM NOVO TIPO DE ITEM
+$(document).ready(function () {
+    $('#upload_type_item_image').on('change', function () {
         var reader = new FileReader();
         reader.onload = function (event) {
             $image.croppie('bind', {
@@ -46,20 +49,50 @@ $(document).ready(function () {
             })
         }
         reader.readAsDataURL(this.files[0]);
+        $('#crop_image').html('<button onclick="return crop_type_item_image()" class="btn btn-success rounded-pill ">CORTAR</button>')
         $('#new-type-item').modal('hide');
         $('#uploadimage').modal('show');
     });
-
-    $('.crop_image').click(function (event) {
-        $image.croppie('result', {
-            type: 'canvas',
-            size: 'viewport'
-        }).then(function (response) {
-            $('#uploadimage').modal('hide');
-            document.getElementById("img_product").src = response;
-            document.getElementById("img-product-crop").value = response;
-            $('#new-type-item').modal('show');
-        })
+});
+function crop_type_item_image() {
+    $image.croppie('result', {
+        type: 'canvas',
+        size: 'viewport'
+    }).then(function (response) {
+        $('#crop_image').html('')
+        $('#uploadimage').modal('hide');
+        document.getElementById("img_type_product").src = response;
+        document.getElementById("img-type-product-crop").value = response;
+        $('#new-type-item').modal('show');
+    })
+};
+//===================== CORTE DE IMAGEM FORM NOVO ITEM
+$(document).ready(function () {
+    $('#upload_item_image').on('change', function () {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            $image.croppie('bind', {
+                url: event.target.result
+            })
+        }
+        reader.readAsDataURL(this.files[0]);
+        $('#crop_image').html('<button onclick="return crop_item_image()" class="btn btn-success rounded-pill ">CORTAR</button>')
+        $('#new-item').modal('hide');
+        $('#uploadimage').modal('show');
     });
 
+
+
 });
+function crop_item_image() {
+    $image.croppie('result', {
+        type: 'canvas',
+        size: 'viewport'
+    }).then(function (response) {
+        $('#crop_image').html('')
+        $('#uploadimage').modal('hide');
+        document.getElementById("img_product").src = response;
+        document.getElementById("img-product-crop").value = response;
+        $('#new-item').modal('show');
+    })
+};

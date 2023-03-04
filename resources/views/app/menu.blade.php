@@ -18,12 +18,9 @@
                 <div class="col-md-5">
                     <div class="row ">
                         <div class="form-group col">
-                            <label for="statusFicha">Filtrar por status</label>
+                            <label for="statusFicha">FILTRO POR TIPO</label>
                             <select id="statusFicha" name="statusFicha" class="form-control">
                                 <option value="">Todas</option>
-                                <option value="3">Aguardando autorização</option>
-                                <option value="1">Abertas</option>
-                                <option value="2">Fechadas</option>
                             </select>
                         </div>
 
@@ -31,12 +28,10 @@
                 </div>
                 <div class="d-flex justify-content-sm-end">
                     <div class="col">
-                        <button class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#register-ficha">NOVO ITEM</button>
-
+                        <button class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#new-item">NOVO ITEM</button>
                     </div>
                 </div>
             </div>
-            <div id="button-print"></div>
         </div>
         <div class="card-body">
             <table id="table-menu" class="table table-bordered table-striped">
@@ -79,8 +74,7 @@
         <div class="card-header">
             <h3 class="card-title">ADICIONAIS</h3>
             <div class="d-flex justify-content-sm-end">
-                <button class="btn btn-primary btn-sm rounded-pill" data-toggle="modal" data-target="#register-ficha">NOVO ADICIONAL</button>
-
+                <button class="btn btn-primary btn-sm rounded-pill" data-toggle="modal" data-target="#">NOVO ADICIONAL</button>
             </div>
         </div>
         <div class="card-body">
@@ -100,7 +94,7 @@
 @endsection
 @section('modal')
 {{-- CRIAR NOVO TIPO DE ITEM --}}
-<div class="modal fade" id="new-type-item" tabindex="-1" role="dialog" aria-labelledby="register-missionLabel" aria-hidden="true">
+<div class="modal fade" id="new-type-item" tabindex="-1" role="dialog" aria-labelledby="newTypeItemLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -118,16 +112,16 @@
                 </div>
                 <div class="row">
                     <div class="mx-auto">
-                        <img id="img_product" width="200" class="img-circle" src="{{ asset('img/gourmetconnect-logo/gourmetconnect.png') }} " alt="Imagem do produto">
+                        <img id="img_type_product" width="200" class="img-circle" src="{{ asset('img/gourmetconnect-logo/g-c-.png') }} " alt="Imagem do produto">
                         <div class="d-flex justify-content-sm-end">
-                            <label for="upload_image" class="btn btn-success rounded-pill"><i class="fa fa-pen"></i><span style="color:red">*</span></label>
-                            <input type="file" class="btn btn-success input-img-profile" name="upload_image" id="upload_image" accept="image/png,image/jpg,image/jpeg" onchange="checkExt(this)" />
+                            <label for="upload_type_item_image" class="btn btn-success rounded-pill"><i class="fa fa-pen"></i><span style="color:red">*</span></label>
+                            <input type="file" class="btn btn-success input-img-profile" name="upload_type_item_image" id="upload_type_item_image" accept="image/png,image/jpg,image/jpeg" onchange="checkExt(this)" />
                         </div>
                     </div>
                 </div>
                 <form id="form-new-type-item">
                     <div class="row">
-                        <input type="hidden" name="img-type-product" id="img-product-crop">
+                        <input type="hidden" name="img-type-product" id="img-type-product-crop">
                         <div class="form-group col">
                             <label for="name-type-product">Nome <span style="color:red">*</span></label>
                             <input minlength="2" maxlength="200" id="name-type-product" name="name-type-product" type="text" class="form-control" placeholder="EX: Pizzas">
@@ -150,6 +144,66 @@
     </div>
 </div>
 
+{{-- CRIAR NOVO ITEM --}}
+<div class="modal fade" id="new-item" tabindex="-1" role="dialog" aria-labelledby="newItemLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="new-itemLabel">NOVO ITEM</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col">
+                    <div class="d-flex justify-content-sm-end">
+                        <p class="f-s-13">(Campos com <span style="color:red">*</span>
+                            são obrigatórios)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mx-auto">
+                        <img id="img_product" width="200" class="img-circle" src="{{ asset('img/gourmetconnect-logo/g-c-.png') }} " alt="Imagem do produto">
+                        <div class="d-flex justify-content-sm-end">
+                            <label for="upload_item_image" class="btn btn-success rounded-pill"><i class="fa fa-pen"></i><span style="color:red">*</span></label>
+                            <input type="file" class="btn btn-success input-img-profile" name="upload_type_item_image" id="upload_item_image" accept="image/png,image/jpg,image/jpeg" onchange="checkExt(this)" />
+                        </div>
+                    </div>
+                </div>
+                <form id="form-new-type-item">
+                    <div class="row">
+                        <input type="hidden" name="img-product" id="img-product-crop">
+                        <div class="form-group col">
+                            <label for="name-product">Nome <span style="color:red">*</span></label>
+                            <input minlength="2" maxlength="200" id="name-product" name="name-product" type="text" class="form-control" placeholder="EX: Pizza">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <input type="hidden" name="img-product" id="img-product-crop">
+                        <div class="form-group col">
+                            <label for="value-product">Preço <span style="color:red">*</span></label>
+                            <input onKeyPress="return(moeda(this,'.',',',event))" id="value-product" name="value-product" type="text" class="form-control" placeholder="EX: R$ 10,00">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col">
+                            <label for="obs-product">Observações</label>
+                            <textarea name="obs-product" id="obs-product" rows="8" placeholder="Detalhes importantes da missão. Exemplo: Para Eixo Sul PGT" class="text form-control"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal">FECHAR</button>
+                <button type="button" class="btn btn-success rounded-pill" onclick="return save_new_item()">SALVAR</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {{-- ENVIO DE IMAGEM --}}
 <div id="uploadimage" class="modal" role="dialog">
     <div class="modal-dialog">
@@ -160,25 +214,23 @@
             <div class="modal-body">
                 <div id="image_demo"></div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default rounded-pill" data-dismiss="modal">FECHAR</button>
-                <button class="btn btn-success rounded-pill crop_image">CORTAR</button>
+            <div id="crop_image" class="modal-footer">
+
             </div>
         </div>
     </div>
 </div>
-<script src="{{ asset('js/crop-img.js') }}"></script>
 @endsection
 @section('plugins')
+<script src="{{ asset('js/crop-img.js') }}"></script>
 <script>
     $(function() {
         $("#table-menu").DataTable({
-            // "order": [
-            //     [0, 'desc']
-            // ],
-            "bInfo": false
-            , "paging": false
-            , "pagingType": 'simple'
+            "order": [
+                [0, 'asc']
+            ]
+            , "bInfo": false
+            , "pagingType": 'simple_numbers'
             , "responsive": true
             , "lengthChange": false
             , "iDisplayLength": 10
@@ -189,21 +241,21 @@
             }
             , "aoColumnDefs": [{
                 'sortable': false
-                , 'aTargets': [1, 2, 3]
+                , 'aTargets': 1
             }]
-            // , "processing": true
-            // , "serverSide": true
-            // , "ajax": {
-            //     "url": ""
-            //     , "type": "POST"
-            //     , "headers": {
-            //         'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            //     , }
-            // , }
+            , "processing": true
+            , "serverSide": true
+            , "ajax": {
+                "url": "{{ route('table_item') }}"
+                , "type": "POST"
+                , "headers": {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                , }
+            , }
         });
+
         $("#type-item-table").DataTable({
             "ordering": false
-
             , "bInfo": false
             , "paging": true
             , "pagingType": 'simple_numbers'
@@ -225,6 +277,7 @@
                 , }
             , }
         });
+
         $("#best-sellers-table").DataTable({
 
             // "order": [

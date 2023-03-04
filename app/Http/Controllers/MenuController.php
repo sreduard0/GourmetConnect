@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemModel;
 use App\Models\TypeItemModel;
 use Illuminate\Http\Request;
 
@@ -65,6 +66,48 @@ class MenuController extends Controller
             "draw" => intval($requestData['draw']), //para cada requisição é enviado um número como parâmetro
             "recordsTotal" => intval($filtered), //Quantidade de registros que há no banco de dados
             "recordsFiltered" => intval(count(TypeItemModel::all())), //Total de registros quando houver pesquisa
+            "data" => $dados, //Array de dados completo dos dados retornados da tabela
+        );
+
+        return json_encode($json_data); //enviar dados como formato json
+    }
+    public function table_item(Request $request)
+    {
+        $requestData = $request->all();
+        $columns = array(
+            0 => 'id',
+            1 => 'id',
+            2 => 'name',
+            3 => 'value',
+        );
+
+        $items = ItemModel::orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])
+            ->offset($requestData['start'])
+            ->take($requestData['length'])
+            ->get();
+
+        $filtered = count($items);
+        $dados = array();
+
+        foreach ($items as $item) {
+            $dado = array();
+            $dado[] = "#" . $item->id;
+            $dado[] = '<img class="img-circle" src="' . asset($item->photo_url) . '" alt="' . $item->name . '" width="35">
+                        <div class="popup">
+                            <img src="' . asset($item->photo_url) . '" alt="' . $item->name . '">
+                        </div>';
+            $dado[] = $item->name;
+            $dado[] = $item->value;
+            $dado[] = 'BOTOES';
+            // $dado[] = $item->description;
+            $dados[] = $dado;
+        }
+
+        //Cria o array de informações a serem retornadas para o Javascript
+        $json_data = array(
+            "draw" => intval($requestData['draw']), //para cada requisição é enviado um número como parâmetro
+            "recordsTotal" => intval($filtered), //Quantidade de registros que há no banco de dados
+            "recordsFiltered" => intval(count(ItemModel::all())), //Total de registros quando houver pesquisa
             "data" => $dados, //Array de dados completo dos dados retornados da tabela
         );
 
