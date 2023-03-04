@@ -54394,3 +54394,34 @@ a.text-muted:hover {
 }
 
 /*# sourceMappingURL=adminlte.css.map */
+
+
+/* CSS ADICIONAL */
+.input-img-profile {
+    display: none;
+}
+
+.dark-mode .popup {
+    position: absolute;
+    display: none;
+    background-color: #343a40;
+    padding: 4px;
+    border: 1px solid #343a40;
+    box-shadow: 0 0 5px #000;
+    z-index: 9999;
+}
+
+.popup {
+    position: absolute;
+    display: none;
+    background-color: #fff;
+    padding: 4px;
+    border: 1px solid #fff;
+    box-shadow: 0 0 5px #000;
+    z-index: 9999;
+
+}
+
+img:hover+.popup {
+    display: block;
+}

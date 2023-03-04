@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('app_settings', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('logo_url', 255)->nullable();
             $table->string('establishment_name', 255)->nullable();
             $table->string('cnpj', 14)->nullable();
             $table->string('address', 255)->nullable();

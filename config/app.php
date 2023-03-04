@@ -14,7 +14,7 @@ return [
     |
      */
 
-    'name' => 'Projeto X',
+    'name' => 'GourmetConnect',
     'version' => 'V1.0',
 
     /*

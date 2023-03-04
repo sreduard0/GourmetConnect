@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\AppViewsController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Route;
 
 // Login routes
@@ -23,6 +24,9 @@ Route::get('administrator/site-settings', [AppViewsController::class, 'site_sett
 Route::post('administrator/post/save/establishment-settings', [AppSettingsController::class, 'save_establishment_settings']);
 Route::post('administrator/post/save/theme-settings', [AppSettingsController::class, 'save_theme_settings']);
 Route::post('administrator/post/save/general-settings', [AppSettingsController::class, 'save_general_settings']);
+//App Menu Routes
+Route::post('/administrator/post/save/menu/type/new', [MenuController::class, 'save_new_type_item']);
+Route::post('/administrator/post/table/menu/type', [MenuController::class, 'table_type_item'])->name('table_type_item');
 
 //ROTA DE INSTALAÇÃO DO SISTEMA
 // Esta rota so pode ser acessada caso o sistema ainda não tenha sido instalado no servidor

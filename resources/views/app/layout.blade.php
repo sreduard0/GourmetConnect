@@ -11,7 +11,7 @@ $app_settings = AppSettingsModel::all()->first();
     @yield('meta')
     <title>{{ $app_settings->establishment_name }} - @yield('title')</title>
 
-    <link rel="shortcut icon" href="{{ asset('img/AdminLTELogo.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset($app_settings->logo_url) }}" type="image/x-icon">
     {{-- ==================================== CSS/JS ===================================== --}}
 
     <!-- Google Font: Source Sans Pro -->
@@ -60,7 +60,7 @@ $app_settings = AppSettingsModel::all()->first();
     <div class="wrapper">
         @if (session('animation') == 0)
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{ asset('img/AdminLTELogo.png') }}" height="200" width="200">
+            <img class="animation__shake" src="{{  asset($app_settings->logo_url) }}" height="200" width="200">
             <span class="fs-30"><strong>{{ $app_settings->establishment_name }}</strong> </span>
         </div>
         @php
@@ -70,7 +70,7 @@ $app_settings = AppSettingsModel::all()->first();
         <aside class="main-sidebar {{ $app_settings->theme_sidebar }} elevation-5">
 
             <div class="brand-link">
-                <img src="{{ asset('img/AdminLTELogo.png') }}" alt="{{ $app_settings->establishment_name }}" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img src="{{  asset($app_settings->logo_url) }}" alt="{{ $app_settings->establishment_name }}" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">{{ $app_settings->establishment_name }}</span>
             </div>
             <div class="sidebar">
@@ -241,7 +241,6 @@ $app_settings = AppSettingsModel::all()->first();
     <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.j') }}s"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('js/adminlte.js') }}"></script>
-    <script src="{{ asset('js/calendar.js') }}"></script>
     <!-- date-range-picker -->
     <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
     <!-- Summernote -->
