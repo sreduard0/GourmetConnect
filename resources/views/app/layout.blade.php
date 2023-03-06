@@ -16,9 +16,6 @@ $app_settings = AppSettingsModel::all()->first();
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@200..900&display=swap">
-
-
-    {{-- <link rel="stylesheet" href="{{ asset('css/gfonts.css') }}"> --}}
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome/css/all.min.css') }}">
     <!-- Tempusdominus Bootstrap 4 -->
@@ -30,7 +27,6 @@ $app_settings = AppSettingsModel::all()->first();
     {{-- sweetalert2 --}}
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
-
     <!-- daterange picker -->
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
     <!-- Theme style -->
@@ -225,7 +221,6 @@ $app_settings = AppSettingsModel::all()->first();
         $.widget.bridge('uibutton', $.ui.button)
 
     </script>
-
     <!-- Bootstrap 4 -->
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- Tempusdominus Bootstrap 4 -->

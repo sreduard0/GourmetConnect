@@ -75,7 +75,7 @@
                         </div>
                     </form>
                     <div class="d-flex justify-content-sm-end">
-                        <button class="btn btn-success rounded-pill" onclick="return save_establishment_settings()">SALVAR</button>
+                        <button class="btn btn-accent rounded-pill" onclick="return save_establishment_settings()">SALVAR</button>
 
 
                     </div>
@@ -161,7 +161,7 @@
                         </div>
                     </form>
                     <div class="d-flex justify-content-sm-end">
-                        <button class="btn btn-success rounded-pill" onclick="return save_theme_settings()">APLICAR CORES</button>
+                        <button class="btn btn-accent rounded-pill" onclick="return save_theme_settings()">APLICAR CORES</button>
 
 
                     </div>
@@ -178,7 +178,7 @@
                         </div>
                     </form>
                     <div class="d-flex justify-content-sm-end">
-                        <button class="btn btn-success rounded-pill" onclick="return save_general_settings()">SALVAR</button>
+                        <button class="btn btn-accent rounded-pill" onclick="return save_general_settings()">SALVAR</button>
 
 
                     </div>

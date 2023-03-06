@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AppSettingsModel;
+use App\Models\ItemModel;
+use App\Models\TypeItemModel;
 
 class AppViewsController extends Controller
 {
@@ -20,7 +22,11 @@ class AppViewsController extends Controller
     }
     public function menu()
     {
-        return view('app.menu');
+        $data = [
+            'types' => TypeItemModel::all(),
+            'items' => ItemModel::all(),
+        ];
+        return view('app.menu', $data);
     }
     public function users()
     {

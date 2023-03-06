@@ -1,8 +1,8 @@
 {
-    "emptyTable": "Não foi encontrado nenhum registro",
+    "emptyTable": "Não foi encontrado nenhum item",
     "loadingRecords": "Carregando...",
     "processing": "Processando...",
-    "lengthMenu": "Mostrar _MENU_ registros",
+    "lengthMenu": "Mostrar _MENU_ items",
     "zeroRecords": "Não foram encontrados resultados",
     "search": "EB/ Placa:",
     "paginate": {
@@ -137,12 +137,12 @@
         "close": "Fechar",
         "create": {
             "button": "Novo",
-            "title": "Criar novo registro",
+            "title": "Criar novo item",
             "submit": "Criar"
         },
         "edit": {
             "button": "Editar",
-            "title": "Editar registro",
+            "title": "Editar item",
             "submit": "Atualizar"
         },
         "remove": {
@@ -159,6 +159,6 @@
             "restore": "Desfazer alterações"
         }
     },
-    "info": "Registros de _START_ a _END_, N° total de registros _TOTAL_",
+    "info": "Items de _START_ a _END_, N° total de items _TOTAL_",
     "infoEmpty": ""
 }

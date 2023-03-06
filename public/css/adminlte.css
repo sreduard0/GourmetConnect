@@ -54423,3 +54423,124 @@ a.text-muted:hover {
 img:hover+.popup {
     display: block;
 }
+
+.btn-accent {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: none;
+}
+
+.accent-warning .btn-accent {
+    color: #fff;
+    background-color: #f0b400;
+    border-color: #f0b400;
+    box-shadow: none;
+}
+
+
+.accent-primary .btn-accent {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: none;
+}
+
+.accent-orange .btn-accent {
+    color: #fff;
+    background-color: #fd7e14;
+    border-color: #fd7e14;
+    box-shadow: none;
+}
+
+.accent-info .btn-accent {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    box-shadow: none;
+}
+
+.accent-danger .btn-accent {
+    color: #fff;
+    background-color: #f11515;
+    border-color: #f11515;
+    box-shadow: none;
+}
+
+.accent-success .btn-accent {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: none;
+}
+
+.accent-indigo .btn-accent {
+    color: #fff;
+    background-color: #6610f2;
+    border-color: #6610f2;
+    box-shadow: none;
+}
+
+.accent-lightblue .btn-accent {
+    color: #fff;
+    background-color: #3c8dbc;
+    border-color: #3c8dbc;
+    box-shadow: none;
+}
+
+.accent-navy .btn-accent {
+    color: #fff;
+    background-color: #001f3f;
+    border-color: #001f3f;
+    box-shadow: none;
+}
+
+.accent-purple .btn-accent {
+    color: #fff;
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    box-shadow: none;
+}
+
+.accent-fuchsia .btn-accent {
+    color: #fff;
+    background-color: #f012be;
+    border-color: #f012be;
+    box-shadow: none;
+}
+
+
+.accent-pink .btn-accent {
+    color: #fff;
+    background-color: #e83e8c;
+    border-color: #e83e8c;
+    box-shadow: none;
+}
+
+.accent-maroon .btn-accent {
+    color: #fff;
+    background-color: #d81b60;
+    border-color: #d81b60;
+    box-shadow: none;
+}
+
+.accent-lime .btn-accent {
+    color: #fff;
+    background-color: #01ff70;
+    border-color: #01ff70;
+    box-shadow: none;
+}
+
+.accent-teal .btn-accent {
+    color: #fff;
+    background-color: #20c997;
+    border-color: #20c997;
+    box-shadow: none;
+}
+
+.accent-olive .btn-accent {
+    color: #fff;
+    background-color: #3d9970;
+    border-color: #3d9970;
+    box-shadow: none;
+}

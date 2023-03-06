@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('additional_items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('type_id');
-            $table->string('photo_url', 255);
-            $table->string('name', 255);
-            $table->decimal('value');
+            $table->integer('item_id');
+            $table->string('name');
+            $table->decimal('value', 10, 2);
             $table->text('description')->nullable();
             $table->timestamps();
         });
@@ -21,6 +21,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('items');
+
     }
 };

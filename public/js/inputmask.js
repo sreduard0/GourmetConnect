@@ -1,11 +1,3 @@
-// $(function() {
-//Initialize Select2 Elements
-// $('.select2').select2()
-
-// //Initialize Select2 Elements
-// $('.select2bs4').select2({
-//     theme: 'bootstrap4'
-// })
 
 // // Datemask dd / mm / yyyy
 // $('#date').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' });
@@ -37,7 +29,7 @@ $(function () {
 });
 
 $(function () {
-    $('.obs_requestVtr').summernote({
+    $('.text_placeolder').summernote({
         placeholder: 'Observações para o cumprimento da missão.',
         height: 150,
         toolbar: [
@@ -47,7 +39,7 @@ $(function () {
             ['table'],
         ]
     });
-    $('.obs_requestVtr').summernote('code', '');
+    $('.text_placeolder').summernote('code', '');
 
 });
 
@@ -79,9 +71,6 @@ $('.time').datetimepicker({
         format: 'DD-MM-YYYY'
     }
 })
-
-// }
-
 
 
 //Date range picker

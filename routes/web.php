@@ -26,8 +26,12 @@ Route::post('administrator/post/save/theme-settings', [AppSettingsController::cl
 Route::post('administrator/post/save/general-settings', [AppSettingsController::class, 'save_general_settings']);
 //App Menu Routes
 Route::post('/administrator/post/save/menu/type/new', [MenuController::class, 'save_new_type_item']);
+Route::post('/administrator/post/save/menu/item/new', [MenuController::class, 'save_new_item']);
+Route::post('/administrator/post/save/menu/additional-item/new', [MenuController::class, 'save_new_additional_item']);
+
 Route::post('/administrator/post/table/menu/type', [MenuController::class, 'table_type_item'])->name('table_type_item');
 Route::post('/administrator/post/table/menu/items', [MenuController::class, 'table_item'])->name('table_item');
+Route::post('/administrator/post/table/menu/additional-items', [MenuController::class, 'table_additional_items'])->name('table_additional_items');
 
 //ROTA DE INSTALAÇÃO DO SISTEMA
 // Esta rota so pode ser acessada caso o sistema ainda não tenha sido instalado no servidor
