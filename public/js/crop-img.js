@@ -29,14 +29,14 @@ $(document).ready(function () {
     $image = $('#image_demo').croppie({
         enableExif: true,
         viewport: {
-            width: 300,
-            height: 300,
+            width: 550,
+            height: 550,
             type: 'square' //circle
         },
         boundary: {
-            width: 400,
-            height: 400
-        }
+            width: 600,
+            height: 600
+        },
     });
 });
 //===================== CORTE DE IMAGEM FORM NOVO TIPO DE ITEM
@@ -49,7 +49,7 @@ $(document).ready(function () {
             })
         }
         reader.readAsDataURL(this.files[0]);
-        $('#crop_image').html('<button onclick="return crop_type_item_image()" class="btn btn-success rounded-pill ">CORTAR</button>')
+        $('#crop_image').html('<button onclick="return crop_type_item_image()" class="btn btn-accent rounded-pill ">CORTAR</button>')
         $('#new-type-item').modal('hide');
         $('#uploadimage').modal('show');
     });
@@ -57,13 +57,18 @@ $(document).ready(function () {
 function crop_type_item_image() {
     $image.croppie('result', {
         type: 'canvas',
-        size: 'viewport'
+        size: 'original',
+        quality: 1
     }).then(function (response) {
         $('#crop_image').html('')
         $('#uploadimage').modal('hide');
         document.getElementById("img_type_product").src = response;
         document.getElementById("img-type-product-crop").value = response;
         $('#new-type-item').modal('show');
+        setTimeout(() => {
+            $('body').addClass('modal-open');
+        }, 500);
+
     })
 };
 //===================== CORTE DE IMAGEM FORM NOVO ITEM
@@ -76,7 +81,7 @@ $(document).ready(function () {
             })
         }
         reader.readAsDataURL(this.files[0]);
-        $('#crop_image').html('<button onclick="return crop_item_image()" class="btn btn-success rounded-pill ">CORTAR</button>')
+        $('#crop_image').html('<button onclick="return crop_item_image()" class="btn btn-accent rounded-pill ">CORTAR</button>')
         $('#new-item').modal('hide');
         $('#uploadimage').modal('show');
     });
@@ -87,12 +92,17 @@ $(document).ready(function () {
 function crop_item_image() {
     $image.croppie('result', {
         type: 'canvas',
-        size: 'viewport'
+        size: 'original',
+        quality: 1
     }).then(function (response) {
         $('#crop_image').html('')
         $('#uploadimage').modal('hide');
         document.getElementById("img_product").src = response;
         document.getElementById("img-product-crop").value = response;
         $('#new-item').modal('show');
+        setTimeout(() => {
+            $('body').addClass('modal-open');
+        }, 500);
+
     })
 };

@@ -18,7 +18,10 @@ class AppViewsController extends Controller
     }
     public function tables()
     {
-        return view('app.tables');
+        $data = [
+            'app_settings' => AppSettingsModel::select('number_tables')->first(),
+        ];
+        return view('app.tables', $data);
     }
     public function menu()
     {

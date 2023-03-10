@@ -120,6 +120,7 @@
                             <div class="form-group col-md-2">
                                 <label for="theme-sidebar">Cor do menu lateral</label>
                                 <select class="form-control" name="theme-sidebar" id="theme-sidebar">
+
                                     <optgroup label="Lateral escura">
                                         <option @if($app_settings->theme_sidebar == 'sidebar-dark-primary') selected @endif value="sidebar-dark-primary" class="bg-primary">Escuro / Azul</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-dark-warning') selected @endif value="sidebar-dark-warning" class="bg-warning">Escuro / Amarelo</option>

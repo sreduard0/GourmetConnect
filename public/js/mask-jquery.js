@@ -1,5 +1,19 @@
 
 // JS ADICIONAIS
+function money(value) {
+    // Converte o valor para um número com duas casas decimais
+    value = parseFloat(value).toFixed(2);
+
+    // Adiciona o separador de milhares (ponto) e separador de decimal (vírgula)
+    value = value.replace(".", ",");
+    value = value.replace(/(\d)(?=(\d{3})+\,)/g, "$1.");
+
+    // Adiciona o símbolo de real (R$)
+    // valor = "R$ " + valor;
+
+    return value;
+}
+
 function moeda(a, e, r, t) {
     let n = ""
         , h = j = 0

@@ -1,3 +1,4 @@
+// ADIÇÃO DE ITEMS
 function save_new_type_item() {
     var Toast = Swal.mixin({
         toast: true,
@@ -5,7 +6,7 @@ function save_new_type_item() {
         showConfirmButton: false,
         timer: 4000
     });
-    const formData = new FormData(document.getElementById('form-new-type-item'))
+    const formData = new FormData(document.getElementById('form-type-item'))
 
     // Verificação
     if (formData.get('img-type-product') == '') {
@@ -41,12 +42,21 @@ function save_new_type_item() {
                         icon: 'success',
                         title: '&nbsp&nbsp Novo tipo adicionado com sucesso.'
                     });
-                    $('#new-type-item').modal('hide');
+                    $('#type-item-modal').modal('hide');
                     $('#img-type-product-crop').val('');
                     $('#obs-type-product').summernote('code', '');
-                    $('#form-new-type-item')[0].reset();
+                    $('#form-type-item')[0].reset();
                     document.getElementById("img_type_product").src = '/img/gourmetconnect-logo/g-c-.png';
                     $("#type-item-table").DataTable().clear().draw();
+                    $.get('/administrator/get/info/menu/types', function (data) {
+                        $('#type-product').empty()
+                        $.each(data, function (index, item) {
+                            $('#type-product').append($('<option>', {
+                                value: item.id
+                                , text: item.name
+                            }));
+                        });
+                    });
                     break;
                 case 'error':
                     Toast.fire({
@@ -72,7 +82,7 @@ function save_new_item() {
         showConfirmButton: false,
         timer: 4000
     });
-    const formData = new FormData(document.getElementById('form-new-item'))
+    const formData = new FormData(document.getElementById('form-item'))
 
     // Verificação
     if (formData.get('img-product') == '') {
@@ -122,12 +132,21 @@ function save_new_item() {
                         icon: 'success',
                         title: '&nbsp&nbsp Novo item adicionado com sucesso.'
                     });
-                    $('#new-item').modal('hide');
+                    $('#item-modal').modal('hide');
                     $('#img-product-crop').val('');
                     $('#obs-product').summernote('code', '');
-                    $('#form-new-item')[0].reset();
+                    $('#form-item')[0].reset();
                     document.getElementById("img_product").src = '/img/gourmetconnect-logo/g-c-.png';
                     $("#table-menu").DataTable().clear().draw();
+                    $.get('/administrator/get/info/menu/items', function (data) {
+                        $('#item-menu').empty()
+                        $.each(data, function (index, item) {
+                            $('#item-menu').append($('<option>', {
+                                value: item.id
+                                , text: item.name
+                            }));
+                        });
+                    });
                     break;
                 case 'error':
                     Toast.fire({
@@ -153,7 +172,7 @@ function save_new_additional_item() {
         showConfirmButton: false,
         timer: 4000
     });
-    const formData = new FormData(document.getElementById('form-new-additional-item'))
+    const formData = new FormData(document.getElementById('form-additional-item'))
     // Verificação
     if (formData.get('item-menu') == '') {
         $('.select2-selection').css('border', '1px solid red');
@@ -195,9 +214,418 @@ function save_new_additional_item() {
                         icon: 'success',
                         title: '&nbsp&nbsp Novo item adicionado com sucesso.'
                     });
-                    $('#new-additional-item').modal('hide');
+                    $('#additional-item-modal').modal('hide');
                     $('#obs-additional').summernote('code', '');
-                    $('#form-new-additional-item')[0].reset();
+                    $('#form-additional-item')[0].reset();
+                    $('#item-menu').val('').trigger('change')
+                    $("#additional-items-table").DataTable().clear().draw();
+                    break;
+                case 'error':
+                    Toast.fire({
+                        icon: 'warning',
+                        title: '&nbsp&nbsp  Ouve um erro ao salvar.'
+                    });
+                    break;
+            }
+        },
+
+        error: function (data) {
+            Toast.fire({
+                icon: 'error',
+                title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
+}
+
+// EXCLUSÃO DE ITEM
+function delete_type_item(id) {
+    var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+    });
+    bootbox.confirm({
+        title: ' Deseja excluir este tipo de item?',
+        message: '<strong class="text-danger">Essa operação não pode ser desfeita.</strong><br> Será excluido também os itens e adicionais vinculados.',
+        callback: function (confirmacao) {
+            if (confirmacao) {
+                const URL = '/administrator/post/delete/menu/type'
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    url: URL,
+                    type: 'post',
+                    data: {
+                        id: id,
+                    },
+                    dataType: 'text',
+                    success: function (data) {
+                        switch (data) {
+                            case 'success':
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: '&nbsp&nbsp Tipo excluido com sucesso.'
+                                });
+                                $("#type-item-table").DataTable().clear().draw();
+                                $("#table-menu").DataTable().clear().draw();
+                                $("#additional-items-table").DataTable().clear().draw();
+                                break;
+                            case 'error':
+                                Toast.fire({
+                                    icon: 'warning',
+                                    title: '&nbsp&nbsp  Ouve um erro ao excluir.'
+                                });
+                                break;
+                        }
+                    },
+                    error: function (data) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: '&nbsp&nbsp Erro na rede.'
+                        });
+                    }
+                });
+            }
+        },
+        buttons: {
+            cancel: {
+                label: 'Cancelar',
+                className: 'btn-default'
+            },
+            confirm: {
+                label: 'Excluir',
+                className: 'btn-danger'
+            }
+
+        }
+    });
+}
+function delete_item(id) {
+    var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+    });
+    bootbox.confirm({
+        title: ' Deseja excluir este registro?',
+        message: '<strong>Essa operação não pode ser desfeita.</strong><br>Será excluido também seus adicionais.',
+        callback: function (confirmacao) {
+            if (confirmacao) {
+                const URL = '/administrator/post/delete/menu/item'
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    url: URL,
+                    type: 'post',
+                    data: {
+                        id: id,
+                    },
+                    dataType: 'text',
+                    success: function (data) {
+                        switch (data) {
+                            case 'success':
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: '&nbsp&nbsp Item excluido com sucesso.'
+                                });
+                                $("#table-menu").DataTable().clear().draw();
+                                $("#additional-items-table").DataTable().clear().draw();
+                                break;
+                            case 'error':
+                                Toast.fire({
+                                    icon: 'warning',
+                                    title: '&nbsp&nbsp  Ouve um erro ao excluir.'
+                                });
+                                break;
+                        }
+                    },
+                    error: function (data) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: '&nbsp&nbsp Erro na rede.'
+                        });
+                    }
+                });
+            }
+        },
+        buttons: {
+            cancel: {
+                label: 'Cancelar',
+                className: 'btn-default'
+            },
+            confirm: {
+                label: 'Excluir',
+                className: 'btn-danger'
+            }
+
+        }
+    });
+}
+function delete_additional_item(id) {
+    var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+    });
+    bootbox.confirm({
+        title: ' Deseja excluir este item adicional?',
+        message: '<strong class="text-danger">Essa operação não pode ser desfeita.</strong><br>Este adicional sairá do cardápio',
+        callback: function (confirmacao) {
+            if (confirmacao) {
+                const URL = '/administrator/post/delete/menu/additional-item'
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    url: URL,
+                    type: 'post',
+                    data: {
+                        id: id,
+                    },
+                    dataType: 'text',
+                    success: function (data) {
+                        switch (data) {
+                            case 'success':
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: '&nbsp&nbsp Adicional excluido com sucesso.'
+                                });
+                                $("#additional-items-table").DataTable().clear().draw();
+                                break;
+                            case 'error':
+                                Toast.fire({
+                                    icon: 'warning',
+                                    title: '&nbsp&nbsp  Ouve um erro ao excluir.'
+                                });
+                                break;
+                        }
+                    },
+                    error: function (data) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: '&nbsp&nbsp Erro na rede.'
+                        });
+                    }
+                });
+            }
+
+        },
+        buttons: {
+            cancel: {
+                label: 'Cancelar',
+                className: 'btn-default'
+            },
+            confirm: {
+                label: 'Excluir',
+                className: 'btn-danger'
+            }
+
+        }
+    });
+}
+
+//EDIÇÃO DE ITENS
+function edit_type_item() {
+    var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+    });
+    const formData = new FormData(document.getElementById('form-type-item'))
+    // Verificação
+    if (formData.get('id-type-product') == '') {
+        return false;
+    }
+    if (formData.get('name-type-product') == '') {
+        $('#name-type-product').addClass('is-invalid');
+        return false;
+    } else {
+        $('#name-type-product').removeClass('is-invalid');
+    }
+
+    var values = {
+        id: formData.get('id-type-product'),
+        img_type_product: formData.get('img-type-product'),
+        name_type_product: formData.get('name-type-product'),
+        obs_type_product: formData.get('obs-type-product')
+    }
+
+    const URL = '/administrator/post/save/menu/type/edit'
+    $.ajax({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: URL,
+        type: 'POST',
+        data: values,
+        dataType: 'text',
+        success: function (data) {
+            switch (data) {
+                case 'success':
+                    Toast.fire({
+                        icon: 'success',
+                        title: '&nbsp&nbsp Salvo.'
+                    });
+                    $('#type-item-modal').modal('hide');
+                    $('#img-type-product-crop').val('');
+                    $('#obs-type-product').summernote('code', '');
+                    $('#form-type-item')[0].reset();
+                    document.getElementById("img_type_product").src = '/img/gourmetconnect-logo/g-c-.png';
+                    $("#type-item-table").DataTable().clear().draw();
+                    break;
+                case 'error':
+                    Toast.fire({
+                        icon: 'warning',
+                        title: '&nbsp&nbsp  Ouve um erro ao salvar.'
+                    });
+                    break;
+            }
+        },
+
+        error: function (data) {
+            Toast.fire({
+                icon: 'error',
+                title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
+}
+function edit_item() {
+    var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+    });
+    const formData = new FormData(document.getElementById('form-item'))
+
+    // Verificação
+    if (formData.get('id-product') == '') {
+        return false;
+    }
+    if (formData.get('type-product')) {
+        $('#type-product').removeClass('is-invalid');
+    } else {
+        $('#type-product').addClass('is-invalid');
+        return false;
+    }
+    if (formData.get('name-product') == '') {
+        $('#name-product').addClass('is-invalid');
+        return false;
+    } else {
+        $('#name-product').removeClass('is-invalid');
+    }
+    if (formData.get('value-product') == '') {
+        $('#value-product').addClass('is-invalid');
+        return false;
+    } else {
+        $('#value-product').removeClass('is-invalid');
+    }
+
+    var values = {
+        id: formData.get('id-product'),
+        img_product: formData.get('img-product'),
+        type_product: formData.get('type-product'),
+        name_product: formData.get('name-product'),
+        value_product: formData.get('value-product'),
+        obs_product: formData.get('obs-product')
+    }
+
+    const URL = '/administrator/post/save/menu/item/edit'
+    $.ajax({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: URL,
+        type: 'POST',
+        data: values,
+        dataType: 'text',
+        success: function (data) {
+            switch (data) {
+                case 'success':
+                    Toast.fire({
+                        icon: 'success',
+                        title: '&nbsp&nbsp Salvo.'
+                    });
+                    $('#item-modal').modal('hide');
+                    $('#img-product-crop').val('');
+                    $('#obs-product').summernote('code', '');
+                    $('#form-item')[0].reset();
+                    document.getElementById("img_product").src = '/img/gourmetconnect-logo/g-c-.png';
+                    $("#table-menu").DataTable().clear().draw();
+                    break;
+                case 'error':
+                    Toast.fire({
+                        icon: 'warning',
+                        title: '&nbsp&nbsp  Ouve um erro ao salvar.'
+                    });
+                    break;
+            }
+        },
+
+        error: function (data) {
+            Toast.fire({
+                icon: 'error',
+                title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
+}
+function edit_additional_item() {
+    var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+    });
+    const formData = new FormData(document.getElementById('form-additional-item'))
+    // Verificação
+    if (formData.get('id_additional_item') == '') {
+        return false;
+    }
+
+    if (formData.get('item-menu') == '') {
+        $('.select2-selection').css('border', '1px solid red');
+        return false;
+    } else {
+        $('.select2-selection').removeAttr('style');
+    }
+    if (formData.get('name-additional') == '') {
+        $('#name-additional').addClass('is-invalid');
+        return false;
+    } else {
+        $('#name-additional').removeClass('is-invalid');
+    }
+    if (formData.get('value-additional') == '') {
+        $('#value-additional').addClass('is-invalid');
+        return false;
+    } else {
+        $('#value-additional').removeClass('is-invalid');
+    }
+
+    var values = {
+        id: formData.get('id_additional_item'),
+        item_menu: formData.get('item-menu'),
+        name_additional: formData.get('name-additional'),
+        value_additional: formData.get('value-additional'),
+        obs_additional: formData.get('obs-additional')
+    }
+
+    const URL = '/administrator/post/save/menu/additional-item/edit'
+    $.ajax({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: URL,
+        type: 'POST',
+        data: values,
+        dataType: 'text',
+        success: function (data) {
+            switch (data) {
+                case 'success':
+                    Toast.fire({
+                        icon: 'success',
+                        title: '&nbsp&nbsp Salvo..'
+                    });
+                    $('#additional-item-modal').modal('hide');
+                    $('#obs-additional').summernote('code', '');
+                    $('#form-additional-item')[0].reset();
+                    $('#item-menu').val('').trigger('change')
                     $("#additional-items-table").DataTable().clear().draw();
                     break;
                 case 'error':

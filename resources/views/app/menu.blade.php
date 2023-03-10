@@ -18,27 +18,16 @@
 <div class="col-12">
     <div class="card">
         <div class="card-header">
-            <div class="row d-flex justify-content-between">
-                <div class="col-md-5">
-                    <div class="row ">
-                        <div class="form-group col">
-                            <label for="statusFicha">FILTRO POR TIPO</label>
-                            <select id="statusFicha" name="statusFicha" class="form-control">
-                                <option value="">Selecione um tipo</option>
-                                @foreach ($types as $type)
-                                <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="d-flex justify-content-sm-end">
-                    <div class="col">
-                        <button class="btn btn-accent rounded-pill" data-toggle="modal" data-target="#new-item"><strong>NOVO ITEM</strong></button>
-
-                    </div>
-                </div>
+            <div class="d-flex justify-content-between row">
+                <h3 class="card-title">CARDÁPIO</h3>
+                <select class=" text-center select-rounded res" id="filter-type-item" name="filter-type-item" class="form-control">
+                    <option disabled selected>BUSQUE POR UM TIPO</option>
+                    <option value="">Todos</option>
+                    @foreach ($types as $type)
+                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                    @endforeach
+                </select>
+                <button class=" btn  btn-accent rounded-pill btnres" onclick="modal_new_item()"><strong>NOVO ITEM</strong></button>
             </div>
         </div>
         <div class="card-body">
@@ -48,8 +37,9 @@
                         <th width="30px">Cod.</th>
                         <th width="40px">Foto</th>
                         <th>Item</th>
+                        <th width="130px">Tipo</th>
                         <th width="100px">Valor</th>
-                        <th width="100px">Ações</th>
+                        <th width="90px">Ações</th>
 
                     </tr>
                 </thead>
@@ -60,9 +50,10 @@
 <div class="col-md-6">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">TIPO</h3>
-            <div class="d-flex justify-content-sm-end">
-                <button class="btn btn-accent btn-sm rounded-pill" data-toggle="modal" data-target="#new-type-item"><strong>NOVO TIPO</strong></button>
+            <div class="d-flex justify-content-between">
+
+                <h3 class="card-title">TIPO</h3>
+                <button class="btn btn-accent btn-sm rounded-pill btnres" onclick="modal_new_type_item()"><strong>NOVO TIPO</strong></button>
             </div>
         </div>
         <div class="card-body">
@@ -72,7 +63,7 @@
                         <th class="mx-auto" style="width: 30px">Foto</th>
                         <th>Tipo</th>
                         <th style="width: 40px">Itens</th>
-                        <th style="width: 40px">Ações</th>
+                        <th style="width:70px">Ações</th>
                     </tr>
                 </thead>
             </table>
@@ -82,9 +73,17 @@
 <div class="col-md-6">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">ADICIONAIS</h3>
-            <div class="d-flex justify-content-sm-end">
-                <button class="btn btn-accent btn-sm rounded-pill" data-toggle="modal" data-target="#new-additional-item"><strong>NOVO ADICIONAL</strong></button>
+            <div class="d-flex justify-content-between row">
+                <h3 class="card-title ">ADICIONAIS</h3>
+                <select class="text-center select-rounded res" id="filter-item" class="form-control">
+                    <option disabled selected>BUSQUE POR UM ITEM</option>
+                    <option value="">Todos</option>
+                    @foreach ($items as $item)
+                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    @endforeach
+                </select>
+                <button class="btn btn-accent btn-sm rounded-pill btnres" onclick="modal_new_additional_item()"><strong>NOVO ADICIONAL</strong></button>
+
             </div>
         </div>
         <div class="card-body">
@@ -95,7 +94,7 @@
                         <th>Adicional</th>
                         <th>Produto</th>
                         <th>Valor</th>
-                        <th style="width: 40px">Ações</th>
+                        <th style="width: 50px">Ações</th>
                     </tr>
                 </thead>
             </table>
@@ -104,12 +103,12 @@
 </div>
 @endsection
 @section('modal')
-{{-- CRIAR NOVO TIPO DE ITEM --}}
-<div class="modal fade" id="new-type-item" tabindex="-1" role="dialog" aria-labelledby="newTypeItemLabel" aria-hidden="true">
+{{-- TIPO DE ITEM --}}
+<div class="modal fade" id="type-item-modal" tabindex="-1" role="dialog" aria-labelledby="TypeItemLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="new-type-itemLabel">NOVA CLASSIFICAÇÃO DE ITEM</h5>
+                <h5 class="modal-title" id="type-itemLabel"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -130,9 +129,11 @@
                         </div>
                     </div>
                 </div>
-                <form id="form-new-type-item">
+                <form id="form-type-item">
+                    <input type="hidden" name="id-type-product" id="id-type-product">
+                    <input type="hidden" name="img-type-product" id="img-type-product-crop">
                     <div class="row">
-                        <input type="hidden" name="img-type-product" id="img-type-product-crop">
+
                         <div class="form-group col">
                             <label for="name-type-product">Nome <span style="color:red">*</span></label>
                             <input minlength="2" maxlength="200" id="name-type-product" name="name-type-product" type="text" class="form-control" placeholder="EX: Pizzas">
@@ -148,18 +149,17 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal"><strong>FECHAR</strong></button>
-                <button type="button" class="btn btn-accent rounded-pill" onclick="return save_new_type_item()"><strong>SALVAR</strong></button>
+                <button id="btn-save-type-item" type="button" class="btn btn-accent rounded-pill" onclick=""><strong>SALVAR</strong></button>
             </div>
         </div>
     </div>
 </div>
-
-{{-- CRIAR NOVO ITEM --}}
-<div class="modal fade" id="new-item" role="dialog" aria-labelledby="newItemLabel" aria-hidden="true">
+{{-- ITEM --}}
+<div class="modal fade" id="item-modal" role="dialog" aria-labelledby="newItemLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="new-itemLabel">NOVO ITEM</h5>
+                <h5 class="modal-title" id="item-modalLabel"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -180,16 +180,18 @@
                         </div>
                     </div>
                 </div>
-                <form id="form-new-item">
+                <form id="form-item">
+                    <input type="hidden" name="id-product" id="id-product">
+                    <input type="hidden" name="img-product" id="img-product-crop">
                     <div class="row">
-                        <input type="hidden" name="img-product" id="img-product-crop">
+
                         <div class="form-group col">
                             <label for="type-product">Tipo <span style="color:red">*</span></label>
                             <select id="type-product" name="type-product" class="form-control" style="width:100%">
                                 @foreach ($types as $type)
                                 <option value="{{ $type->id }}">{{ $type->name }}</option>
                                 @endforeach
-                                <option value="">Selecione um tipo</option>
+                                <option selected disabled value="">Selecione um tipo</option>
                             </select>
                         </div>
                     </div>
@@ -202,7 +204,8 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="value-product">Preço <span style="color:red">*</span></label>
-                            <input onKeyPress="return(moeda(this,'.',',',event))" id="value-product" name="value-product" type="text" class="form-control" placeholder="EX: R$ 10,00">
+                            <input onkeypress="return(moeda(this,'.',',',event))" id="value-product" name="value-product" type="text" class="form-control" placeholder="EX: R$ 10,00">
+
 
                         </div>
                     </div>
@@ -216,18 +219,18 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal"><strong>FECHAR</strong></button>
-                <button type="button" class="btn btn-accent rounded-pill" onclick="return save_new_item()"><strong>SALVAR</strong></button>
+                <button type="button" id="btn-save-item" class="btn btn-accent rounded-pill" onclick=""><strong>SALVAR</strong></button>
+
             </div>
         </div>
     </div>
 </div>
-
-{{-- CRIAR NOVO ITEM ADICIONAL --}}
-<div class="modal fade" id="new-additional-item" role="dialog" aria-labelledby="new-additional-itemLabel" aria-hidden="true">
+{{-- ITEM ADICIONAL --}}
+<div class="modal fade" id="additional-item-modal" role="dialog" aria-labelledby="additional-itemLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="new-additional-itemLabel">NOVO ITEM ADICIONAL</h5>
+                <h5 class="modal-title" id="additional-itemLabel">NOVO ITEM ADICIONAL</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -239,7 +242,8 @@
                             são obrigatórios)</p>
                     </div>
                 </div>
-                <form id="form-new-additional-item">
+                <form id="form-additional-item">
+                    <input type="hidden" name="id_additional_item" id="id_additional_item">
                     <div class="row">
                         <div class="form-group col">
                             <label for="item-menu">Item <span style="color:red">*</span></label>
@@ -259,7 +263,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col">
-                            <label for="value-additional">Preço <span style="color:red">*</span></label>
+                            <label for="name-additional">Preço <span style="color:red">*</span></label>
                             <input onKeyPress="return(moeda(this,'.',',',event))" id="value-additional" name="value-additional" type="text" class="form-control" placeholder="EX: R$ 10,00">
                         </div>
                     </div>
@@ -273,18 +277,22 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal"><strong>FECHAR</strong></button>
-                <button type="button" class="btn btn-accent rounded-pill" onclick="return save_new_additional_item()"><strong>SALVAR</strong></button>
+                <button type="button" id="btn-save-additional-item" class="btn btn-accent rounded-pill" onclick=""><strong>SALVAR</strong></button>
             </div>
         </div>
     </div>
 </div>
-
+{{-- VIEW ITEM --}}
+@include('app.component.view-item')
 {{-- ENVIO DE IMAGEM --}}
 <div id="uploadimage" class="modal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Ajustar imagem</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div id="image_demo"></div>
@@ -300,110 +308,5 @@
 <!-- Select2 -->
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('js/crop-img.js') }}"></script>
-<script>
-    $(function() {
-        $("#table-menu").DataTable({
-            "order": [
-                    [0, 'asc']
-                ]
-                // , "bInfo": false
-            , "pagingType": 'simple_numbers'
-            , "responsive": true
-            , "lengthChange": false
-            , "iDisplayLength": 10
-            , "autoWidth": false
-            , "dom": '<"top">rt<"bottom"ip><"clear" >'
-            , "language": {
-                "url": "{{ asset('plugins/datatables/Portuguese2.json') }}"
-            }
-            , "aoColumnDefs": [{
-                'sortable': false
-                , 'aTargets': 1
-            }]
-            , "processing": true
-            , "serverSide": true
-            , "ajax": {
-                "url": "{{ route('table_item') }}"
-                , "type": "POST"
-                , "headers": {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                , }
-            , }
-        });
-
-        $("#type-item-table").DataTable({
-            "ordering": false
-            , "bInfo": false
-            , "paging": true
-            , "pagingType": 'simple_numbers'
-            , "responsive": true
-            , "lengthChange": false
-            , "iDisplayLength": 10
-            , "autoWidth": false
-            , "dom": '<"top">rt<"bottom"ip> <"clear">'
-            , "language": {
-                "url": "{{ asset('plugins/datatables/Portuguese2.json') }}"
-            }
-            , "processing": true
-            , "serverSide": true
-            , "ajax": {
-                "url": "{{ route('table_type_item') }}"
-                , "type": "POST"
-                , "headers": {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                , }
-            , }
-        });
-
-        $("#additional-items-table").DataTable({
-            "order": [
-                [0, 'asc']
-            ]
-            , "pagingType": 'simple_numbers'
-            , "responsive": true
-            , "lengthChange": false
-            , "iDisplayLength": 10
-            , "autoWidth": false
-            , "dom": '<"top">rt<"bottom"ip><"clear" > '
-            , "language": {
-                "url": "{{ asset('plugins/datatables/Portuguese2.json') }}"
-            }
-            , "aoColumnDefs": [{
-                'sortable': false
-                , 'aTargets': 1
-            }]
-            , "processing": true
-            , "serverSide": true
-            , "ajax": {
-                "url": "{{ route('table_additional_items') }}"
-                , "type": "POST"
-                , "headers": {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                , }
-            , }
-
-        })
-    });
-
-    function matchCustom(params, data) {
-        document.querySelector(".select2-search__field").placeholder = "Buscar item";
-        if ($.trim(params.term) === '') {
-            return data;
-        }
-        if (data.title.indexOf(params.term) > -1) {
-            var modifiedData = $.extend({}, data, true)
-            return modifiedData;
-        }
-        if (data.text.toLowerCase().indexOf(params.term.toLowerCase()) > -1) {
-            var modifiedData = $.extend({}, data, true);
-            return modifiedData;
-        }
-        return '';
-    }
-
-    $('.select2').select2({
-        matcher: matchCustom
-    , });
-
-</script>
+<script src="{{ asset('js/menu.js') }}"></script>
 @endsection
