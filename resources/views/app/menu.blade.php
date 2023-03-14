@@ -20,7 +20,7 @@
         <div class="card-header">
             <div class="d-flex justify-content-between row">
                 <h3 class="card-title">CARDÁPIO</h3>
-                <select class=" text-center select-rounded res" id="filter-type-item" name="filter-type-item" class="form-control">
+                <select class=" text-center select-rounded res" id="filter-type-item" name="filter-type-item">
                     <option disabled selected>BUSQUE POR UM TIPO</option>
                     <option value="">Todos</option>
                     @foreach ($types as $type)
@@ -75,7 +75,7 @@
         <div class="card-header">
             <div class="d-flex justify-content-between row">
                 <h3 class="card-title ">ADICIONAIS</h3>
-                <select class="text-center select-rounded res" id="filter-item" class="form-control">
+                <select class="text-center select-rounded res" id="filter-item">
                     <option disabled selected>BUSQUE POR UM ITEM</option>
                     <option value="">Todos</option>
                     @foreach ($items as $item)

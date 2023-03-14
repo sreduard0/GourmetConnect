@@ -14,6 +14,7 @@ Route::get('/', [LoginController::class, 'login'])->name('login');
 // Views rutes
 Route::get('administrator/control-panel', [AppViewsController::class, 'control_panel'])->name('control_panel');
 Route::get('administrator/requests', [AppViewsController::class, 'requests'])->name('requests');
+Route::get('administrator/delivery', [AppViewsController::class, 'delivery'])->name('delivery');
 Route::get('administrator/tables', [AppViewsController::class, 'tables'])->name('tables');
 Route::get('administrator/menu', [AppViewsController::class, 'menu'])->name('menu');
 Route::get('administrator/users', [AppViewsController::class, 'users'])->name('users');
@@ -48,6 +49,8 @@ Route::get('/administrator/get/info/menu/items', [MenuController::class, 'all_it
 Route::post('/administrator/post/table/menu/type', [MenuController::class, 'table_type_item']);
 Route::post('/administrator/post/table/menu/items', [MenuController::class, 'table_item']);
 Route::post('/administrator/post/table/menu/additional-items', [MenuController::class, 'table_additional_items']);
+
+// APP ROUTES PEDIDOS
 
 //ROTA DE INSTALAÇÃO DO SISTEMA
 // Esta rota so pode ser acessada caso o sistema ainda não tenha sido instalado no servidor

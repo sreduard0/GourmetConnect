@@ -91,14 +91,33 @@ $app_settings = AppSettingsModel::all()->first();
                             </a>
                         </li>
                         @endif
-                        @if(session('user')['permissions']['requests'])
-                        <li class="nav-item ">
-                            <a href="{{ route('requests') }}" class="rounded-pill nav-link @yield('requests')">
+                        @if(session('user')['permissions']['requests'] || session('user')['permissions']['delivery'])
+                        <li class="nav-item @yield('menu-requests')">
+                            <a href="#" class="rounded-pill nav-link @yield('requests') @yield('delivery')">
                                 <i class="nav-icon fa-duotone fa-burger-soda"></i>
                                 <p>
                                     Pedidos
+                                    <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                @if(session('user')['permissions']['requests'])
+                                <li class="nav-item">
+                                    <a href="{{ route('requests') }}" class="rounded-pill nav-link  @yield('requests')">
+                                        <i class="fa-duotone fa-home nav-icon"></i>
+                                        <p>Local</p>
+                                    </a>
+                                </li>
+                                @endif
+                                @if(session('user')['permissions']['delivery'])
+                                <li class="nav-item">
+                                    <a href="{{ route('delivery') }}" class="rounded-pill nav-link  @yield('delivery')">
+                                        <i class="fa-duotone fa-moped nav-icon"></i>
+                                        <p>Entregas</p>
+                                    </a>
+                                </li>
+                                @endif
+                            </ul>
                         </li>
                         @endif
                         @if(session('user')['permissions']['tables'])

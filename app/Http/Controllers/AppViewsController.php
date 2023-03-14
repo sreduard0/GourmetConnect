@@ -14,7 +14,15 @@ class AppViewsController extends Controller
     }
     public function requests()
     {
-        return view('app.requests');
+        $data = [
+            'app_settings' => AppSettingsModel::select('number_tables')->first(),
+        ];
+
+        return view('app.requests', $data);
+    }
+    public function delivery()
+    {
+        return view('app.delivery');
     }
     public function tables()
     {

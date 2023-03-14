@@ -15,6 +15,7 @@ class LoginController extends Controller
                 'permissions' => [
                     'dashboard' => true,
                     'requests' => true,
+                    'delivery' => true,
                     'tables' => true,
                     'menu' => true,
                     'users' => true,
