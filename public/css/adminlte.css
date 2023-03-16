@@ -66658,6 +66658,16 @@ body .ui-tooltip {
     color: #333333;
 }
 
+.dark-mode .ui-widget.ui-widget-content {
+    border: 1px solid #6c757d;
+}
+
+.dark-mode .ui-widget-content {
+    border: 1px solid #6c757d;
+    background: #343a40;
+    color: #fff;
+}
+
 .ui-widget-content a {
     color: #333333;
 }
@@ -67711,8 +67721,7 @@ a.ui-button:active,
 
 .ui-corner-all,
 .ui-corner-bottom,
-.ui-corner-left,
-.ui-corner-bl {
+.ui-corner-left, ui-auto .ui-corner-bl {
     border-bottom-left-radius: 3px;
 }
 
@@ -67734,4 +67743,8 @@ a.ui-button:active,
 .ui-widget-shadow {
     -webkit-box-shadow: 0px 0px 5px #666666;
     box-shadow: 0px 0px 5px #666666;
+}
+
+.rotate {
+    animation: is-rotating 1s infinite;
 }

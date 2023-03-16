@@ -46,13 +46,14 @@ class AppSettingsController extends Controller
     {
         if (!AppSettingsModel::all()->first()) {
             $save_data = new AppSettingsModel();
-            $save_data->establishment_name = 'Projeto X';
-            $save_data->cnpj = null;
-            $save_data->address = null;
-            $save_data->number = null;
-            $save_data->neighborhood = null;
-            $save_data->city = null;
-            $save_data->state = null;
+            // $save_data->logo_url = 'img\gourmetconnect-logo\gourmetconnect.png';
+            $save_data->establishment_name = 'GourmetConnect';
+            $save_data->cnpj = 888888888;
+            $save_data->address = 'rua xxx';
+            $save_data->number = 000;
+            $save_data->neighborhood = 'xxx';
+            $save_data->city = 'nsr';
+            $save_data->state = 'rs';
             $save_data->theme_background = 'dark-mode';
             $save_data->theme_accent = 'accent-danger';
             $save_data->theme_sidebar = 'sidebar-dark-danger';

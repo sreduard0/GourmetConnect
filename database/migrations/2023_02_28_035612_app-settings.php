@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('app_ettings');
+        Schema::dropIfExists('app_settings');
     }
 };

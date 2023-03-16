@@ -32,7 +32,8 @@
                 <p id="item-description-view" class="text-muted">-</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-accent rounded-pill" data-dismiss="modal"><strong>FECHAR</strong></button>
+                <button type="button" class="btn btn-accent rounded-pill  float-right" data-dismiss="modal"><strong>FECHAR</strong></button>
+
             </div>
         </div>
     </div>

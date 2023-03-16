@@ -278,6 +278,4 @@ $app_settings = AppSettingsModel::all()->first();
     @yield('plugins')
     {{-- ====================================/ PLUGINS ===================================== --}}
 </body>
-
-
 </html>

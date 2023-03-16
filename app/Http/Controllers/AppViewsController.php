@@ -16,6 +16,7 @@ class AppViewsController extends Controller
     {
         $data = [
             'app_settings' => AppSettingsModel::select('number_tables')->first(),
+            'types' => TypeItemModel::all(),
         ];
 
         return view('app.requests', $data);

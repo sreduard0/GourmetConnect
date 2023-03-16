@@ -9,18 +9,20 @@ return new class extends Migration
 
     public function up()
     {
-        Schema::create('additional_items', function (Blueprint $table) {
+        Schema::create('request_items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('item_id');
-            $table->string('name');
+            $table->bigInteger('request_id');
+            $table->bigInteger('product_id');
+            $table->string('waiter', 255);
             $table->decimal('value', 10, 2);
-            $table->text('description')->nullable();
+            $table->text('observation')->nullable();
+            $table->integer('status');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('additional_items');
+        Schema::dropIfExists('request_items');
     }
 };
