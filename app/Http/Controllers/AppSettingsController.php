@@ -46,7 +46,7 @@ class AppSettingsController extends Controller
     {
         if (!AppSettingsModel::all()->first()) {
             $save_data = new AppSettingsModel();
-            // $save_data->logo_url = 'img\gourmetconnect-logo\gourmetconnect.png';
+            $save_data->logo_url = 'img\gourmetconnect-logo\gourmetconnect.png';
             $save_data->establishment_name = 'GourmetConnect';
             $save_data->cnpj = 888888888;
             $save_data->address = 'rua xxx';
