@@ -8,7 +8,9 @@
         typeof define === 'function' && define.amd ? define(['exports', 'jquery'], factory) :
             (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.adminlte = {}, global.jQuery));
 }(this, (function (exports, $) {
+
     'use strict';
+
 
     function _interopDefaultLegacy(e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 

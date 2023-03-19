@@ -13,7 +13,8 @@ $app_settings = AppSettingsModel::all()->first();
 
     <link rel="shortcut icon" href="{{ asset($app_settings->logo_url) }}" type="image/x-icon">
     {{-- ==================================== CSS/JS ===================================== --}}
-
+    {{-- NOTIFICAÇÕES --}}
+    <script type="module" src="{{ asset('js/notification.js') }}"></script>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@200..900&display=swap">
     <!-- Font Awesome -->
@@ -43,6 +44,7 @@ $app_settings = AppSettingsModel::all()->first();
     <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+
 
     @yield('script')
 
@@ -231,6 +233,7 @@ $app_settings = AppSettingsModel::all()->first();
     {{-- ========================== MODAL ========================== --}}
     @yield('modal')
     {{-- ==================================== PLUGINS ===================================== --}}
+
     <!-- jQuery UI 1.11.4 -->
     <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
     <!-- OPTIONAL SCRIPTS -->
@@ -242,6 +245,8 @@ $app_settings = AppSettingsModel::all()->first();
     </script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+
     <!-- Tempusdominus Bootstrap 4 -->
     <script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('plugins/inputmask/jquery.inputmask.min.js') }}"></script>

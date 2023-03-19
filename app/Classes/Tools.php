@@ -2,8 +2,45 @@
 
 namespace App\Classes;
 
+use App\Models\RequestsItemsModel;
+
 class Tools
 {
+    // SOMA O VALOR DE TODOS PRODUTOS
+    public function sum_values_requests($id)
+    {
+        $itemsRequest = RequestsItemsModel::with('additionals')
+            ->select('id', 'value')
+            ->where('request_id', $id)
+            ->where('status', 2)
+            ->get();
+
+        $sum = [];
+        foreach ($itemsRequest as $item) {
+            $sum[] = $item->value;
+            foreach ($item->additionals as $additional) {
+                $sum[] = $additional->value;
+            }
+
+        }
+
+        return 'R$' . number_format(array_sum($sum), 2, ',', '.');
+    }
+    // SOMA O VALOR DE UM UNICO ITEM
+    public function sum_values_item($id)
+    {
+        $itemsRequest = RequestsItemsModel::with('additionals')
+            ->select('id', 'value')
+            ->where('id', $id)
+            ->where('status', 1)
+            ->first();
+        $sum[] = $itemsRequest->value;
+        foreach ($itemsRequest->additionals as $item) {
+            $sum[] = $item->value;
+        }
+        return 'R$' . number_format(array_sum($sum), 2, ',', '.');
+    }
+    // CRIPTOGRAFA VALORES
     public function hash($value, $function)
     {
         switch ($function) {

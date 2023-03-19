@@ -14,33 +14,23 @@
     <div class="card">
         <div class="card-header">
             <div class="d-flex justify-content-between row">
-                <div class="col-md-6">
-                    <select class="text-center w-250 select-rounded  res col-md-3 m-r-5" id="filter-item" class="form-control">
-                        <option selected>TODAS MESAS</option>
-                        @for ($t = 1; $t <= $app_settings->number_tables; $t++)
-                            <option value="{{ $t }}">MESA #{{ $t }}</option>
-                            @endfor
-                    </select>
-                    <select class="text-center w-250 select-rounded  res col-md-3 " id="filter-item" class="form-control">
-                        <option selected>STATUS</option>
-                        <option>ABERTAS</option>
-                        <option>FECHADAS</option>
-                        <option>COM PEDIDO</option>
-                        <option>XXXX</option>
-                    </select>
-
-                </div>
+                <select class="text-center w-250 select-rounded  res col-md-3 m-r-5" id="filter-item-table" class="form-control" onchange="return filter_all_requests()">
+                    <option value='' selected>TODAS MESAS</option>
+                    @for ($t = 1; $t <= $app_settings->number_tables; $t++)
+                        <option value="{{ $t }}">MESA #{{ $t }}</option>
+                        @endfor
+                </select>
                 <button class="btn btn-accent rounded-pill btnres" onclick="modal_new_request()"><strong>NOVO PEDIDO</strong></button>
             </div>
         </div>
         <div class="card-body">
             <table id="requests-table" class="table table-bordered table-striped">
-
                 <thead>
                     <tr>
                         <th width="30px">Ord.</th>
                         <th>Cliente</th>
                         <th width="30px">Mesa</th>
+                        <th width='80px'>Pedido</th>
                         <th width="130px">Valor</th>
                         <th width="80px">Ações</th>
 
@@ -71,7 +61,7 @@
                                 <option value="{{ $t }}">MESA #{{ $t }}</option>
                                 @endfor
                         </select>
-                        <input minlength="2" maxlength="200" id="client-name" value="" type="text" class="form-control rounded-pill col m-b-10" placeholder="Nome do Cliente">
+                        <input minlength="2" maxlength="200" id="client-name" value="" type="text" class="form-control rounded-pill text-center col m-b-10" placeholder="Nome do Cliente ou Nº da comanda">
                         <div class="d-flex justify-content-center">
                             <button id="btn-select-request" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-chevron-right fs-35"></i></button>
                         </div>
@@ -102,7 +92,6 @@
                                         <th>Item</th>
                                         <th width='100px'>Valor</th>
                                         <th width='70px'>Ações</th>
-
                                     </tr>
                                 </thead>
                             </table>
@@ -119,12 +108,11 @@
 
                                 <thead>
                                     <tr>
-                                        <th width="30px">Cod.</th>
-                                        <th width="35px">Foto</th>
+                                        <th width="25px">Foto</th>
                                         <th>Item</th>
-                                        <th width="30px">Qtd.</th>
                                         <th width="60px">Valor</th>
-                                        <th width="80px">Ações</th>
+                                        {{-- <th width="80px">Status</th> --}}
+                                        <th width="70px">Ações</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -134,7 +122,45 @@
                 </div>
             </div>
             <div class="modal-footer" id="modal-footer" style="display:none">
-                <button type="button" class="btn btn-accent rounded-pill float-right" data-dismiss="modal"><strong>ENVIAR PEDIDO</strong></button>
+                <button id="send-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>ENVIAR PEDIDO</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- ADICIONAIS E OBS --}}
+<div class="modal fade" id="observation-item-modal" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="observation-item-modalLabel">ADICIONAIS E OBSERVAÇÕES</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="request_id">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title "><strong>Adicionais</strong></h5>
+                    </div>
+                    <form id="form-add-additional">
+                        <div id="checkbox-container" class="card-body">
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title"> <strong>Observações</strong> </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <textarea name="obs-additional" id="obs-additional" rows="8" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-obs-item-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>SALVAR</strong></button>
             </div>
         </div>
     </div>

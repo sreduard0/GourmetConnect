@@ -6,21 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
-    public function up()
+    public function up(): void
     {
-        Schema::create('requests', function (Blueprint $table) {
+        Schema::create('request_additional_items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('table');
-            $table->string('client_name', 255);
-            $table->integer('client_id')->nullable();
-            $table->integer('status');
+            $table->bigInteger('additional_id');
+            $table->bigInteger('item_id');
+            $table->decimal('value', 10, 2);
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('requests');
+        Schema::dropIfExists('request_additional_items');
     }
 };

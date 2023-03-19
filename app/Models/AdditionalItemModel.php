@@ -11,7 +11,6 @@ class AdditionalItemModel extends Model
     {
         return $this->hasOne('App\Models\ItemModel', 'id', 'item_id');
     }
-
     protected $table = 'additional_items';
     protected $primarykey = 'id';
     use HasFactory;

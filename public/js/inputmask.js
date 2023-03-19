@@ -29,17 +29,16 @@ $(function () {
 });
 
 $(function () {
-    $('.text_placeolder').summernote({
-        placeholder: 'Observações para o cumprimento da missão.',
+    $('#obs-additional').summernote({
+        placeholder: 'Observações do pedido.',
         height: 150,
         toolbar: [
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['fontsize', ['fontsize']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['table'],
         ]
     });
-    $('.text_placeolder').summernote('code', '');
+    $('#obs-additional').summernote('code', '');
 
 });
 

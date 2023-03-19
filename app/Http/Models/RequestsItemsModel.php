@@ -9,7 +9,7 @@ class RequestsItemsModel extends Model
 {
     public function product()
     {
-        return $this->hasOne('App\Models\ItemModel', 'id', 'product_id');
+        return $this->hasOne('App\Models\ItemModel', 'id', 'product_id')->with('additionals');
     }
     use HasFactory;
     protected $table = 'request_items';

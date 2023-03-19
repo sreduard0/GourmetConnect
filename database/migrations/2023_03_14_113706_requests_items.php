@@ -13,7 +13,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('request_id');
             $table->bigInteger('product_id');
-            $table->string('waiter', 255);
+            $table->string('waiter', 255)->nullable();
             $table->decimal('value', 10, 2);
             $table->text('observation')->nullable();
             $table->integer('status');

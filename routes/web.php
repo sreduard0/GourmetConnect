@@ -4,6 +4,7 @@ use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\AppViewsController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RequestsController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,14 +53,25 @@ Route::post('/administrator/post/table/menu/items', [MenuController::class, 'tab
 Route::post('/administrator/post/table/menu/additional-items', [MenuController::class, 'table_additional_items']);
 
 // APP ROUTES PEDIDOS
+// ADICIONAR
+Route::post('administrator/post/request/item/add', [RequestsController::class, 'add_item_request']);
+// DELETAR
+Route::post('administrator/post/request/item/delete', [RequestsController::class, 'delete_item_request']);
+// ENVIAR
+Route::post('administrator/post/request/item/send', [RequestsController::class, 'send_item_request']);
+Route::post('administrator/post/request/additional-item/save', [RequestsController::class, 'save_obs_item_request']);
+
 //INFORMAÇOES DE PEDIDOS
 Route::post('administrator/post/info/table/client', [RequestsController::class, 'client_table']);
+Route::post('administrator/post/request/item/additionals', [RequestsController::class, 'additionals_items_request']);
 
 //TABELAS
 Route::post('administrator/post/table/request/client', [RequestsController::class, 'request_client_table']);
 Route::post('administrator/post/table/request/all', [RequestsController::class, 'all_request_table']);
 Route::post('administrator/post/table/request/menu', [RequestsController::class, 'table_menu']);
-Route::post('administrator/post/request/item/add', [RequestsController::class, 'add_item_request']);
+
+// NOTIFICAÇÃO
+Route::get('administrator/notification/events', [NotificationController::class, 'notification']);
 
 //ROTA DE INSTALAÇÃO DO SISTEMA
 // Esta rota so pode ser acessada caso o sistema ainda não tenha sido instalado no servidor
