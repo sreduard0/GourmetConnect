@@ -13,38 +13,50 @@ var source = new EventSource(window.location.origin + '/administrator/notificati
 source.timeout = 3000;
 source.onmessage = function (event) {
     var data = JSON.parse(event.data);
+    if (data == null) {
+        return false;
+    }
+    if (window.location.pathname == '/administrator/requests') {
+        $('#requests-table').DataTable().clear().draw()
+    }
     if (data.notify == true) {
         switch (data.type) {
             case 'bootbox':
-                bootbox.confirm({
-                    title: data.title,
-                    message: data.messege,
-                    size: data.size,
-                    centerVertical: data.centervertical,
-                    buttons: {
-                        confirm: {
-                            label: 'Yes',
-                            className: 'btn-accent'
+                if ($('.bootbox').is(':visible') == true) {
+                    $('.bootbox-body').append('<hr><h3>' + data.messege + '</h3>')
+                } else {
+                    bootbox.confirm({
+                        title: '<h2>' + data.title + '</h2>',
+                        message: '<h3>' + data.messege + '</h3>',
+                        size: data.size,
+                        centerVertical: data.centervertical,
+                        buttons: {
+                            confirm: {
+                                label: 'FECHAR',
+                                className: 'btn-accent'
+                            },
+                            cancel: {
+                                label: '',
+                                className: 'd-none'
+                            }
                         },
-                        cancel: {
-                            label: 'No',
-                            className: 'd-none'
+                        callback: function (result) {
+
                         }
-                    },
-                    callback: function (result) {
-                        console.log('This was logged in the callback: ' + result);
-                    }
-                });
+                    });
+                }
                 if (Notification.permission !== "granted") {
                     Notification.requestPermission();
                 }
                 if (Notification.permission === "granted") {
                     var notification = new Notification(data.title, {
                         body: data.messege,
-                        icon: window.location.origin + data.icon,
+                        icon: window.location.origin + '/' + data.icon,
                         sound: window.location.origin + "/sound/notification.mp3"
                     });
                 }
+                var notificationSound = new Audio(window.location.origin + "/sound/notification.mp3");
+                notificationSound.play();
                 break;
             case 'native':
 
@@ -54,17 +66,19 @@ source.onmessage = function (event) {
                 if (Notification.permission === "granted") {
                     var notification = new Notification(data.title, {
                         body: data.message,
-                        icon: data.icon,
-                        sound: "/sound/notification.mp3"
+                        icon: window.location.origin + '/' + data['icon'],
                     });
+                    // notification.onclick = function () {
+                    //     window.open("https://www.exemplo.com");
+                    // }
                 }
                 break;
             case 'popup':
-                var notificationSound = new Audio("/sound/notification.mp3");
+                var notificationSound = new Audio(window.location.origin + "/sound/notification.mp3");
                 $(document).Toasts('create', {
-                    class: 'bg-danger',
-                    title: 'Toast Title',
-                    subtitle: 'Subtitle',
+                    class: 'bg-accent',
+                    title: data.title,
+                    subtitle: '',
                     body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
                 })
                 notificationSound.play();
@@ -72,4 +86,6 @@ source.onmessage = function (event) {
         }
 
     }
+
+
 };

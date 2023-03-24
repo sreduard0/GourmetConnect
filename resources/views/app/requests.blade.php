@@ -43,7 +43,7 @@
 @endsection
 @section('modal')
 {{-- NOVO PEDIDO --}}
-<div class="modal fade" id="new-request-modal" role="dialog" tabindex="-1" aria-labelledby="TypeItemLabel" aria-hidden="true">
+<div class="modal fade" id="new-request-modal" role="dialog" tabindex="-1" aria-labelledby="newReqLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -105,13 +105,11 @@
                         </div>
                         <div class="card-body">
                             <table style="width:100%" id="client-requests-table" class="table table-bordered table-striped">
-
                                 <thead>
                                     <tr>
                                         <th width="25px">Foto</th>
                                         <th>Item</th>
                                         <th width="60px">Valor</th>
-                                        {{-- <th width="80px">Status</th> --}}
                                         <th width="70px">Ações</th>
                                     </tr>
                                 </thead>
@@ -123,6 +121,61 @@
             </div>
             <div class="modal-footer" id="modal-footer" style="display:none">
                 <button id="send-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>ENVIAR PEDIDO</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- PEDIDOS DO CLIENTE --}}
+<div class="modal fade" id="requests-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reqClienttitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table style="width:100%" id="client-requests-tool-table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="25px">Foto</th>
+                            <th>Item</th>
+                            <th width="60px">Valor</th>
+                            <th width="70px">Ações</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer" id="modal-footer">
+                <div class="col-md-8">
+                    <p class="lead">Amount Due 2/22/2014</p>
+
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th style="width:50%">Subtotal:</th>
+                                    <td>$250.30</td>
+                                </tr>
+                                <tr>
+                                    <th>Tax (9.3%)</th>
+                                    <td>$10.34</td>
+                                </tr>
+                                <tr>
+                                    <th>Shipping:</th>
+                                    <td>$5.80</td>
+                                </tr>
+                                <tr>
+                                    <th>Total:</th>
+                                    <td>$265.24</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

@@ -32,13 +32,35 @@ class Tools
         $itemsRequest = RequestsItemsModel::with('additionals')
             ->select('id', 'value')
             ->where('id', $id)
-            ->where('status', 1)
             ->first();
+
         $sum[] = $itemsRequest->value;
         foreach ($itemsRequest->additionals as $item) {
             $sum[] = $item->value;
         }
         return 'R$' . number_format(array_sum($sum), 2, ',', '.');
+    }
+    // SOMA O VALOR DE UM UNICO ITEM
+    public function sum_values_items_equals($item, $request)
+    {
+        $items = RequestsItemsModel::with('additionals')
+            ->select('id', 'value')
+            ->where('request_id', $request)
+            ->where('product_id', $item)
+            ->where('status', '>', 2)
+            ->get();
+
+        $sum = [];
+        foreach ($items as $item) {
+            $sum[] = $item->value;
+            foreach ($item->additionals as $additional) {
+                $sum[] = $additional->value;
+            }
+
+        }
+
+        return 'R$' . number_format(array_sum($sum), 2, ',', '.');
+
     }
     // CRIPTOGRAFA VALORES
     public function hash($value, $function)

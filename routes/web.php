@@ -67,11 +67,17 @@ Route::post('administrator/post/request/item/additionals', [RequestsController::
 
 //TABELAS
 Route::post('administrator/post/table/request/client', [RequestsController::class, 'request_client_table']);
+Route::post('administrator/post/table/request/client-tool', [RequestsController::class, 'request_client_tool_table']);
 Route::post('administrator/post/table/request/all', [RequestsController::class, 'all_request_table']);
 Route::post('administrator/post/table/request/menu', [RequestsController::class, 'table_menu']);
 
 // NOTIFICAÇÃO
 Route::get('administrator/notification/events', [NotificationController::class, 'notification']);
+Route::get('teste', function () {
+
+    echo 123;
+
+});
 
 //ROTA DE INSTALAÇÃO DO SISTEMA
 // Esta rota so pode ser acessada caso o sistema ainda não tenha sido instalado no servidor

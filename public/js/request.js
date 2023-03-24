@@ -101,6 +101,44 @@ $(function () {
             ,
         }
     });
+    $("#client-requests-tool-table").DataTable({
+        "order": [
+            [3, 'asc']
+        ],
+        "bInfo": false
+        , "paging": true
+        , "pagingType": 'simple_numbers'
+        , "responsive": true
+        , "lengthChange": false
+        , "iDisplayLength": 10
+        , "autoWidth": false
+        , "aoColumnDefs": [{
+            'className': 'text-center'
+            , 'aTargets': 3
+        }],
+        "dom": '<"top">rt<"bottom"ip> <"clear">'
+        , "language": {
+            "url": window.location.origin + "/plugins/datatables/Portuguese2.json"
+        },
+        "aoColumnDefs": [{
+            'className': 'text-center',
+            'aTargets': [0, 3]
+        },
+        {
+            'sortable': false,
+            'aTargets': [0, 3]
+        }],
+        "serverSide": true
+        , "ajax": {
+            "url": window.location.origin + "/administrator/post/table/request/client-tool"
+            , "type": "POST"
+            , "headers": {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                ,
+            }
+            ,
+        }
+    });
 });
 
 // SELEÇÃO DE MESA E CLIENTE
@@ -492,5 +530,17 @@ function delete_item_request(id) {
     });
 
 }
+
+// PEDIDOS DO CLIENTE
+function requests_client_tool_modal(id, table, client) {
+    $('#client-requests-tool-table').DataTable().column(1).search(id).draw()
+    $('#reqClienttitle').text('MESA #1 - Eduardo')
+    $('#requests-client-modal').modal('show')
+}
+$('#new-request-modal').on('hide.bs.modal', function () {
+    $('#client-requests-tool-table').DataTable().clear().draw()
+    $('#reqClienttitle').text('')
+
+});
 
 

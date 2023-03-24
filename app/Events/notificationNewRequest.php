@@ -12,8 +12,6 @@ class notificationNewRequest
     public $data;
     public function __construct($data)
     {
-        echo $data;
-
         $this->data = $data;
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\notificationNewRequest;
+use App\Models\AppSettingsModel;
+use App\Models\NotificationModel;
+use Illuminate\Http\Response;
 
 class NotificationController extends Controller
 {
@@ -10,22 +12,36 @@ class NotificationController extends Controller
     public function notification()
     {
 
-        event(new notificationNewRequest('HOPEE'));
+        $app_config = AppSettingsModel::select('logo_url')->first();
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $notification = NotificationModel::where('notify', 1)->first();
+        if ($notification) {
+            if ($notification->user_destination == null || $notification->user_destination !== session('user')['id']) {
+                $notification['icon'] = $app_config->logo_url;
+                $response->setContent('data: ' . json_encode($notification) . "\n\n");
+                $response->send();
 
-        // $response = new Response();
-        // $response->headers->set('Content-Type', 'text/event-stream');
-        // $response->headers->set('Cache-Control', 'no-cache');
+                $notification = NotificationModel::where('notify', 1)->first();
+                $notification->notify = 0;
+                $notification->save();
+            } else {
+                $notification = null;
+                $response->setContent('data: ' . json_encode($notification) . "\n\n");
+                $response->send();
 
-        // $data = [
-        //     'notify' => false,
-        //     'type' => 'bootbox',
-        //     'title' => 'Teste',
-        //     'messege' => '1234',
-        //     'size' => 'small',
-        //     'centervertical' => true,
-        // ];
+            }
+        } else {
+            $notification = null;
+            $response->setContent('data: ' . json_encode($notification) . "\n\n");
+            $response->send();
+        }
 
-        // $response->setContent('data: ' . json_encode($data) . "\n\n");
-        // $response->send();
+    }
+    public function notification_check($id)
+    {
+        NotificationModel::find($id)->delete();
+        return true;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\Tools;
+use App\Events\notificationNewRequest;
 use App\Models\AdditionalItemModel;
 use App\Models\ItemModel;
 use App\Models\RequestAdditionalItemModal;
@@ -44,6 +45,15 @@ class RequestsController extends Controller
         $request = RequestsModel::select('id')->where('table', $data['table'])->where('client_name', $data['client'])->first();
 
         if (RequestsItemsModel::where('request_id', $request->id)->where('status', 1)->update(['waiter' => session('user')['name'], 'status' => 2])) {
+            event(new notificationNewRequest([
+                'notify' => 1,
+                'type' => 'bootbox',
+                'title' => 'NOVO PEDIDO',
+                'messege' => 'Há um novo pedido na MESA #' . $data['table'] . ' para ' . strtoupper($data['client']),
+                'size' => 'medium',
+                'centervertical' => 1,
+                'user_destination' => session('user')['id'],
+            ]));
             return 'success';
         } else {
             return 'not-send';
@@ -179,6 +189,56 @@ class RequestsController extends Controller
 
         return json_encode($json_data); //enviar dados como formato json
     }
+    public function request_client_tool_table(Request $request)
+    {
+        $requestData = $request->all();
+        $columns = array(
+            0 => 'id',
+            1 => 'product_id',
+            2 => 'value',
+            3 => 'status',
+            4 => 'id',
+        );
+
+        if ($requestData['columns'][1]['search']['value']) {
+            $items = RequestsItemsModel::with('product')
+                ->where('request_id', $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'))
+                ->where('status', '>', 1)
+                ->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])
+                ->offset($requestData['start'])
+                ->take($requestData['length'])
+                ->get();
+
+            $rows = RequestsItemsModel::where('request_id', $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'))->where('status', '>', 1)->count();
+
+        } else {
+            $items = array();
+            $rows = 0;
+        }
+
+        $filtered = count($items);
+        $dados = array();
+
+        foreach ($items as $item) {
+            $dado = array();
+            $dado[] = '<img class="img-circle" src="' . asset($item->product->photo_url) . '" alt="" width="35">';
+            $dado[] = $item->product->name;
+            $dado[] = $this->Tools->sum_values_item($item->id);
+            $dado[] = '<button onclick="return additional_item_request(\'' . $this->Tools->hash($item->product_id, 'encrypt') . '\',\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return  delete_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>';
+            // $dado[] = $item->description;'R$' . number_format($item->value, 2, ',', '.')
+            $dados[] = $dado;
+        }
+
+        //Cria o array de informações a serem retornadas para o Javascript
+        $json_data = array(
+            "draw" => intval($requestData['draw']), //para cada requisição é enviado um número como parâmetro
+            "recordsTotal" => intval($filtered), //Quantidade de registros que há no banco de dados
+            "recordsFiltered" => intval($rows), //Total de registros quando houver pesquisa
+            "data" => $dados, //Array de dados completo dos dados retornados da tabela
+        );
+
+        return json_encode($json_data); //enviar dados como formato json
+    }
     public function all_request_table(Request $request)
     {
         $requestData = $request->all();
@@ -212,9 +272,7 @@ class RequestsController extends Controller
                 ->get();
             $rows = RequestsModel::where('status', 1)->count();
         }
-
         $filtered = count($requests);
-
         $dados = array();
         foreach ($requests as $request) {
             $dado = array();
@@ -223,7 +281,7 @@ class RequestsController extends Controller
             $dado[] = $request->table;
             $dado[] = $request->request_items ? 'SIM' : 'NÃO';
             $dado[] = $this->Tools->sum_values_requests($request->id);
-            $dado[] = '<button onclick="return modal_additional_item(\'' . $this->Tools->hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_additional_item(\'' . $this->Tools->hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+            $dado[] = '<button onclick="return requests_client_tool_modal(\'' . $this->Tools->hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-dark" ><i class="fa-solid fa-eye"></i></button> <button onclick="return delete_additional_item(\'' . $this->Tools->hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
             $dados[] = $dado;
         }
 
@@ -253,6 +311,7 @@ class RequestsController extends Controller
                 ->offset($requestData['start'])
                 ->take($requestData['length'])
                 ->get();
+
             $rows = count(ItemModel::where('type_id', $requestData['columns'][1]['search']['value'])->get());
         } else {
             $items = ItemModel::orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])
@@ -268,7 +327,7 @@ class RequestsController extends Controller
             $dado[] = '<img class="img-circle" src="' . asset($item->photo_url) . '" alt="' . $item->name . '" width="35">';
             $dado[] = $item->name;
             $dado[] = 'R$' . number_format($item->value, 2, ',', '.');
-            $dado[] = '<button onclick="return modal_view_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary" ><i class="fa-solid fa-eye"></i></button> <button onclick="return select_amount_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i></button>';
+            $dado[] = '<button onclick="return modal_view_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-dark" ><i class="fa-solid fa-eye"></i></button> <button onclick="return select_amount_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i></button>';
             // $dado[] = $item->description;
             $dados[] = $dado;
         }

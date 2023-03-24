@@ -17237,8 +17237,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
     -ms-flex-align: center;
     align-items: center;
     padding: 0.25rem 0.75rem;
-    color: #6c757d;
-    background-color: rgba(255, 255, 255, 0.85);
+    color: #fff;
     background-clip: padding-box;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     border-top-left-radius: calc(0.25rem - 1px);
@@ -17247,6 +17246,8 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 
 .toast-body {
     padding: 0.75rem;
+    background-color: rgb(255, 255, 255, 0.30);
+    color: #fff;
 }
 
 .modal-open {
@@ -67747,4 +67748,75 @@ a.ui-button:active,
 
 .rotate {
     animation: is-rotating 1s infinite;
+}
+
+
+
+.toast.bg-accent {
+    background-color: #007bff;
+}
+
+.accent-warning .toast.bg-accent {
+    background-color: #f0b400;
+}
+
+.accent-primary .toast.bg-accent {
+    background-color: #007bff;
+}
+
+.accent-orange .toast.bg-accent {
+    background-color: #fd7e14;
+}
+
+.accent-info .toast.bg-accent {
+    background-color: #17a2b8;
+}
+
+.accent-danger .toast.bg-accent {
+    background-color: #f11515;
+}
+
+.accent-success .toast.bg-accent {
+    background-color: #28a745;
+}
+
+.accent-indigo .toast.bg-accent {
+    background-color: #6610f2;
+}
+
+.accent-lightblue .toast.bg-accent {
+    background-color: #3c8dbc;
+}
+
+.accent-navy .toast.bg-accent {
+    background-color: #001f3f;
+}
+
+.accent-purple .toast.bg-accent {
+    background-color: #6f42c1;
+}
+
+.accent-fuchsia .toast.bg-accent {
+    background-color: #f012be;
+}
+
+
+.accent-pink .toast.bg-accent {
+    background-color: #e83e8c;
+}
+
+.accent-maroon .toast.bg-accent {
+    background-color: #d81b60;
+}
+
+.accent-lime .toast.bg-accent {
+    background-color: #01ff70;
+}
+
+.accent-teal .toast.bg-accent {
+    background-color: #20c997;
+}
+
+.accent-olive .toast.bg-accent {
+    background-color: #3d9970;
 }
