@@ -15,8 +15,16 @@ $(function () {
         , "dom": '<"top">rt<"bottom"ip> <"clear" > '
         , "language": {
             "url": window.location.origin + "/plugins/datatables/Portuguese2.json"
-        }
-        , "processing": true
+        },
+        "aoColumnDefs": [{
+            'className': 'text-center',
+            'aTargets': 5
+        },
+        {
+            'sortable': false,
+            'aTargets': 5
+        }],
+        "processing": true
         , "serverSide": true
         , "ajax": {
             "url": window.location.origin + "/administrator/post/table/request/all"
@@ -73,11 +81,7 @@ $(function () {
         , "responsive": true
         , "lengthChange": false
         , "iDisplayLength": 10
-        , "autoWidth": false
-        , "aoColumnDefs": [{
-            'className': 'text-center'
-            , 'aTargets': 3
-        }],
+        , "autoWidth": false,
         "dom": '<"top">rt<"bottom"ip> <"clear">'
         , "language": {
             "url": window.location.origin + "/plugins/datatables/Portuguese2.json"
@@ -101,36 +105,59 @@ $(function () {
             ,
         }
     });
-    $("#client-requests-tool-table").DataTable({
-        "order": [
-            [3, 'asc']
-        ],
+    $("#list-items-equals-table").DataTable({
         "bInfo": false
         , "paging": true
         , "pagingType": 'simple_numbers'
         , "responsive": true
         , "lengthChange": false
         , "iDisplayLength": 10
-        , "autoWidth": false
-        , "aoColumnDefs": [{
-            'className': 'text-center'
-            , 'aTargets': 3
-        }],
+        , "autoWidth": false,
         "dom": '<"top">rt<"bottom"ip> <"clear">'
         , "language": {
             "url": window.location.origin + "/plugins/datatables/Portuguese2.json"
         },
         "aoColumnDefs": [{
             'className': 'text-center',
-            'aTargets': [0, 3]
-        },
-        {
-            'sortable': false,
-            'aTargets': [0, 3]
+            'aTargets': [0, 2, 3]
         }],
         "serverSide": true
         , "ajax": {
-            "url": window.location.origin + "/administrator/post/table/request/client-tool"
+            "url": window.location.origin + "/administrator/post/table/request/list-items-equals"
+            , "type": "POST"
+            , "headers": {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                ,
+            }
+            ,
+        }
+    });
+    $("#client-requests-view-table").DataTable({
+        "order": [
+            [1, 'asc']
+        ],
+        "bInfo": false
+        , "paging": false
+        , "pagingType": 'simple_numbers'
+        , "responsive": true
+        , "lengthChange": false
+        , "iDisplayLength": 10
+        , "autoWidth": false,
+        "dom": '<"top">rt<"bottom"ip> <"clear">'
+        , "language": {
+            "url": window.location.origin + "/plugins/datatables/Portuguese2.json"
+        },
+        "aoColumnDefs": [{
+            'className': 'text-center',
+            'aTargets': [0, 2, 3, 4]
+        },
+        {
+            'sortable': false,
+            'aTargets': [0, 3, 4]
+        }],
+        "serverSide": true
+        , "ajax": {
+            "url": window.location.origin + "/administrator/post/table/request/client-view"
             , "type": "POST"
             , "headers": {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -227,6 +254,15 @@ $('#new-request-modal').on('hide.bs.modal', function () {
     $('#modal-footer').css('display', 'none')
 });
 $('#view-item-modal').on('hide.bs.modal', function () {
+    setTimeout(() => {
+        $('body').addClass('modal-open')
+    }, 500);
+});
+$('#list-items-equals-modal').on('hide.bs.modal', function () {
+    $('#list-items-equals-table').DataTable().clear().draw()
+    $('#requests-table').DataTable().clear().draw()
+    $('#client-requests-view-table').DataTable().clear().draw()
+    $('#requests-client-modal').modal('show')
     setTimeout(() => {
         $('body').addClass('modal-open')
     }, 500);
@@ -441,6 +477,9 @@ $('#save-obs-item-request').on('click', function () {
                         , title: '&nbsp&nbsp Salvo.'
                     });
                     $('#client-requests-table').DataTable().clear().draw()
+                    $('#list-items-equals-table').DataTable().clear().draw()
+                    $('#requests-table').DataTable().clear().draw()
+                    $('#client-requests-view-table').DataTable().clear().draw()
                     $('#observation-item-modal').modal('hide')
                     $('#checkbox-container').empty()
                     $('#obs-additional').summernote('code', '')
@@ -500,6 +539,7 @@ function delete_item_request(id) {
                     , dataType: 'text'
                     , success: function (response) {
                         $('#client-requests-table').DataTable().clear().draw()
+                        $('#list-items-equals-table').DataTable().clear().draw()
                         switch (response) {
                             case 'success':
                                 Toast.fire({
@@ -532,15 +572,50 @@ function delete_item_request(id) {
 }
 
 // PEDIDOS DO CLIENTE
-function requests_client_tool_modal(id, table, client) {
-    $('#client-requests-tool-table').DataTable().column(1).search(id).draw()
-    $('#reqClienttitle').text('MESA #1 - Eduardo')
-    $('#requests-client-modal').modal('show')
+function requests_client_view_modal(id) {
+    const URL = window.location.origin + '/administrator/post/request/client/requests-view'
+    $.ajax({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: URL,
+        type: 'post',
+        data: {
+            id: id,
+        },
+        dataType: 'text',
+        success: function (response) {
+            var data = JSON.parse(response)
+            if (data.pending) {
+                $('.requests').removeClass('active');
+                $('.pending').addClass('active treme');
+            } else {
+                $('.pending').removeClass('active treme');
+                $('.requests').addClass('active');
+            }
+            $('#client-requests-view-table').DataTable().column(1).search(id).column(2).search(data.pending).draw()
+            $('#reqClienttitle').text('MESA #' + data.table + ' - ' + data.client)
+            $('.value-total').text(data.total)
+            $('#requests-client-modal').modal('show')
+        },
+
+    });
+}
+function requests_client_view_table(pending) {
+    $('#client-requests-view-table').DataTable().column(2).search(pending).draw()
 }
 $('#new-request-modal').on('hide.bs.modal', function () {
-    $('#client-requests-tool-table').DataTable().clear().draw()
+    $('#client-requests-view-table').DataTable().clear().draw()
     $('#reqClienttitle').text('')
+    $('.value-total').text('')
 
 });
+function list_items_equals_request(request, item, product) {
+    $('#product_name').text(product)
+    $('#list-items-equals-table').DataTable().column(1).search(request).column(2).search(item).draw()
+    $('#requests-client-modal').modal('hide')
+    $('#list-items-equals-modal').modal('show')
+
+}
+
+
 
 

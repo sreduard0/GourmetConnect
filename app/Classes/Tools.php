@@ -12,7 +12,7 @@ class Tools
         $itemsRequest = RequestsItemsModel::with('additionals')
             ->select('id', 'value')
             ->where('request_id', $id)
-            ->where('status', 2)
+            ->where('status', '>', 1)
             ->get();
 
         $sum = [];
@@ -47,7 +47,7 @@ class Tools
             ->select('id', 'value')
             ->where('request_id', $request)
             ->where('product_id', $item)
-            ->where('status', '>', 2)
+            ->where('status', '>', 1)
             ->get();
 
         $sum = [];

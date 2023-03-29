@@ -6,6 +6,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RequestsController;
+use App\Models\RequestsItemsModel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 // Login routes
@@ -64,18 +66,26 @@ Route::post('administrator/post/request/additional-item/save', [RequestsControll
 //INFORMAÇOES DE PEDIDOS
 Route::post('administrator/post/info/table/client', [RequestsController::class, 'client_table']);
 Route::post('administrator/post/request/item/additionals', [RequestsController::class, 'additionals_items_request']);
+Route::post('administrator/post/request/client/requests-view', [RequestsController::class, 'requests_client_view']);
 
 //TABELAS
 Route::post('administrator/post/table/request/client', [RequestsController::class, 'request_client_table']);
-Route::post('administrator/post/table/request/client-tool', [RequestsController::class, 'request_client_tool_table']);
+Route::post('administrator/post/table/request/client-view', [RequestsController::class, 'request_client_view']);
+Route::post('administrator/post/table/request/list-items-equals', [RequestsController::class, 'list_items_equals']);
 Route::post('administrator/post/table/request/all', [RequestsController::class, 'all_request_table']);
 Route::post('administrator/post/table/request/menu', [RequestsController::class, 'table_menu']);
 
 // NOTIFICAÇÃO
 Route::get('administrator/notification/events', [NotificationController::class, 'notification']);
 Route::get('teste', function () {
-
-    echo 123;
+    $dd = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
+        ->where('request_id', 1)
+        ->where('status', '>', 1)
+        ->groupBy('product_id')
+        ->get();
+    dd(
+        count($dd)
+    );
 
 });
 

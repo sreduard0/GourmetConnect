@@ -32,7 +32,7 @@
                         <th width="30px">Mesa</th>
                         <th width='80px'>Pedido</th>
                         <th width="130px">Valor</th>
-                        <th width="80px">Ações</th>
+                        <th width="110px">Ações</th>
 
                     </tr>
                 </thead>
@@ -136,46 +136,67 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table style="width:100%" id="client-requests-tool-table" class="table table-bordered table-striped">
+                <ul class="nav nav-pills">
+                    <li class="nav-item" onclick="requests_client_view_table(false)"><a class="requests nav-link rounded-pill" href="#requests" data-toggle="tab">Pedidos</a></li>
+                    <li class="nav-item" onclick="requests_client_view_table(true)"><a class="pending nav-link rounded-pill" href="#pending" data-toggle="tab">Pendentes</a></li>
+                </ul>
+                <table style="width:100%" id="client-requests-view-table" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th width="25px">Foto</th>
                             <th>Item</th>
-                            <th width="60px">Valor</th>
-                            <th width="70px">Ações</th>
+                            <th width="30px">Qtd.</th>
+                            <th width="80px">Valor</th>
+                            <th width="30px">Ver</th>
                         </tr>
                     </thead>
                 </table>
-            </div>
-            <div class="modal-footer" id="modal-footer">
-                <div class="col-md-8">
-                    <p class="lead">Amount Due 2/22/2014</p>
-
-
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <th style="width:50%">Subtotal:</th>
-                                    <td>$250.30</td>
-                                </tr>
-                                <tr>
-                                    <th>Tax (9.3%)</th>
-                                    <td>$10.34</td>
-                                </tr>
-                                <tr>
-                                    <th>Shipping:</th>
-                                    <td>$5.80</td>
-                                </tr>
-                                <tr>
-                                    <th>Total:</th>
-                                    <td>$265.24</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="tab-content">
+                    <div class="requests tab-pane" id="requests">
+                        <div class="col-md-5 m-t-10">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th style="width:50%">TOTAL:</th>
+                                            <td class="value-total"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
+                    <div class="pending tab-pane" id="pending">
+                        <button type="button" class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
+                    </div>
+
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+{{-- LISTA DE ITEM DO MESMO TIPO DO PEDIDO --}}
+<div class="modal fade" id="list-items-equals-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="product_name"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table style="width:100%" id="list-items-equals-table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="25px">Foto</th>
+                            <th>Item</th>
+                            <th width="80px">Valor</th>
+                            <th width="60px">Ações</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>

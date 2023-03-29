@@ -23,11 +23,11 @@ source.onmessage = function (event) {
         switch (data.type) {
             case 'bootbox':
                 if ($('.bootbox').is(':visible') == true) {
-                    $('.bootbox-body').append('<hr><h3>' + data.messege + '</h3>')
+                    $('#requests_bootbox').append('<tr data-widget="expandable-table" aria-expanded="false"><td> "NOME" </td></tr><tr class="expandable-body d-none"><td><p class="m-l-30 text-muted">MESA#01 </p><p class="m-l-30 text-muted"> SEILA</p><p class=" m-l-30 text-muted">teste2:  </p></td></tr>')
                 } else {
                     bootbox.confirm({
                         title: '<h2>' + data.title + '</h2>',
-                        message: '<h3>' + data.messege + '</h3>',
+                        message: '<table class="table table-hover"><tbody id="requests_bootbox" ><tr data-widget="expandable-table" aria-expanded="false"><td> "NOME" </td></tr><tr class="expandable-body d-none"><td><p class="m-l-30 text-muted">MESA#01 </p><p class="m-l-30 text-muted"> SEILA</p><p class=" m-l-30 text-muted">teste2:  </p></td></tr></tbody></table>',
                         size: data.size,
                         centerVertical: data.centervertical,
                         buttons: {
