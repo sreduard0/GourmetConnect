@@ -15,10 +15,10 @@ $(function () {
         }
         , "aoColumnDefs": [{
             'className': 'text-center'
-            , 'aTargets': 4
+            , 'aTargets': 5
         }, {
             'sortable': false
-            , 'aTargets': [1, 3]
+            , 'aTargets': [1, 4]
         }]
         , "processing": true
         , "serverSide": true
@@ -77,7 +77,7 @@ $(function () {
         }
         , "aoColumnDefs": [{
             'className': 'text-center'
-            , 'aTargets': 4
+            , 'aTargets': 5
         }]
         , "processing": true
         , "serverSide": true
@@ -199,6 +199,7 @@ function modal_item(id) {
             var data = JSON.parse(response)
             $('#id-product').val(data.id)
             $('#img_product').attr('src', window.location.origin + '/' + data.photo_url)
+            $('#status-product').val(data.status)
             $('#type-product').val(data.type_id)
             $('#name-product').val(data.name)
             $('#value-product').val(money(data.value))
@@ -238,6 +239,7 @@ function modal_additional_item(id) {
             $('#item-menu').val(data.item_id).trigger('change')
             $('#name-additional').val(data.name)
             $('#value-additional').val(money(data.value))
+            $('#status-additional').val(data.status)
             $('#obs-additional').summernote('code', data.description)
             $('#additional-itemLabel').text('EDITAR ITEM ADICIONAL')
             $('#btn-save-additional-item').attr('onclick', 'return edit_additional_item()')

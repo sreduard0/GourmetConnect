@@ -221,7 +221,6 @@ function save_general_settings() {
         timer: 4000
     });
     const formData = new FormData(document.getElementById('form-general-settings'))
-
     // Verificação
     if (formData.get('general-tables') == '') {
         $('#general-tables').addClass('is-invalid');
@@ -229,9 +228,16 @@ function save_general_settings() {
     } else {
         $('#general-tables').removeClass('is-invalid');
     }
+    if ($('#payments').val() == '') {
+        $('.select2-selection').css('border', '1px solid red');
+        return false;
+    } else {
+        $('.select2-selection').removeAttr('style');
+    }
 
     var values = {
         general_tables: formData.get('general-tables').replace(/[._-]/g, ''),
+        methods: $('#payments').val()
     }
 
     const URL = '/administrator/post/save/general-settings'

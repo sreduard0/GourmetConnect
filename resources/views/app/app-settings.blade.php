@@ -6,8 +6,12 @@
 @section('meta')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
+@section('css')
+<link rel="stylesheet" href="{{asset('plugins/select2/css/select2.css')}}">
+@endsection
 @section('script')
 <script src="{{ asset('js/forms-app-settings.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 @endsection
 @section('content')
 <div class="col-12">
@@ -177,11 +181,40 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Formas de pagamento</label>
+                                    <select id="payments" name="payments" class="select2" multiple="multiple" data-placeholder="Formas de pagamento" style="width: 100%;">
+                                        <optgroup label="Cartões de crédito">
+                                            @foreach ($payment_methods as $method)
+                                            @if ($method->group_payment == 'credit_card')
+                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                            @endif
+                                            @endforeach
+                                        </optgroup>
+                                        <optgroup label="Cartões de débito">
+                                            @foreach ($payment_methods as $method)
+                                            @if ($method->group_payment == 'debit_card')
+                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                            @endif
+                                            @endforeach
+
+                                        </optgroup>
+                                        <optgroup label="Outras formas de pagamento">
+                                            @foreach ($payment_methods as $method)
+                                            @if ($method->group_payment == 'other_forms')
+                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                            @endif
+                                            @endforeach
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                     <div class="d-flex justify-content-sm-end">
                         <button class="btn btn-accent rounded-pill" onclick="return save_general_settings()">SALVAR</button>
-
-
                     </div>
                 </div>
             </div>
@@ -189,4 +222,15 @@
     </div>
 
 </div>
+@endsection
+@section('plugins')
+<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+<script>
+    $(function() {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    })
+
+</script>
 @endsection

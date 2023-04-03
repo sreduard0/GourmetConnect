@@ -60,6 +60,7 @@ class MenuController extends Controller
         $item = new ItemModel();
         $item->photo_url = $fileDir . $imageName;
         $item->type_id = $data_save['type_product'];
+        $item->status = $data_save['status_product'];
         $item->name = $data_save['name_product'];
         $item->value = str_replace(',', '.', str_replace('.', '', $data_save['value_product']));
         $item->description = $data_save['obs_product'];
@@ -77,6 +78,7 @@ class MenuController extends Controller
         $item = new AdditionalItemModel();
         $item->item_id = $data_save['item_menu'];
         $item->name = $data_save['name_additional'];
+        $item->status = $data_save['status_additional'];
         $item->value = str_replace(',', '.', str_replace('.', '', $data_save['value_additional']));
         $item->description = $data_save['obs_additional'];
         if ($item->save()) {
@@ -133,6 +135,7 @@ class MenuController extends Controller
             $item->photo_url = $fileDir . $imageName;
         }
         $item->type_id = $data_save['type_product'];
+        $item->status = $data_save['status_product'];
         $item->name = $data_save['name_product'];
         $item->value = str_replace(',', '.', str_replace('.', '', $data_save['value_product']));
         $item->description = $data_save['obs_product'];
@@ -150,6 +153,7 @@ class MenuController extends Controller
         $item = AdditionalItemModel::find($data_save['id']);
         $item->item_id = $data_save['item_menu'];
         $item->name = $data_save['name_additional'];
+        $item->status = $data_save['status_additional'];
         $item->value = str_replace(',', '.', str_replace('.', '', $data_save['value_additional']));
         $item->description = $data_save['obs_additional'];
         if ($item->save()) {
@@ -196,7 +200,7 @@ class MenuController extends Controller
 
     public function info_item(Request $request)
     {
-        return ItemModel::with('type','additionals')->find($this->Tools->hash($request->get('id'), 'decrypt'));
+        return ItemModel::with('type', 'additionals')->find($this->Tools->hash($request->get('id'), 'decrypt'));
     }
 
     public function info_additional_item(Request $request)
@@ -253,8 +257,9 @@ class MenuController extends Controller
             0 => 'id',
             1 => 'id',
             2 => 'name',
-            3 => 'value',
-            4 => 'id',
+            3 => 'status',
+            4 => 'value',
+            5 => 'id',
         );
 
         if ($requestData['columns'][1]['search']['value']) {
@@ -283,6 +288,7 @@ class MenuController extends Controller
                             <img src="' . asset($item->photo_url) . '" alt="' . $item->name . '">
                         </div>';
             $dado[] = $item->name;
+            $dado[] = $item->status ? 'Disponível' : 'Indisponível';
             $dado[] = $item->type->name;
             $dado[] = 'R$' . number_format($item->value, 2, ',', '.');
             $dado[] = '<button onclick="return modal_view_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary" ><i class="fa-solid fa-eye"></i></button> <button onclick="return modal_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
@@ -306,9 +312,10 @@ class MenuController extends Controller
         $columns = array(
             0 => 'id',
             1 => 'name',
-            2 => 'item_id',
-            3 => 'value',
-            4 => 'id',
+            2 => 'status',
+            3 => 'item_id',
+            4 => 'value',
+            5 => 'id',
         );
 
         if ($requestData['columns'][1]['search']['value']) {
@@ -333,10 +340,10 @@ class MenuController extends Controller
             $dado = array();
             $dado[] = "#" . $item->id;
             $dado[] = $item->name;
+            $dado[] = $item->status ? 'Disp.' : 'Ind.';
             $dado[] = $item->item->name;
             $dado[] = 'R$' . number_format($item->value, 2, ',', '.');
             $dado[] = '<button onclick="return modal_additional_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_additional_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
-            // $dado[] = $item->description;
             $dados[] = $dado;
         }
 

@@ -40,7 +40,7 @@ class Tools
         }
         return 'R$' . number_format(array_sum($sum), 2, ',', '.');
     }
-    // SOMA O VALOR DE UM UNICO ITEM
+    // SOMA O VALOR DE  ITEM IGUAIS
     public function sum_values_items_equals($item, $request)
     {
         $items = RequestsItemsModel::with('additionals')

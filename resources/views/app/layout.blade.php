@@ -13,8 +13,7 @@ $app_settings = AppSettingsModel::all()->first();
 
     <link rel="shortcut icon" href="{{ asset($app_settings->logo_url) }}" type="image/x-icon">
     {{-- ==================================== CSS/JS ===================================== --}}
-    {{-- NOTIFICAÇÕES --}}
-    <script type="module" src="{{ asset('js/notification.js') }}"></script>
+
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@200..900&display=swap">
     <!-- Font Awesome -->
@@ -44,7 +43,8 @@ $app_settings = AppSettingsModel::all()->first();
     <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-
+    {{-- NOTIFICAÇÕES --}}
+    <script type="module" src="{{ asset('js/notification.js') }}"></script>
 
     @yield('script')
 

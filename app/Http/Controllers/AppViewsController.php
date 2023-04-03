@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\Tools;
 use App\Models\AppSettingsModel;
 use App\Models\ItemModel;
+use App\Models\PaymentMethodsModel;
+use App\Models\RequestsModel;
 use App\Models\TypeItemModel;
 
 class AppViewsController extends Controller
 {
+    // FERRAMENTAS
+    private $Tools;
+    public function __construct()
+    {
+        $this->Tools = new Tools;
+    }
     public function control_panel()
     {
         return view('app.control-panel');
@@ -20,6 +29,16 @@ class AppViewsController extends Controller
         ];
 
         return view('app.requests', $data);
+    }
+    public function close_request($id)
+    {
+        $data = [
+            'app_settings' => AppSettingsModel::all()->first(),
+            'command' => RequestsModel::find($this->Tools->hash($id, 'decrypt')),
+            'payment_methods' => PaymentMethodsModel::where('active', 1)->get(),
+        ];
+
+        return view('app.close-request', $data);
     }
     public function delivery()
     {
@@ -48,6 +67,7 @@ class AppViewsController extends Controller
     {
         $data = [
             'app_settings' => AppSettingsModel::all()->first(),
+            'payment_methods' => PaymentMethodsModel::all(),
         ];
 
         return view('app.app-settings', $data);

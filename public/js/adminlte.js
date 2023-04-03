@@ -2963,3 +2963,186 @@
 
 })));
 //# sourceMappingURL=adminlte.js.map
+
+
+//IMPRIMIR VIA NOTIFIÇÂO
+function print_request_notification(id) {
+    var Toast = Swal.mixin({
+        toast: true
+        , position: 'top-end'
+        , showConfirmButton: false
+        , timer: 4000
+    });
+    $.ajax({
+        type: "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        dataType: "text",
+        url: window.location.origin + "/administrator/post/request/print",
+        data: {
+            id: id,
+        },
+        success: function (response) {
+            if (response == 'not-exists') {
+                Toast.fire({
+                    icon: 'warning'
+                    , title: '&nbsp&nbsp Não há pedidos pendentes para imprimir.'
+                });
+            } else {
+                window.open().document.write(response);
+                bootbox.confirm({
+                    title: 'Pedido impressso?',
+                    message: 'Remover dos pendentes?',
+                    size: 'small',
+                    buttons: {
+                        cancel: {
+                            label: 'Não',
+                            className: 'btn-secondary'
+                        },
+                        confirm: {
+                            label: 'Sim',
+                            className: 'btn-accent'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.ajax({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                }
+                                , url: window.location.origin + '/administrator/post/request/print/confirm'
+                                , type: 'post'
+                                , data: {
+                                    id: id,
+                                }
+                                , dataType: 'text'
+                                , success: function () {
+                                    if (window.location.pathname == '/administrator/requests') {
+                                        $('#requests-table').DataTable().clear().draw()
+                                        if (id != 'all') {
+                                            // seleciona a tabela pelo ID
+                                            const table = document.getElementById('requests_bootbox');
+                                            // conta o número de linhas na tabela
+                                            const count = table.getElementsByTagName('tr').length;
+                                            if (count > 2) {
+                                                $('.' + id).remove()
+                                            } else {
+                                                $('.bootbox').modal('hide')
+                                            }
+                                        }
+                                    }
+                                }
+                                , error: function () {
+                                    Toast.fire({
+                                        icon: 'error'
+                                        , title: '&nbsp&nbsp Erro na rede.'
+                                    });
+                                }
+                            });
+                        } else {
+                            setTimeout(() => {
+                                $('body').addClass('modal-open')
+                            }, 500)
+                        }
+                    }
+                });
+
+            }
+        },
+        error: function () {
+            Toast.fire({
+                icon: 'error'
+                , title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
+}
+
+function print_all_request_notification() {
+    var Toast = Swal.mixin({
+        toast: true
+        , position: 'top-end'
+        , showConfirmButton: false
+        , timer: 4000
+    });
+    $.ajax({
+        type: "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        dataType: "text",
+        url: window.location.origin + "/administrator/post/request/print",
+        data: '',
+        success: function (response) {
+            if (response == 'not-exists') {
+                Toast.fire({
+                    icon: 'warning'
+                    , title: '&nbsp&nbsp Não há pedidos pendentes para imprimir.'
+                });
+            } else {
+                window.open().document.write(response);
+                bootbox.confirm({
+                    title: 'Pedido impressso?',
+                    message: 'Remover dos pendentes?',
+                    size: 'small',
+                    buttons: {
+                        cancel: {
+                            label: 'Não',
+                            className: 'btn-secondary'
+                        },
+                        confirm: {
+                            label: 'Sim',
+                            className: 'btn-accent'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.ajax({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                }
+                                , url: window.location.origin + '/administrator/post/request/print/confirm'
+                                , type: 'post'
+                                , data: { id: id }
+                                , dataType: 'text'
+                                , success: function () {
+                                    if (window.location.pathname == '/administrator/requests') {
+                                        $('#requests-table').DataTable().clear().draw()
+                                        // seleciona a tabela pelo ID
+                                        const table = document.getElementById('requests_bootbox');
+                                        // conta o número de linhas na tabela
+                                        const count = table.getElementsByTagName('tr').length;
+                                        if (count > 2) {
+                                            $('.' + id).remove()
+                                        } else {
+                                            $('.bootbox').modal('hide')
+                                        }
+
+                                    }
+                                }
+                                , error: function () {
+                                    Toast.fire({
+                                        icon: 'error'
+                                        , title: '&nbsp&nbsp Erro na rede.'
+                                    });
+                                }
+                            });
+                        } else {
+                            setTimeout(() => {
+                                $('body').addClass('modal-open')
+                            }, 500)
+                        }
+                    }
+                });
+
+            }
+        },
+        error: function () {
+            Toast.fire({
+                icon: 'error'
+                , title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
+}

@@ -38,6 +38,12 @@
                 </thead>
             </table>
         </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-end row">
+                <button class="btn btn-accent rounded-pill btnres" onclick="print_request_notification('all')"><strong>IMPRIMIR PENDENTES</strong></button>
+            </div>
+        </div>
+
     </div>
 </div>
 @endsection
@@ -167,7 +173,8 @@
                         </div>
                     </div>
                     <div class="pending tab-pane" id="pending">
-                        <button type="button" class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
+                        <input type="hidden" id="print_id">
+                        <button type="button" onclick='print_request()' class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
                     </div>
 
                 </div>
@@ -192,6 +199,7 @@
                         <tr>
                             <th width="25px">Foto</th>
                             <th>Item</th>
+                            <th width="110px">Garçom</th>
                             <th width="80px">Valor</th>
                             <th width="60px">Ações</th>
                         </tr>

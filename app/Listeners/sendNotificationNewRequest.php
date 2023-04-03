@@ -12,6 +12,7 @@ class sendNotificationNewRequest
         $notification = [
             'notify' => $response->data['notify'],
             'type' => $response->data['type'],
+            'request_id' => $response->data['request_id'],
             'title' => $response->data['title'],
             'messege' => $response->data['messege'],
             'size' => $response->data['size'],

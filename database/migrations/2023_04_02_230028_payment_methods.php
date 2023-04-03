@@ -6,22 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('payment_methods', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('type_id');
-            $table->integer('status');
-            $table->string('photo_url', 255);
             $table->string('name', 255);
-            $table->decimal('value', 10, 2);
-            $table->text('description')->nullable();
+            $table->string('group_payment', 255);
+            $table->integer('active');
             $table->timestamps();
         });
     }
 
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('payment_methods');
     }
 };

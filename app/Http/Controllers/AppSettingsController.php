@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AppSettingsModel;
+use App\Models\PaymentMethodsModel;
 use Illuminate\Http\Request;
 
 class AppSettingsController extends Controller
@@ -37,13 +38,22 @@ class AppSettingsController extends Controller
     public function save_general_settings(Request $request)
     {
         $data = $request->all();
-        $save_data = AppSettingsModel::all()->first();
-        $save_data->number_tables = str_replace(['/', '.', '-', '_'], '', $data['general_tables']);
-        $save_data->save();
+        if ($data['general_tables']) {
+            $save_data = AppSettingsModel::all()->first();
+            $save_data->number_tables = str_replace(['/', '.', '-', '_'], '', $data['general_tables']);
+            $save_data->save();
+        }
+        if ($data['methods']) {
+            PaymentMethodsModel::select('active')->update(['active' => 0]);
+            PaymentMethodsModel::whereIn('id', $data['methods'])->update(['active' => 1]);
+        }
+
         return 'success';
     }
     public function installation()
     {
+        // EXECUTAR MIGRATES
+        // CONFIGURAÇÕES
         if (!AppSettingsModel::all()->first()) {
             $save_data = new AppSettingsModel();
             $save_data->logo_url = 'img\gourmetconnect-logo\gourmetconnect.png';
@@ -61,5 +71,7 @@ class AppSettingsController extends Controller
             $save_data->save();
             return 'success';
         }
+        // USUARIOS
+        // FORMAS DE PAGAMENTO
     }
 }

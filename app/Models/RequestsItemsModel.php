@@ -13,7 +13,7 @@ class RequestsItemsModel extends Model
     }
     public function additionals()
     {
-        return $this->hasMany('App\Models\RequestAdditionalItemModal', 'item_id', 'id');
+        return $this->hasMany('App\Models\RequestAdditionalItemModal', 'item_id', 'id')->with('info');
     }
     use HasFactory;
     protected $table = 'request_items';

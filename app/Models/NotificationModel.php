@@ -14,6 +14,7 @@ class NotificationModel extends Model
         'notify',
         'type',
         'title',
+        'request_id',
         'messege',
         'size',
         'centervertical',

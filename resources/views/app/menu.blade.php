@@ -37,6 +37,7 @@
                         <th width="30px">Cod.</th>
                         <th width="40px">Foto</th>
                         <th>Item</th>
+                        <th width="130px">Status</th>
                         <th width="130px">Tipo</th>
                         <th width="100px">Valor</th>
                         <th width="90px">Ações</th>
@@ -92,6 +93,7 @@
                     <tr>
                         <th class="mx-auto" style="width: 10px">#</th>
                         <th>Adicional</th>
+                        <th style="width: 50px">Status</th>
                         <th>Produto</th>
                         <th>Valor</th>
                         <th style="width: 50px">Ações</th>
@@ -184,7 +186,15 @@
                     <input type="hidden" name="id-product" id="id-product">
                     <input type="hidden" name="img-product" id="img-product-crop">
                     <div class="row">
-
+                        <div class="form-group col">
+                            <label for="status-product">Status <span style="color:red">*</span></label>
+                            <select id="status-product" name="status-product" class="form-control" style="width:100%">
+                                <option selected value="1">Disponível</option>
+                                <option value="0">Indisponível</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="form-group col">
                             <label for="type-product">Tipo <span style="color:red">*</span></label>
                             <select id="type-product" name="type-product" class="form-control" style="width:100%">
@@ -244,6 +254,16 @@
                 </div>
                 <form id="form-additional-item">
                     <input type="hidden" name="id_additional_item" id="id_additional_item">
+                    <div class="row">
+                        <div class="form-group col">
+                            <label for="status-additional">Status <span style="color:red">*</span></label>
+                            <select id="status-additional" name="status-additional" class="form-control" style="width:100%">
+                                <option selected value="1">Disponível</option>
+                                <option value="0">Indisponível</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="form-group col">
                             <label for="item-menu">Item <span style="color:red">*</span></label>

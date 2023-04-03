@@ -3,7 +3,7 @@
 $(function () {
     $("#requests-table").DataTable({
         "order": [
-            [2, 'asc']
+            [3, 'desc']
         ],
         "bInfo": false
         , "paging": true
@@ -119,7 +119,7 @@ $(function () {
         },
         "aoColumnDefs": [{
             'className': 'text-center',
-            'aTargets': [0, 2, 3]
+            'aTargets': [0, 3, 4]
         }],
         "serverSide": true
         , "ajax": {
@@ -166,6 +166,48 @@ $(function () {
             ,
         }
     });
+    $("#client-requests-payment-table").DataTable({
+        "order": [
+            [1, 'asc']
+        ],
+        "bInfo": false
+        , "paging": false
+        , "pagingType": 'simple_numbers'
+        , "responsive": true
+        , "lengthChange": false
+        , "iDisplayLength": 10
+        , "autoWidth": false,
+        "dom": '<"top">rt<"bottom"ip> <"clear">'
+        , "language": {
+            "url": window.location.origin + "/plugins/datatables/Portuguese2.json"
+        },
+        "aoColumnDefs": [{
+            'className': 'text-center',
+            'aTargets': [0, 3, 4, 5]
+        },
+        {
+            'sortable': false,
+            'aTargets': [0, 1, 4, 5]
+        }],
+        "serverSide": true
+        , "ajax": {
+            "url": window.location.origin + "/administrator/post/table/request/client-payment/" + $('#print_id').val()
+            , "type": "POST"
+            , "headers": {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                ,
+            }
+            ,
+        }
+    });
+    // var minhaTabela = $('#minha-tabela');
+
+    //         // Calcula o número de linhas e colunas da tabela
+    //         var numLinhas = minhaTabela.find('tbody tr').length;
+    //         var numColunas = minhaTabela.find('thead th').length;
+
+    //         // Define a largura da tabela com base no número de linhas e colunas
+    //         minhaTabela.css('width', (numColunas * 100) + "px");
 });
 
 // SELEÇÃO DE MESA E CLIENTE
@@ -272,7 +314,22 @@ $('#observation-item-modal').on('hide.bs.modal', function () {
         $('body').addClass('modal-open')
     }, 500);
 });
-
+// SOMA PEDIDOS DO CLIENTE
+function sum_requests_client(id) {
+    const URL = window.location.origin + '/administrator/post/sum/request/client-payment'
+    $.ajax({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: URL,
+        type: 'post',
+        data: {
+            id: id,
+        },
+        dataType: 'text',
+        success: function (data) {
+            $('.value-total').text(data)
+        },
+    });
+}
 // ADICIONAR ITEM NO PEDIDO
 function select_amount_item(item) {
     bootbox.prompt({
@@ -483,8 +540,8 @@ $('#save-obs-item-request').on('click', function () {
                     $('#observation-item-modal').modal('hide')
                     $('#checkbox-container').empty()
                     $('#obs-additional').summernote('code', '')
-
                     $('#request_id').val('')
+                    sum_requests_client($('#print_id').val())
                     break;
                 case 'not-save':
                     Toast.fire({
@@ -542,6 +599,7 @@ function delete_item_request(id) {
                         $('#list-items-equals-table').DataTable().clear().draw()
                         switch (response) {
                             case 'success':
+                                sum_requests_client($('#print_id').val())
                                 Toast.fire({
                                     icon: 'success'
                                     , title: '&nbsp&nbsp Item excluído.'
@@ -594,6 +652,7 @@ function requests_client_view_modal(id) {
             $('#client-requests-view-table').DataTable().column(1).search(id).column(2).search(data.pending).draw()
             $('#reqClienttitle').text('MESA #' + data.table + ' - ' + data.client)
             $('.value-total').text(data.total)
+            $('#print_id').val(id)
             $('#requests-client-modal').modal('show')
         },
 
@@ -608,12 +667,136 @@ $('#new-request-modal').on('hide.bs.modal', function () {
     $('.value-total').text('')
 
 });
-function list_items_equals_request(request, item, product) {
+function list_items_equals_request(request, item, product, status) {
     $('#product_name').text(product)
-    $('#list-items-equals-table').DataTable().column(1).search(request).column(2).search(item).draw()
+    $('#list-items-equals-table').DataTable().column(1).search(request).column(2).search(item).column(3).search(status).draw()
     $('#requests-client-modal').modal('hide')
     $('#list-items-equals-modal').modal('show')
 
+}
+function delete_request(id) {
+    bootbox.confirm({
+        title: 'Tem certeza que deseja excluir essa comanda?',
+        message: '<p class="text-danger"> <strong>ESTA AÇÃO NÃO PODE SER DESFEITA</strong></p><p>Ao excluir esta comanda você apagará todos itens pendentes ou não.</p>',
+        // size: 'small',
+        buttons: {
+            cancel: {
+                label: 'CANCELAR',
+                className: 'btn-secondary'
+            },
+            confirm: {
+                label: 'EXCLUIR',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                    , url: window.location.origin + '/administrator/post/request/delete'
+                    , type: 'post'
+                    , data: { id: id }
+                    , dataType: 'text'
+                    , success: function (response) {
+                        $('#requests-table').DataTable().clear().draw()
+                        Toast.fire({
+                            icon: 'success'
+                            , title: '&nbsp&nbsp Comanda excluída.'
+                        });
+                    }
+                    , error: function () {
+                        Toast.fire({
+                            icon: 'error'
+                            , title: '&nbsp&nbsp Erro na rede.'
+                        });
+                    }
+                });
+            }
+        }
+    });
+}
+function print_request() {
+    var Toast = Swal.mixin({
+        toast: true
+        , position: 'top-end'
+        , showConfirmButton: false
+        , timer: 4000
+    });
+    $.ajax({
+        type: "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        dataType: "text",
+        url: window.location.origin + "/administrator/post/request/print",
+        data: { id: $('#print_id').val() },
+        success: function (response) {
+            if (response == 'not-exists') {
+                Toast.fire({
+                    icon: 'warning'
+                    , title: '&nbsp&nbsp Não há pedidos pendentes para imprimir.'
+                });
+            } else {
+                window.open().document.write(response);
+                bootbox.confirm({
+                    title: 'Pedido impressso?',
+                    message: 'Remover dos pendentes?',
+                    size: 'small',
+                    buttons: {
+                        cancel: {
+                            label: 'Não',
+                            className: 'btn-secondary'
+                        },
+                        confirm: {
+                            label: 'Sim',
+                            className: 'btn-accent'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.ajax({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                }
+                                , url: window.location.origin + '/administrator/post/request/print/confirm'
+                                , type: 'post'
+                                , data: { id: $('#print_id').val() }
+                                , dataType: 'text'
+                                , success: function (response) {
+                                    $('#requests-table').DataTable().clear().draw()
+                                    $('#requests-client-modal').modal('hide');
+                                }
+                                , error: function () {
+                                    Toast.fire({
+                                        icon: 'error'
+                                        , title: '&nbsp&nbsp Erro na rede.'
+                                    });
+                                }
+                            });
+                        } else {
+                            setTimeout(() => {
+                                $('body').addClass('modal-open')
+                            }, 500)
+                        }
+                    }
+                });
+
+            }
+        },
+        error: function () {
+            Toast.fire({
+                icon: 'error'
+                , title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
+
+}
+//PAGAMENTO
+function payment_type_modal() {
+    $('#payment-type-modal').modal('show');
 }
 
 

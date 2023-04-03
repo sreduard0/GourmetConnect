@@ -42,74 +42,70 @@ $(function () {
 
 });
 
+// $('.date').datetimepicker({
+//     timePicker: true,
+//     timePickerIncrement: 30,
+//     format: 'DD-MM-YYYY HH:mm',
+//     locale: 'pt-br',
+//     icons: { time: 'far fa-clock' }
+// });
 
+// $('.datet').datetimepicker({
+//     format: 'DD-MM-YYYY',
+//     locale: 'pt-br',
+// });
 
-
-
-$('.date').datetimepicker({
-    timePicker: true,
-    timePickerIncrement: 30,
-    format: 'DD-MM-YYYY HH:mm',
-    locale: 'pt-br',
-    icons: { time: 'far fa-clock' }
-});
-
-$('.datet').datetimepicker({
-    format: 'DD-MM-YYYY',
-    locale: 'pt-br',
-});
-
-$('[data-mask]').inputmask()
+// $('[data-mask]').inputmask()
 
 
 //Date and time picker
-$('.time').datetimepicker({
-    timePicker: true,
-    timePickerIncrement: 30,
-    locale: {
-        format: 'DD-MM-YYYY'
-    }
-})
+// $('.time').datetimepicker({
+    // timePicker: true,
+    // timePickerIncrement: 30,
+    // locale: {
+    //     format: 'DD-MM-YYYY'
+    // }
+// })
 
 
 //Date range picker
-moment.locale('pt-br');
-$('#betweenDate').daterangepicker({
-    locale: {
-        "format": "DD-MM-YYYY",
-        "separator": " > ",
-        "applyLabel": "Aplicar",
-        "cancelLabel": "Cancelar",
-        "fromLabel": "De",
-        "toLabel": "Até",
-        "customRangeLabel": "Custom",
-        "daysOfWeek": [
-            "Dom",
-            "Seg",
-            "Ter",
-            "Qua",
-            "Qui",
-            "Sex",
-            "Sáb"
-        ],
-        "monthNames": [
-            "Janeiro",
-            "Fevereiro",
-            "Março",
-            "Abril",
-            "Maio",
-            "Junho",
-            "Julho",
-            "Agosto",
-            "Setembro",
-            "Outubro",
-            "Novembro",
-            "Dezembro"
-        ],
-        "firstDay": 0
-    }
+// moment.locale('pt-br');
+// $('#betweenDate').daterangepicker({
+//     locale: {
+//         "format": "DD-MM-YYYY",
+//         "separator": " > ",
+//         "applyLabel": "Aplicar",
+//         "cancelLabel": "Cancelar",
+//         "fromLabel": "De",
+//         "toLabel": "Até",
+//         "customRangeLabel": "Custom",
+//         "daysOfWeek": [
+//             "Dom",
+//             "Seg",
+//             "Ter",
+//             "Qua",
+//             "Qui",
+//             "Sex",
+//             "Sáb"
+//         ],
+//         "monthNames": [
+//             "Janeiro",
+//             "Fevereiro",
+//             "Março",
+//             "Abril",
+//             "Maio",
+//             "Junho",
+//             "Julho",
+//             "Agosto",
+//             "Setembro",
+//             "Outubro",
+//             "Novembro",
+//             "Dezembro"
+//         ],
+//         "firstDay": 0
+//     }
 
-})
+// })
             //Date range picker with time picker
         // $('#reservationtime').daterangepicker({
         //         timePicker: true,
