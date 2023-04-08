@@ -1,4 +1,9 @@
-
+var Toast = Swal.mixin({
+    toast: true
+    , position: 'top-end'
+    , showConfirmButton: false
+    , timer: 4000
+});
 // TABLES
 $(function () {
     $("#requests-table").DataTable({
@@ -200,6 +205,39 @@ $(function () {
             ,
         }
     });
+    $("#split-payment-table").DataTable({
+        "order": [
+            [1, 'asc']
+        ],
+        "bInfo": false
+        , "paging": false
+        , "responsive": true
+        , "lengthChange": false
+        , "iDisplayLength": 10
+        , "autoWidth": false,
+        "dom": '<"top">rt<"bottom"ip> <"clear">'
+        , "language": {
+            "url": window.location.origin + "/plugins/datatables/Portuguese2.json"
+        },
+        "aoColumnDefs": [{
+            'className': 'text-center',
+            'aTargets': [0, 3]
+        },
+        {
+            'sortable': false,
+            'aTargets': [0, 2, 3]
+        }],
+        "serverSide": true
+        , "ajax": {
+            "url": window.location.origin + "/administrator/post/table/request/split-payment"
+            , "type": "POST"
+            , "headers": {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                ,
+            }
+            ,
+        }
+    })
     // var minhaTabela = $('#minha-tabela');
 
     //         // Calcula o número de linhas e colunas da tabela
@@ -212,12 +250,6 @@ $(function () {
 
 // SELEÇÃO DE MESA E CLIENTE
 $('#table-select').on('change', function (event) {
-    var Toast = Swal.mixin({
-        toast: true
-        , position: 'top-end'
-        , showConfirmButton: false
-        , timer: 4000
-    });
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -361,12 +393,6 @@ function select_amount_item(item) {
     });
 }
 function add_item_request(item, amt) {
-    var Toast = Swal.mixin({
-        toast: true
-        , position: 'top-end'
-        , showConfirmButton: false
-        , timer: 4000
-    });
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -405,12 +431,7 @@ function filter_all_requests() {
 }
 // ENVIAR PEDIDO
 $('#send-request').on('click', function (event) {
-    var Toast = Swal.mixin({
-        toast: true
-        , position: 'top-end'
-        , showConfirmButton: false
-        , timer: 4000
-    });
+
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -451,12 +472,6 @@ $('#send-request').on('click', function (event) {
 })
 // ADICIONAIS E OBSERVAÇÃO
 function additional_item_request(product_id, request_id) {
-    var Toast = Swal.mixin({
-        toast: true
-        , position: 'top-end'
-        , showConfirmButton: false
-        , timer: 4000
-    });
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -492,12 +507,6 @@ function additional_item_request(product_id, request_id) {
 }
 // SALVAS OBS E ADICIONAIS
 $('#save-obs-item-request').on('click', function () {
-    var Toast = Swal.mixin({
-        toast: true
-        , position: 'top-end'
-        , showConfirmButton: false
-        , timer: 4000
-    });
     var inputs = {};
     $('#form-add-additional :input').each(function () {
         if ($(this).prop('checked')) {
@@ -561,12 +570,6 @@ $('#save-obs-item-request').on('click', function () {
 })
 // APAGAR PEDIDO
 function delete_item_request(id) {
-    var Toast = Swal.mixin({
-        toast: true
-        , position: 'top-end'
-        , showConfirmButton: false
-        , timer: 4000
-    });
     bootbox.confirm({
         title: 'Excluir item do pedido',
         message: 'Deseja mesmo excluir?',
@@ -718,12 +721,7 @@ function delete_request(id) {
     });
 }
 function print_request() {
-    var Toast = Swal.mixin({
-        toast: true
-        , position: 'top-end'
-        , showConfirmButton: false
-        , timer: 4000
-    });
+
     $.ajax({
         type: "POST",
         headers: {
@@ -795,10 +793,227 @@ function print_request() {
 
 }
 //PAGAMENTO
-function payment_type_modal() {
+function payment_type_modal(action = '') {
+    if (action) {
+        const formData = new FormData(document.getElementById('form-split-payment'))
+        if (formData.getAll('item') == '') {
+            Toast.fire({
+                icon: 'warning'
+                , title: '&nbsp&nbsp Selecione pelo menos um item.'
+            });
+            return false;
+        }
+        $('#split-payment-modal').modal('hide');
+        $('#split-payment-select').val(1);
+    }
     $('#payment-type-modal').modal('show');
 }
 
+function finalize_payment() {
 
+    if ($('#print_id').val() == '') {
+        Toast.fire({
+            icon: 'warning'
+            , title: '&nbsp&nbsp Atualize a  pagina e tente novamente'
+        });
+        return false;
+    }
+    if ($('#payment-type').val() == null) {
+        $('#payment-type').addClass('is-invalid');
+        return false;
+    } else {
+        $('#payment-type').removeClass('is-invalid');
+    }
+
+    $('#payment-type-modal').modal('hide');
+
+    //
+    // SOLICITA CPF AQUI
+    //
+    var split_payment = {
+        active: false,
+    }
+    if ($('#split-payment-select').val()) {
+        const formData = new FormData(document.getElementById('form-split-payment'))
+        split_payment = {
+            active: true,
+            items: formData.getAll('item')
+        }
+    }
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+        , url: window.location.origin + '/administrator/post/request/finalize-payment'
+        , type: 'post'
+        , data: {
+            id: $('#print_id').val(),
+            method: $('#payment-type').val(),
+            cpf: '',
+            split_payment: split_payment
+
+        }
+        , dataType: 'text'
+        , success: function (status) {
+            if (status) {
+                bootbox.prompt({
+                    title: 'COMANDA FINALIZADA',
+                    message: '<p>Escolha como o cliente ira receber sua nota fiscal.</p>',
+                    inputType: 'select',
+                    inputOptions: [{
+                        text: 'Não quer',
+                        value: 1
+                    },
+                    {
+                        text: 'Email',
+                        value: 2
+                    },
+                    {
+                        text: 'WhatsApp',
+                        value: 3
+                    },
+                    {
+                        text: 'Impresso',
+                        value: 4,
+                    }
+                    ],
+                    buttons: {
+                        cancel: {
+                            label: '',
+                            className: 'd-none'
+                        },
+                        confirm: {
+                            label: 'PRONTO',
+                            className: 'btn-accent'
+                        }
+                    },
+                    callback: function (coupon_send) {
+                        switch (coupon_send) {
+                            case '1':
+                                $.ajax({
+                                    type: "POST",
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    dataType: "text",
+                                    url: window.location.origin + "/administrator/post/request/tax-coupon",
+                                    data: {
+                                        id: $('#print_id').val(),
+                                        action: 'not',
+                                        split_payment: split_payment
+
+                                    },
+                                    success: function (response) {
+                                        Toast.fire({
+                                            icon: 'success'
+                                            , title: '&nbsp&nbsp Pronto, tudo finalizado.'
+                                        });
+                                        $('#split-payment-table').DataTable().clear().draw()
+                                        $('#client-requests-payment-table').DataTable().clear().draw()
+                                        $.get("/administrator/get/info/request/finish/" + $('#print_id').val(),
+                                            function (data) {
+                                                if (data == 'true') {
+                                                    window.location.reload()
+                                                }
+                                            },
+                                        );
+                                    },
+                                    error: function () {
+                                        Toast.fire({
+                                            icon: 'error'
+                                            , title: '&nbsp&nbsp Erro na rede.'
+                                        });
+                                    }
+                                });
+                                break;
+                            case '2':
+
+                                break;
+                            case '3':
+
+                                break;
+                            case '4':
+                                $.ajax({
+                                    type: "POST",
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    dataType: "text",
+                                    url: window.location.origin + "/administrator/post/request/tax-coupon",
+                                    data: {
+                                        id: $('#print_id').val(),
+                                        action: 'print',
+                                        method: $('#payment-type').val(),
+                                        split_payment: split_payment
+
+                                    },
+                                    success: function (response) {
+                                        window.open().document.write(response);
+                                        bootbox.confirm({
+                                            title: 'Cupom impressso?',
+                                            message: 'Necessita imprimir novamente?',
+                                            size: 'small',
+                                            buttons: {
+                                                cancel: {
+                                                    label: 'Não',
+                                                    className: 'btn-secondary'
+                                                },
+                                                confirm: {
+                                                    label: 'Sim',
+                                                    className: 'btn-accent'
+                                                }
+                                            },
+                                            callback: function (action) {
+                                                if (action) {
+                                                    window.open().document.write(response);
+                                                }
+                                                $.get("/administrator/get/info/request/finish/" + $('#print_id').val(),
+                                                    function (data) {
+                                                        if (data == 'true') {
+                                                            window.location.reload()
+                                                        }
+                                                    },
+                                                );
+                                            }
+                                        });
+                                        $('#split-payment-table').DataTable().clear().draw()
+                                        $('#client-requests-payment-table').DataTable().clear().draw()
+                                    },
+                                    error: function () {
+                                        Toast.fire({
+                                            icon: 'error'
+                                            , title: '&nbsp&nbsp Erro na rede.'
+                                        });
+                                    }
+                                });
+                                break;
+                        }
+
+                    }
+                }).find('select').val(4);
+            }
+            $('#split-payment-select').val('')
+        }
+        , error: function () {
+            Toast.fire({
+                icon: 'error'
+                , title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
+}
+function split_payment_modal() {
+    const formData = new FormData(document.getElementById('form-split-payment'))
+    if (formData.getAll('item') == '') {
+        $('#split-payment-table').DataTable().column(1).search($('#print_id').val()).draw()
+    }
+    $('#split-payment-modal').modal('show')
+    setTimeout(() => {
+        $("#split-payment-table").DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+    }, 200);
+}
 
 

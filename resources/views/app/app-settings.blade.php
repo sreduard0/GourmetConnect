@@ -11,7 +11,6 @@
 @endsection
 @section('script')
 <script src="{{ asset('js/forms-app-settings.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 @endsection
 @section('content')
 <div class="col-12">
@@ -71,11 +70,11 @@
                             <div class="form-group col-md-1">
                                 <label for="establishment-state">UF <span style="color:red">*</span></label>
                                 <input value="{{ $app_settings->state }}" minlength="2" maxlength="200" id="establishment-state" name="establishment-state" type="text" class="form-control" placeholder="EX: RS">
-
-
-
                             </div>
-
+                            <div class="form-group col-md-3">
+                                <label for="establishment-cep">UF <span style="color:red">*</span></label>
+                                <input value="{{ $app_settings->cep }}" minlength="2" maxlength="10" id="establishment-cep" name="establishment-cep" type="text" class="form-control" data-inputmask="'mask':'99.999-999'" data-mask="" inputmode="text" placeholder="EX: 92.480-000">
+                            </div>
                         </div>
                     </form>
                     <div class="d-flex justify-content-sm-end">
@@ -185,7 +184,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Formas de pagamento</label>
-                                    <select id="payments" name="payments" class="select2" multiple="multiple" data-placeholder="Formas de pagamento" style="width: 100%;">
+                                    <select id="payments" name="payments" class="select-payments" multiple="multiple" data-placeholder="Formas de pagamento" style="width: 100%;">
                                         <optgroup label="Cartões de crédito">
                                             @foreach ($payment_methods as $method)
                                             @if ($method->group_payment == 'credit_card')
@@ -225,12 +224,4 @@
 @endsection
 @section('plugins')
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-<script src="{{ asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-<script>
-    $(function() {
-        //Initialize Select2 Elements
-        $('.select2').select2()
-    })
-
-</script>
 @endsection

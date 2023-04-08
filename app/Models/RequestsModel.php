@@ -15,4 +15,6 @@ class RequestsModel extends Model
     use HasFactory;
     protected $table = 'requests';
     protected $primarykey = 'id';
+    protected $fillable = ['status'];
+
 }

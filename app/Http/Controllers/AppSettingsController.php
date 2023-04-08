@@ -19,6 +19,7 @@ class AppSettingsController extends Controller
         $save_data->neighborhood = $data['establishment_neighborhood'];
         $save_data->city = $data['establishment_city'];
         $save_data->state = $data['establishment_state'];
+        $save_data->cep = str_replace(['.', '-', '_'], '', $data['establishment_cep']);
         $save_data->save();
         return 'success';
 

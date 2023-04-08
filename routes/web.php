@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RequestsController;
+use App\Models\RequestsItemsModel;
 use Illuminate\Support\Facades\Route;
 
 // Login routes
@@ -28,7 +29,7 @@ Route::post('administrator/post/save/establishment-settings', [AppSettingsContro
 Route::post('administrator/post/save/theme-settings', [AppSettingsController::class, 'save_theme_settings']);
 Route::post('administrator/post/save/general-settings', [AppSettingsController::class, 'save_general_settings']);
 
-//APP ROUTES CARDÁPIO
+// APP ROUTES CARDÁPIO
 // CRIAR
 Route::post('administrator/post/save/menu/type/new', [MenuController::class, 'save_new_type_item']);
 Route::post('administrator/post/save/menu/item/new', [MenuController::class, 'save_new_item']);
@@ -47,6 +48,8 @@ Route::post('administrator/post/info/menu/item', [MenuController::class, 'info_i
 Route::post('administrator/post/info/menu/additional-item', [MenuController::class, 'info_additional_item']);
 Route::get('administrator/get/info/menu/types', [MenuController::class, 'all_types']);
 Route::get('administrator/get/info/menu/items', [MenuController::class, 'all_items']);
+Route::get('administrator/get/info/menu/types', [MenuController::class, 'all_types']);
+
 // TABELAS
 Route::post('administrator/post/table/menu/type', [MenuController::class, 'table_type_item']);
 Route::post('administrator/post/table/menu/items', [MenuController::class, 'table_item']);
@@ -68,6 +71,12 @@ Route::post('administrator/post/request/print/confirm', [RequestsController::cla
 Route::post('administrator/post/info/table/client', [RequestsController::class, 'client_table']);
 Route::post('administrator/post/request/item/additionals', [RequestsController::class, 'additionals_items_request']);
 Route::post('administrator/post/request/client/requests-view', [RequestsController::class, 'requests_client_view']);
+Route::get('administrator/get/info/request/finish/{id}', [RequestsController::class, 'request_finish']);
+Route::post('administrator/post/info/request/item', [RequestsController::class, 'view_item_request']);
+
+// PAGAMENTO
+Route::post('administrator/post/request/finalize-payment', [RequestsController::class, 'finalize_payment']);
+Route::post('administrator/post/request/tax-coupon', [RequestsController::class, 'tax_coupon']);
 
 //TABELAS
 Route::post('administrator/post/table/request/client', [RequestsController::class, 'request_client_table']);
@@ -77,11 +86,16 @@ Route::post('administrator/post/sum/request/client-payment', [RequestsController
 Route::post('administrator/post/table/request/list-items-equals', [RequestsController::class, 'list_items_equals']);
 Route::post('administrator/post/table/request/all', [RequestsController::class, 'all_request_table']);
 Route::post('administrator/post/table/request/menu', [RequestsController::class, 'table_menu']);
+Route::post('administrator/post/table/request/split-payment', [RequestsController::class, 'split_payment_table']);
+
+// APP ROUTES DELIVERY
 
 // NOTIFICAÇÃO
 Route::get('administrator/notification/events', [NotificationController::class, 'notification']);
 Route::post('administrator/notification/events/requests', [NotificationController::class, 'new_request_notification']);
+
 Route::get('teste', function () {
+    dd(RequestsItemsModel::find(24));
 
 });
 

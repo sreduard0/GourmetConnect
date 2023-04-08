@@ -17,6 +17,8 @@ return new class extends Migration
             $table->decimal('value', 10, 2);
             $table->text('observation')->nullable();
             $table->integer('status');
+            $table->integer('payment_method')->nullable();
+            $table->integer('print')->nullable();
             $table->timestamps();
         });
     }

@@ -53,8 +53,12 @@ function save_establishment_settings() {
     } else {
         $('#establishment-state').removeClass('is-invalid');
     }
-
-
+    if (formData.get('establishment-cep') == '' || formData.get('establishment-cep').length > 10) {
+        $('#establishment-cep').addClass('is-invalid');
+        return false;
+    } else {
+        $('#establishment-cep').removeClass('is-invalid');
+    }
 
     var values = {
         establishment_name: formData.get('establishment-name'),
@@ -64,6 +68,7 @@ function save_establishment_settings() {
         establishment_neighborhood: formData.get('establishment-neighborhood'),
         establishment_city: formData.get('establishment-city'),
         establishment_state: formData.get('establishment-state'),
+        establishment_cep: formData.get('establishment-cep'),
     }
 
     const URL = '/administrator/post/save/establishment-settings'
@@ -272,4 +277,9 @@ function save_general_settings() {
         }
     });
 }
+$(function () {
+    //Initialize Select2 Elements
+    $('.select-payments').select2()
+})
+
 

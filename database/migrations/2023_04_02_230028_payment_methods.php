@@ -11,6 +11,7 @@ return new class extends Migration
     {
         Schema::create('payment_methods', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('logo_url', 255);
             $table->string('name', 255);
             $table->string('group_payment', 255);
             $table->integer('active');

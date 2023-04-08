@@ -6,6 +6,7 @@ use App\Classes\Tools;
 use App\Models\AppSettingsModel;
 use App\Models\ItemModel;
 use App\Models\PaymentMethodsModel;
+use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
 use App\Models\TypeItemModel;
 
@@ -32,13 +33,19 @@ class AppViewsController extends Controller
     }
     public function close_request($id)
     {
-        $data = [
-            'app_settings' => AppSettingsModel::all()->first(),
-            'command' => RequestsModel::find($this->Tools->hash($id, 'decrypt')),
-            'payment_methods' => PaymentMethodsModel::where('active', 1)->get(),
-        ];
+        if (RequestsModel::where('id', $this->Tools->hash($id, 'decrypt'))->where('status', 1)->first()) {
 
-        return view('app.close-request', $data);
+            $data = [
+                'app_settings' => AppSettingsModel::all()->first(),
+                'command' => RequestsModel::find($this->Tools->hash($id, 'decrypt')),
+                'payment_methods' => PaymentMethodsModel::where('active', 1)->get(),
+                'finalize' => RequestsItemsModel::select('status')->where('request_id', $this->Tools->hash($id, 'decrypt'))->where('status', 3)->first(),
+            ];
+
+            return view('app.close-request', $data);
+        } else {
+            return back();
+        }
     }
     public function delivery()
     {

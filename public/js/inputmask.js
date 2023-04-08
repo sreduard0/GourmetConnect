@@ -55,7 +55,7 @@ $(function () {
 //     locale: 'pt-br',
 // });
 
-// $('[data-mask]').inputmask()
+$('[data-mask]').inputmask()
 
 
 //Date and time picker

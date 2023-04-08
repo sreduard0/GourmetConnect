@@ -6,495 +6,247 @@
 @section('meta')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
+@section('script')
+{{-- CRUD --}}
+@endsection
 @section('content')
 <div class="col-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">ENTREGAS</h3>
+            <div class="d-flex justify-content-between row">
+                <select class="text-center w-250 select-rounded  res col-md-3 m-r-5" id="filter-item-table" class="form-control" onchange="return filter_all_requests()">
+                    <option value='' selected>TODAS LOCAIS</option>
+                </select>
+                <button class="btn btn-accent rounded-pill btnres" onclick="modal_new_request()"><strong>NOVO PEDIDO</strong></button>
+            </div>
         </div>
         <div class="card-body">
-            <table id="example2" class="table table-bordered table-hover">
+            <table id="requests-table" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
+                        <th width="30px">Ord.</th>
+                        <th>Cliente</th>
+                        <th width="30px">Mesa</th>
+                        <th width='80px'>Pedido</th>
+                        <th width="130px">Valor</th>
+                        <th width="110px">Ações</th>
+
                     </tr>
                 </thead>
-                <tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-end row">
+                <button class="btn btn-accent rounded-pill btnres" onclick="print_request_notification('all')"><strong>IMPRIMIR PENDENTES</strong></button>
+            </div>
+        </div>
+
+    </div>
+</div>
+@endsection
+@section('modal')
+{{-- NOVO PEDIDO --}}
+{{-- <div class="modal fade" id="new-request-modal" role="dialog" tabindex="-1" aria-labelledby="newReqLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="type-itemLabel">COMANDA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="div-select-client" class="d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <select class="text-center col select-rounded m-b-10" id="table-select">
+                            <option disabled selected value="">SELECIONE UMA MESA</option>
+                            @for ($t = 1; $t <= $app_settings->number_tables; $t++)
+                                <option value="{{ $t }}">MESA #{{ $t }}</option>
+@endfor
+</select>
+<input minlength="2" maxlength="200" id="client-name" value="" type="text" class="form-control rounded-pill text-center col m-b-10" placeholder="Nome do Cliente ou Nº da comanda">
+<div class="d-flex justify-content-center">
+    <button id="btn-select-request" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-chevron-right fs-35"></i></button>
+</div>
+</div>
+
+</div>
+<div style="display:none" id="div-add-request">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between row">
+                <h3 class="card-title ">CARDÁPIO</h3>
+                <select class=" text-center select-rounded res" id="filter-type-item" name="filter-type-item">
+                    <option disabled selected>BUSQUE POR UM TIPO</option>
+                    <option value="">TODOS</option>
+                    @foreach ($types as $type)
+                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                    @endforeach
+                </select>
+
+            </div>
+        </div>
+        <div class="card-body">
+            <table style="width:100%" id="menu-table" class="table table-bordered table-striped">
+
+                <thead>
                     <tr>
-                        <td>Trident</td>
-                        <td>Internet
-                            Explorer 4.0
-                        </td>
-                        <td>Win 95+</td>
-                        <td> 4</td>
-                        <td>X</td>
+                        <th width='25px'>Foto</th>
+                        <th>Item</th>
+                        <th width='100px'>Valor</th>
+                        <th width='70px'>Ações</th>
                     </tr>
-                    <tr>
-                        <td>Trident</td>
-                        <td>Internet
-                            Explorer 5.0
-                        </td>
-                        <td>Win 95+</td>
-                        <td>5</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td>Trident</td>
-                        <td>Internet
-                            Explorer 5.5
-                        </td>
-                        <td>Win 95+</td>
-                        <td>5.5</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Trident</td>
-                        <td>Internet
-                            Explorer 6
-                        </td>
-                        <td>Win 98+</td>
-                        <td>6</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Trident</td>
-                        <td>Internet Explorer 7</td>
-                        <td>Win XP SP2+</td>
-                        <td>7</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Trident</td>
-                        <td>AOL browser (AOL desktop)</td>
-                        <td>Win XP</td>
-                        <td>6</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Firefox 1.0</td>
-                        <td>Win 98+ / OSX.2+</td>
-                        <td>1.7</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Firefox 1.5</td>
-                        <td>Win 98+ / OSX.2+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Firefox 2.0</td>
-                        <td>Win 98+ / OSX.2+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Firefox 3.0</td>
-                        <td>Win 2k+ / OSX.3+</td>
-                        <td>1.9</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Camino 1.0</td>
-                        <td>OSX.2+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Camino 1.5</td>
-                        <td>OSX.3+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Netscape 7.2</td>
-                        <td>Win 95+ / Mac OS 8.6-9.2</td>
-                        <td>1.7</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Netscape Browser 8</td>
-                        <td>Win 98SE+</td>
-                        <td>1.7</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Netscape Navigator 9</td>
-                        <td>Win 98+ / OSX.2+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Mozilla 1.0</td>
-                        <td>Win 95+ / OSX.1+</td>
-                        <td>1</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Mozilla 1.1</td>
-                        <td>Win 95+ / OSX.1+</td>
-                        <td>1.1</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Mozilla 1.2</td>
-                        <td>Win 95+ / OSX.1+</td>
-                        <td>1.2</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Mozilla 1.3</td>
-                        <td>Win 95+ / OSX.1+</td>
-                        <td>1.3</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Mozilla 1.4</td>
-                        <td>Win 95+ / OSX.1+</td>
-                        <td>1.4</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Mozilla 1.5</td>
-                        <td>Win 95+ / OSX.1+</td>
-                        <td>1.5</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Mozilla 1.6</td>
-                        <td>Win 95+ / OSX.1+</td>
-                        <td>1.6</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Mozilla 1.7</td>
-                        <td>Win 98+ / OSX.1+</td>
-                        <td>1.7</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Mozilla 1.8</td>
-                        <td>Win 98+ / OSX.1+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Seamonkey 1.1</td>
-                        <td>Win 98+ / OSX.2+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Gecko</td>
-                        <td>Epiphany 2.20</td>
-                        <td>Gnome</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Webkit</td>
-                        <td>Safari 1.2</td>
-                        <td>OSX.3</td>
-                        <td>125.5</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Webkit</td>
-                        <td>Safari 1.3</td>
-                        <td>OSX.3</td>
-                        <td>312.8</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Webkit</td>
-                        <td>Safari 2.0</td>
-                        <td>OSX.4+</td>
-                        <td>419.3</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Webkit</td>
-                        <td>Safari 3.0</td>
-                        <td>OSX.4+</td>
-                        <td>522.1</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Webkit</td>
-                        <td>OmniWeb 5.5</td>
-                        <td>OSX.4+</td>
-                        <td>420</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Webkit</td>
-                        <td>iPod Touch / iPhone</td>
-                        <td>iPod</td>
-                        <td>420.1</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Webkit</td>
-                        <td>S60</td>
-                        <td>S60</td>
-                        <td>413</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Presto</td>
-                        <td>Opera 7.0</td>
-                        <td>Win 95+ / OSX.1+</td>
-                        <td>-</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Presto</td>
-                        <td>Opera 7.5</td>
-                        <td>Win 95+ / OSX.2+</td>
-                        <td>-</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Presto</td>
-                        <td>Opera 8.0</td>
-                        <td>Win 95+ / OSX.2+</td>
-                        <td>-</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Presto</td>
-                        <td>Opera 8.5</td>
-                        <td>Win 95+ / OSX.2+</td>
-                        <td>-</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Presto</td>
-                        <td>Opera 9.0</td>
-                        <td>Win 95+ / OSX.3+</td>
-                        <td>-</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Presto</td>
-                        <td>Opera 9.2</td>
-                        <td>Win 88+ / OSX.3+</td>
-                        <td>-</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Presto</td>
-                        <td>Opera 9.5</td>
-                        <td>Win 88+ / OSX.3+</td>
-                        <td>-</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Presto</td>
-                        <td>Opera for Wii</td>
-                        <td>Wii</td>
-                        <td>-</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Presto</td>
-                        <td>Nokia N800</td>
-                        <td>N800</td>
-                        <td>-</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Presto</td>
-                        <td>Nintendo DS browser</td>
-                        <td>Nintendo DS</td>
-                        <td>8.5</td>
-                        <td>C/A<sup>1</sup></td>
-                    </tr>
-                    <tr>
-                        <td>KHTML</td>
-                        <td>Konqureror 3.1</td>
-                        <td>KDE 3.1</td>
-                        <td>3.1</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td>KHTML</td>
-                        <td>Konqureror 3.3</td>
-                        <td>KDE 3.3</td>
-                        <td>3.3</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>KHTML</td>
-                        <td>Konqureror 3.5</td>
-                        <td>KDE 3.5</td>
-                        <td>3.5</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Tasman</td>
-                        <td>Internet Explorer 4.5</td>
-                        <td>Mac OS 8-9</td>
-                        <td>-</td>
-                        <td>X</td>
-                    </tr>
-                    <tr>
-                        <td>Tasman</td>
-                        <td>Internet Explorer 5.1</td>
-                        <td>Mac OS 7.6-9</td>
-                        <td>1</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td>Tasman</td>
-                        <td>Internet Explorer 5.2</td>
-                        <td>Mac OS 8-X</td>
-                        <td>1</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td>Misc</td>
-                        <td>NetFront 3.1</td>
-                        <td>Embedded devices</td>
-                        <td>-</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td>Misc</td>
-                        <td>NetFront 3.4</td>
-                        <td>Embedded devices</td>
-                        <td>-</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>Misc</td>
-                        <td>Dillo 0.8</td>
-                        <td>Embedded devices</td>
-                        <td>-</td>
-                        <td>X</td>
-                    </tr>
-                    <tr>
-                        <td>Misc</td>
-                        <td>Links</td>
-                        <td>Text only</td>
-                        <td>-</td>
-                        <td>X</td>
-                    </tr>
-                    <tr>
-                        <td>Misc</td>
-                        <td>Lynx</td>
-                        <td>Text only</td>
-                        <td>-</td>
-                        <td>X</td>
-                    </tr>
-                    <tr>
-                        <td>Misc</td>
-                        <td>IE Mobile</td>
-                        <td>Windows Mobile 6</td>
-                        <td>-</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td>Misc</td>
-                        <td>PSP browser</td>
-                        <td>PSP</td>
-                        <td>-</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td>Other browsers</td>
-                        <td>All others</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>U</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
-                    </tr>
-                </tfoot>
+                </thead>
             </table>
         </div>
     </div>
-</div>
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between row">
+                <h3 id="title-requests" class="card-title "></h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <table style="width:100%" id="client-requests-table" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th width="25px">Foto</th>
+                        <th>Item</th>
+                        <th width="60px">Valor</th>
+                        <th width="70px">Ações</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
 
+</div>
+</div>
+<div class="modal-footer" id="modal-footer" style="display:none">
+    <button id="send-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>ENVIAR PEDIDO</strong></button>
+</div>
+</div>
+</div>
+</div> --}}
+{{-- PEDIDOS DO CLIENTE --}}
+{{-- <div class="modal fade" id="requests-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reqClienttitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-pills">
+                    <li class="nav-item" onclick="requests_client_view_table(false)"><a class="requests nav-link rounded-pill" href="#requests" data-toggle="tab">Pedidos</a></li>
+                    <li class="nav-item" onclick="requests_client_view_table(true)"><a class="pending nav-link rounded-pill" href="#pending" data-toggle="tab">Pendentes</a></li>
+                </ul>
+                <table style="width:100%" id="client-requests-view-table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="25px">Foto</th>
+                            <th>Item</th>
+                            <th width="30px">Qtd.</th>
+                            <th width="80px">Valor</th>
+                            <th width="30px">Ver</th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="tab-content">
+                    <div class="requests tab-pane" id="requests">
+                        <div class="col-md-5 m-t-10">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th style="width:50%">TOTAL:</th>
+                                            <td class="value-total"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pending tab-pane" id="pending">
+                        <input type="hidden" id="print_id">
+                        <button type="button" onclick='print_request()' class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div> --}}
+{{-- LISTA DE ITEM DO MESMO TIPO DO PEDIDO --}}
+{{-- <div class="modal fade" id="list-items-equals-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="product_name"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table style="width:100%" id="list-items-equals-table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="25px">Foto</th>
+                            <th>Item</th>
+                            <th width="110px">Garçom</th>
+                            <th width="80px">Valor</th>
+                            <th width="60px">Ações</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div> --}}
+{{-- ADICIONAIS E OBS --}}
+{{-- <div class="modal fade" id="observation-item-modal" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="observation-item-modalLabel">ADICIONAIS E OBSERVAÇÕES</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="request_id">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title "><strong>Adicionais</strong></h5>
+                    </div>
+                    <form id="form-add-additional">
+                        <div id="checkbox-container" class="card-body">
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title"> <strong>Observações</strong> </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <textarea name="obs-additional" id="obs-additional" rows="8" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-obs-item-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>SALVAR</strong></button>
+            </div>
+        </div>
+    </div>
+</div> --}}
+@include('app.component.view-item')
 @endsection
 @section('plugins')
-<script>
-    // $(function() {
-    //             $("#table").DataTable({
-    //             "order": [
-    //             [0, 'desc']
-    //             ],
-    //             "bInfo": false,
-    //             "paging": false,
-    //             "pagingType": 'simple',
-    //             "responsive": true,
-    //             "lengthChange": false,
-    //             "iDisplayLength": 10,
-    //             "autoWidth": false,
-    //             "dom": '<"top">rt<"bottom"ip>
-    //                     <"clear">',
-    //                         "language": {
-    //                         "url": "{{ asset('plugins/datatables/Portuguese2.json') }}"
-    // },
-    // "aoColumnDefs": [{
-    // 'sortable': false,
-    // 'aTargets': [1, 2, 3]
-    // }],
-    // "processing": true,
-    // "serverSide": true,
-    // "ajax": {
-    // "url": "",
-    // "type": "POST",
-    // "headers": {
-    // 'X-CSRF-TOKEN': "{{ csrf_token() }}",
-    // },
-    // },
-    // });
-
-    // });
-
-
-    $(function() {
-        $('#example2').DataTable({
-            "paging": true
-            , "lengthChange": false
-            , "searching": false
-            , "ordering": true
-            , "info": true
-            , "autoWidth": false
-            , "responsive": true
-        , });
-    });
-
-</script>
+<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('js/request.js') }}"></script>
 @endsection

@@ -42,6 +42,51 @@
     <img src="{{ asset('img/product/item/item-CHADDER BACU-gourmetconnect.png') }}" alt="TESTE">
 </div>
 <script>
+    function view_item_request(id) {
+        var Toast = Swal.mixin({
+            toast: true
+            , position: 'top-end'
+            , showConfirmButton: false
+            , timer: 4000
+        });
+
+        const URL = '/administrator/post/info/request/item'
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+            , url: URL
+            , type: 'post'
+            , data: {
+                id: id
+            , }
+            , dataType: 'text'
+            , success: function(response) {
+                var data = JSON.parse(response)
+                $('#view-itemLabel').text(data.name + '   |  ' + data.type.name)
+                $('#item-img-view').attr('src', window.location.origin + '/' + data.photo_url)
+                $('#item-name-view').text(data.name)
+                $('#item-value-view').text("R$" + money(data.value))
+                $('#item-additional-view').empty()
+                $.each(data.additionals, function(index, item) {
+                    $('#item-additional-view').append("<li>" + item.name + "</li>")
+                })
+                if (data.description) {
+                    $('#item-description-view').html(data.description)
+                } else {
+                    $('#item-description-view').text('Não há.')
+                }
+                $('#view-item-modal').modal('show')
+            }
+            , error: function() {
+                Toast.fire({
+                    icon: 'error'
+                    , title: '&nbsp&nbsp Erro na rede.'
+                });
+            }
+        });
+    }
+
     function modal_view_item(id) {
         var Toast = Swal.mixin({
             toast: true

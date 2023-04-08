@@ -12,7 +12,7 @@ class Tools
         $itemsRequest = RequestsItemsModel::with('additionals')
             ->select('id', 'value')
             ->where('request_id', $id)
-            ->where('status', '>', 1)
+            ->whereBetween('status', [1, 3])
             ->get();
 
         $sum = [];
@@ -47,7 +47,7 @@ class Tools
             ->select('id', 'value')
             ->where('request_id', $request)
             ->where('product_id', $item)
-            ->where('status', '>', 1)
+            ->whereBetween('status', [1, 3])
             ->get();
 
         $sum = [];
@@ -74,6 +74,19 @@ class Tools
 
                 break;
         }
+    }
+    public function sum_values_item_number($id)
+    {
+        $itemsRequest = RequestsItemsModel::with('additionals')
+            ->select('id', 'value')
+            ->where('id', $id)
+            ->first();
+
+        $sum[] = $itemsRequest->value;
+        foreach ($itemsRequest->additionals as $item) {
+            $sum[] = $item->value;
+        }
+        return array_sum($sum);
     }
     //====================[Mascara para strings]===========================
     public function mask($mask, $str)
