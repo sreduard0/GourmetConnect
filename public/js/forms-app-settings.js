@@ -60,6 +60,19 @@ function save_establishment_settings() {
         $('#establishment-cep').removeClass('is-invalid');
     }
 
+    if (formData.get('general-tables') == '') {
+        $('#general-tables').addClass('is-invalid');
+        return false;
+    } else {
+        $('#general-tables').removeClass('is-invalid');
+    }
+    if ($('#payments').val() == '') {
+        $('.select2-selection').css('border', '1px solid red');
+        return false;
+    } else {
+        $('.select2-selection').removeAttr('style');
+    }
+
     var values = {
         establishment_name: formData.get('establishment-name'),
         establishment_cnpj: formData.get('establishment-cnpj').replace(/[._-]/g, '').replace('/', ''),
@@ -69,6 +82,8 @@ function save_establishment_settings() {
         establishment_city: formData.get('establishment-city'),
         establishment_state: formData.get('establishment-state'),
         establishment_cep: formData.get('establishment-cep'),
+        general_tables: formData.get('general-tables').replace(/[._-]/g, ''),
+        methods: $('#payments').val()
     }
 
     const URL = '/administrator/post/save/establishment-settings'
@@ -218,64 +233,59 @@ function save_theme_settings() {
         }
     });
 }
-function save_general_settings() {
+function save_delivery_settings() {
     var Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
         timer: 4000
     });
-    const formData = new FormData(document.getElementById('form-general-settings'))
+    const formData = new FormData(document.getElementById('form-delivery-settings'))
     // Verificação
-    if (formData.get('general-tables') == '') {
-        $('#general-tables').addClass('is-invalid');
-        return false;
-    } else {
-        $('#general-tables').removeClass('is-invalid');
-    }
-    if ($('#payments').val() == '') {
-        $('.select2-selection').css('border', '1px solid red');
-        return false;
-    } else {
-        $('.select2-selection').removeAttr('style');
-    }
 
-    var values = {
-        general_tables: formData.get('general-tables').replace(/[._-]/g, ''),
-        methods: $('#payments').val()
-    }
+    // if (formData.get('general-tables') == '') {
+    //     $('#general-tables').addClass('is-invalid');
+    //     return false;
+    // } else {
+    //     $('#general-tables').removeClass('is-invalid');
+    // }
 
-    const URL = '/administrator/post/save/general-settings'
-    $.ajax({
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: URL,
-        type: 'POST',
-        data: values,
-        dataType: 'text',
-        success: function (data) {
-            switch (data) {
-                case 'success':
-                    Toast.fire({
-                        icon: 'success',
-                        title: '&nbsp&nbsp Configurações salvas.'
-                    });
-                    break;
-                case 'error':
-                    Toast.fire({
-                        icon: 'warning',
-                        title: '&nbsp&nbsp  As configuraççoes não foram salvas'
-                    });
-                    break;
-            }
-        },
+    // var values = {
+    //     general_tables: formData.get('general-tables').replace(/[._-]/g, ''),
+    //     methods: $('#payments').val()
+    // }
 
-        error: function (data) {
-            Toast.fire({
-                icon: 'error',
-                title: '&nbsp&nbsp Erro na rede.'
-            });
-        }
-    });
+    // const URL = '/administrator/post/save/general-settings'
+    // $.ajax({
+    //     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+    //     url: URL,
+    //     type: 'POST',
+    //     data: values,
+    //     dataType: 'text',
+    //     success: function (data) {
+    //         switch (data) {
+    //             case 'success':
+    //                 Toast.fire({
+    //                     icon: 'success',
+    //                     title: '&nbsp&nbsp Configurações salvas.'
+    //                 });
+    //                 break;
+    //             case 'error':
+    //                 Toast.fire({
+    //                     icon: 'warning',
+    //                     title: '&nbsp&nbsp  As configuraççoes não foram salvas'
+    //                 });
+    //                 break;
+    //         }
+    //     },
+
+    //     error: function (data) {
+    //         Toast.fire({
+    //             icon: 'error',
+    //             title: '&nbsp&nbsp Erro na rede.'
+    //         });
+    //     }
+    // });
 }
 $(function () {
     //Initialize Select2 Elements

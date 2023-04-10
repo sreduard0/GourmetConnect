@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\Tools;
 use App\Models\AppSettingsModel;
+use App\Models\DeliveryLocationsModel;
 use App\Models\ItemModel;
 use App\Models\PaymentMethodsModel;
 use App\Models\RequestsItemsModel;
@@ -49,7 +50,10 @@ class AppViewsController extends Controller
     }
     public function delivery()
     {
-        return view('app.delivery');
+        $data = [
+            'locations' => DeliveryLocationsModel::all(),
+        ];
+        return view('app.delivery', $data);
     }
     public function tables()
     {

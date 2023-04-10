@@ -47,7 +47,6 @@ $tools = new App\Classes\Tools;
                             </thead>
                         </table>
                     </div>
-                    <!-- /.col -->
                 </div>
                 @if(isset($finalize->status))
                 <p class="lead">{{ $command->client_name }} - {{ date('d/m/Y') }}</p>

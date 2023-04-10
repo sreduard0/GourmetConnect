@@ -17,15 +17,18 @@
     <div class="card">
         <div class="card-header p-2">
             <ul class="nav nav-pills">
-                <li class="nav-item"><a class="rounded-pill nav-link active" href="#establishment-settings" data-toggle="tab">Estabelecimento</a></li>
+                <li class="nav-item"><a class="rounded-pill nav-link active" href="#establishment-settings" data-toggle="tab">Dados</a></li>
+                <li class="nav-item"><a class="rounded-pill nav-link" href="#delivery-settings" data-toggle="tab">Delivery</a></li>
                 <li class="nav-item"><a class="rounded-pill nav-link" href="#theme-settings" data-toggle="tab">Cores</a></li>
-                <li class="nav-item"><a class="rounded-pill nav-link" href="#general-settings" data-toggle="tab">Geral</a></li>
             </ul>
         </div>
         <div class="card-body">
             <div class="tab-content">
                 <div class="active tab-pane" id="establishment-settings">
                     <form id="form-establishment-settings">
+                        <div class="border-bottom border-light m-b-20 col-3">
+                            <h5>ESTABELECIMENTO</h5>
+                        </div>
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="establishment-name">Nome do estabelecimento <span style="color:red">*</span></label>
@@ -42,6 +45,11 @@
 
                             </div>
                         </div>
+                        <hr>
+                        <div class="border-bottom border-light m-b-20 col-3">
+                            <h5>ENDEREÇO</h5>
+                        </div>
+
                         <div class="row">
                             <div class="form-group col-md-5">
                                 <label for="establishment-address">Logradouro <span style="color:red">*</span></label>
@@ -72,17 +80,73 @@
                                 <input value="{{ $app_settings->state }}" minlength="2" maxlength="200" id="establishment-state" name="establishment-state" type="text" class="form-control" placeholder="EX: RS">
                             </div>
                             <div class="form-group col-md-3">
-                                <label for="establishment-cep">UF <span style="color:red">*</span></label>
+                                <label for="establishment-cep">CEP <span style="color:red">*</span></label>
                                 <input value="{{ $app_settings->cep }}" minlength="2" maxlength="10" id="establishment-cep" name="establishment-cep" type="text" class="form-control" data-inputmask="'mask':'99.999-999'" data-mask="" inputmode="text" placeholder="EX: 92.480-000">
                             </div>
                         </div>
+                        <hr>
+                        <div class="border-bottom border-light m-b-20 col-3">
+                            <h5>MESAS</h5>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <label for="general-tables">Quantidade de mesas <span style="color:red">*</span></label>
+                                <div class="input-group">
+                                    <input value="{{ $app_settings->number_tables }}" type="text" class="form-control" id="general-tables" name="general-tables" data-inputmask="'mask':'999'" data-mask="" inputmode="text" placeholder="EX: 10">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="border-bottom border-light m-b-20 col-3">
+                            <h5>PAGAMENTO</h5>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Formas de pagamento</label>
+                                    <select id="payments" name="payments" class="select-payments" multiple="multiple" data-placeholder="Formas de pagamento" style="width: 100%;">
+                                        <optgroup label="Cartões de crédito">
+                                            @foreach ($payment_methods as $method)
+                                            @if ($method->group_payment == 'credit_card')
+                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                            @endif
+                                            @endforeach
+                                        </optgroup>
+                                        <optgroup label="Cartões de débito">
+                                            @foreach ($payment_methods as $method)
+                                            @if ($method->group_payment == 'debit_card')
+                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                            @endif
+                                            @endforeach
+
+                                        </optgroup>
+                                        <optgroup label="Outras formas de pagamento">
+                                            @foreach ($payment_methods as $method)
+                                            @if ($method->group_payment == 'other_forms')
+                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                            @endif
+                                            @endforeach
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                     </form>
                     <div class="d-flex justify-content-sm-end">
                         <button class="btn btn-accent rounded-pill" onclick="return save_establishment_settings()">SALVAR</button>
-
-
                     </div>
                 </div>
+                <div class="tab-pane" id="delivery-settings">
+                    <form id="form-delivery-settings">
+                        teste
+                    </form>
+                    <div class="d-flex justify-content-sm-end">
+                        <button class="btn btn-accent rounded-pill" onclick="return save_delivery_settings()">SALVAR</button>
+                    </div>
+                </div>
+
                 <div class="tab-pane" id="theme-settings">
                     <form id="form-theme-settings">
                         <div class="row">
@@ -168,52 +232,6 @@
                         <button class="btn btn-accent rounded-pill" onclick="return save_theme_settings()">APLICAR CORES</button>
 
 
-                    </div>
-                </div>
-                <div class="tab-pane" id="general-settings">
-                    <form id="form-general-settings">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label for="general-tables">Quantidade de mesas <span style="color:red">*</span></label>
-                                <div class="input-group">
-                                    <input value="{{ $app_settings->number_tables }}" type="text" class="form-control" id="general-tables" name="general-tables" data-inputmask="'mask':'999'" data-mask="" inputmode="text" placeholder="EX: 10">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Formas de pagamento</label>
-                                    <select id="payments" name="payments" class="select-payments" multiple="multiple" data-placeholder="Formas de pagamento" style="width: 100%;">
-                                        <optgroup label="Cartões de crédito">
-                                            @foreach ($payment_methods as $method)
-                                            @if ($method->group_payment == 'credit_card')
-                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
-                                            @endif
-                                            @endforeach
-                                        </optgroup>
-                                        <optgroup label="Cartões de débito">
-                                            @foreach ($payment_methods as $method)
-                                            @if ($method->group_payment == 'debit_card')
-                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
-                                            @endif
-                                            @endforeach
-
-                                        </optgroup>
-                                        <optgroup label="Outras formas de pagamento">
-                                            @foreach ($payment_methods as $method)
-                                            @if ($method->group_payment == 'other_forms')
-                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
-                                            @endif
-                                            @endforeach
-                                        </optgroup>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="d-flex justify-content-sm-end">
-                        <button class="btn btn-accent rounded-pill" onclick="return save_general_settings()">SALVAR</button>
                     </div>
                 </div>
             </div>

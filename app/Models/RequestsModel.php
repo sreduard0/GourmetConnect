@@ -12,6 +12,10 @@ class RequestsModel extends Model
     {
         return $this->hasOne('App\Models\RequestsItemsModel', 'request_id', 'id')->where('status', 2);
     }
+    public function address()
+    {
+        return $this->hasOne('App\Models\DeliveryAddressModel', 'request_id', 'id');
+    }
     use HasFactory;
     protected $table = 'requests';
     protected $primarykey = 'id';

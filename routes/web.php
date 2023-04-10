@@ -2,11 +2,11 @@
 
 use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\AppViewsController;
+use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RequestsController;
-use App\Models\RequestsItemsModel;
 use Illuminate\Support\Facades\Route;
 
 // Login routes
@@ -67,7 +67,7 @@ Route::post('administrator/post/request/additional-item/save', [RequestsControll
 Route::post('administrator/post/request/print', [RequestsController::class, 'print_request']);
 Route::post('administrator/post/request/print/confirm', [RequestsController::class, 'print_confirm']);
 
-//INFORMAÇOES DE PEDIDOS
+// INFORMAÇOES DE PEDIDOS
 Route::post('administrator/post/info/table/client', [RequestsController::class, 'client_table']);
 Route::post('administrator/post/request/item/additionals', [RequestsController::class, 'additionals_items_request']);
 Route::post('administrator/post/request/client/requests-view', [RequestsController::class, 'requests_client_view']);
@@ -78,7 +78,7 @@ Route::post('administrator/post/info/request/item', [RequestsController::class, 
 Route::post('administrator/post/request/finalize-payment', [RequestsController::class, 'finalize_payment']);
 Route::post('administrator/post/request/tax-coupon', [RequestsController::class, 'tax_coupon']);
 
-//TABELAS
+// TABELAS
 Route::post('administrator/post/table/request/client', [RequestsController::class, 'request_client_table']);
 Route::post('administrator/post/table/request/client-view', [RequestsController::class, 'request_client_view']);
 Route::post('administrator/post/table/request/client-payment/{id}', [RequestsController::class, 'client_payment']);
@@ -90,12 +90,17 @@ Route::post('administrator/post/table/request/split-payment', [RequestsControlle
 
 // APP ROUTES DELIVERY
 
+// INFORMAÇOES DO DELIVERY
+Route::post('administrator/post/delivery/client/delivery-view', [DeliveryController::class, 'delivery_client_view']);
+
+// TABELAS
+Route::post('administrator/post/table/delivery/all', [DeliveryController::class, 'delivery_table']);
+
 // NOTIFICAÇÃO
 Route::get('administrator/notification/events', [NotificationController::class, 'notification']);
 Route::post('administrator/notification/events/requests', [NotificationController::class, 'new_request_notification']);
 
 Route::get('teste', function () {
-    dd(RequestsItemsModel::find(24));
 
 });
 

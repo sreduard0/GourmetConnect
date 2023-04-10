@@ -9,19 +9,16 @@ return new class extends Migration
 
     public function up()
     {
-        Schema::create('requests', function (Blueprint $table) {
+        Schema::create('delivery_locations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('table');
-            $table->string('client_name', 255);
-            $table->integer('client_id')->nullable();
-            $table->integer('status');
-            $table->integer('delivery')->default(0);
+            $table->string('local', 255);
+            $table->decimal('value_delivery', 10, 2);
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('requests');
+        Schema::dropIfExists('delivery_locations');
     }
 };

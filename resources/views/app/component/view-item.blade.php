@@ -63,16 +63,16 @@
             , dataType: 'text'
             , success: function(response) {
                 var data = JSON.parse(response)
-                $('#view-itemLabel').text(data.name + '   |  ' + data.type.name)
-                $('#item-img-view').attr('src', window.location.origin + '/' + data.photo_url)
-                $('#item-name-view').text(data.name)
-                $('#item-value-view').text("R$" + money(data.value))
+                $('#view-itemLabel').text('VER ITEM')
+                $('#item-img-view').attr('src', window.location.origin + '/' + data.product.photo_url)
+                $('#item-name-view').text(data.product.name)
+                $('#item-value-view').text(data.value)
                 $('#item-additional-view').empty()
                 $.each(data.additionals, function(index, item) {
-                    $('#item-additional-view').append("<li>" + item.name + "</li>")
+                    $('#item-additional-view').append("<li>" + item.info.name + "</li>")
                 })
-                if (data.description) {
-                    $('#item-description-view').html(data.description)
+                if (data.observation) {
+                    $('#item-description-view').html(data.observation)
                 } else {
                     $('#item-description-view').text('Não há.')
                 }

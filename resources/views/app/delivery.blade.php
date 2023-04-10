@@ -16,18 +16,21 @@
             <div class="d-flex justify-content-between row">
                 <select class="text-center w-250 select-rounded  res col-md-3 m-r-5" id="filter-item-table" class="form-control" onchange="return filter_all_requests()">
                     <option value='' selected>TODAS LOCAIS</option>
+                    @foreach($locations as $location)
+                    <option value='{{ $location->id }}'>{{ $location->local }}</option>
+                    @endforeach
                 </select>
                 <button class="btn btn-accent rounded-pill btnres" onclick="modal_new_request()"><strong>NOVO PEDIDO</strong></button>
             </div>
         </div>
         <div class="card-body">
-            <table id="requests-table" class="table table-bordered table-striped">
+            <table id="delivery-table" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th width="30px">Ord.</th>
                         <th>Cliente</th>
-                        <th width="30px">Mesa</th>
-                        <th width='80px'>Pedido</th>
+                        <th width="30px">Bairro</th>
+                        <th width='80px'>Status</th>
                         <th width="130px">Valor</th>
                         <th width="110px">Ações</th>
 
@@ -129,21 +132,17 @@
 </div>
 </div> --}}
 {{-- PEDIDOS DO CLIENTE --}}
-{{-- <div class="modal fade" id="requests-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+<div class="modal fade" id="delivery-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="reqClienttitle"></h5>
+                <div class="modal-title" id="DeliveryViewtitle"></div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <ul class="nav nav-pills">
-                    <li class="nav-item" onclick="requests_client_view_table(false)"><a class="requests nav-link rounded-pill" href="#requests" data-toggle="tab">Pedidos</a></li>
-                    <li class="nav-item" onclick="requests_client_view_table(true)"><a class="pending nav-link rounded-pill" href="#pending" data-toggle="tab">Pendentes</a></li>
-                </ul>
-                <table style="width:100%" id="client-requests-view-table" class="table table-bordered table-striped">
+                <table style="width:100%" id="client-delivery-view-table" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th width="25px">Foto</th>
@@ -154,34 +153,16 @@
                         </tr>
                     </thead>
                 </table>
-                <div class="tab-content">
-                    <div class="requests tab-pane" id="requests">
-                        <div class="col-md-5 m-t-10">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <th style="width:50%">TOTAL:</th>
-                                            <td class="value-total"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pending tab-pane" id="pending">
-                        <input type="hidden" id="print_id">
-                        <button type="button" onclick='print_request()' class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
-                    </div>
-
-                </div>
-
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="print_id">
+                <button type="button" onclick='print_request()' class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 {{-- LISTA DE ITEM DO MESMO TIPO DO PEDIDO --}}
-{{-- <div class="modal fade" id="list-items-equals-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+<div class="modal fade" id="list-items-equals-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -205,7 +186,7 @@
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 {{-- ADICIONAIS E OBS --}}
 {{-- <div class="modal fade" id="observation-item-modal" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -248,5 +229,5 @@
 @endsection
 @section('plugins')
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-<script src="{{ asset('js/request.js') }}"></script>
+<script src="{{ asset('js/delivery.js') }}"></script>
 @endsection

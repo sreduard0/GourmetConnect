@@ -236,7 +236,7 @@ class RequestsController extends Controller
     public function client_table(Request $request)
     {
         $table = $request->all();
-        $requests = RequestsModel::select('client_name')->where('table', $table['number'])->where('status', 1)->get();
+        $requests = RequestsModel::select('client_name')->where('table', $table['number'])->where('status', 1)->where('delivery', 0)->get();
         $clients = [];
         foreach ($requests as $client) {
             $clients[] = $client->client_name;
@@ -265,7 +265,9 @@ class RequestsController extends Controller
     }
     public function view_item_request(Request $request)
     {
-        return RequestsItemsModel::find($this->Tools->hash($request->get('id'), 'decrypt'));
+        $data = RequestsItemsModel::with('product', 'additionals')->find($this->Tools->hash($request->get('id'), 'decrypt'));
+        $data->value = $this->Tools->sum_values_item($this->Tools->hash($request->get('id'), 'decrypt'));
+        return $data;
     }
 // PAGAMENTO
     public function finalize_payment(Request $request)
@@ -573,23 +575,20 @@ class RequestsController extends Controller
             5 => 'id',
         );
 
-        if ($requestData['columns'][1]['search']['value'] || $requestData['columns'][2]['search']['value']) {
+        if ($requestData['columns'][1]['search']['value']) {
             $query = RequestsModel::query();
             if ($requestData['columns'][1]['search']['value']) {
                 $query->where('table', $requestData['columns'][1]['search']['value']);
             }
-            if ($requestData['columns'][2]['search']['value']) {
-                $query->where('status', $requestData['columns'][2]['search']['value']);
-            }
             $query_rows = $query;
             $rows = $query_rows->count();
 
-            $requests = $query->where('status', 1)->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])
+            $requests = $query->where('status', 1)->where('delivery', 0)->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])
                 ->offset($requestData['start'])
                 ->take($requestData['length'])
                 ->get();
         } else {
-            $requests = RequestsModel::with('request_items')->where('status', 1)->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])
+            $requests = RequestsModel::with('request_items')->where('status', 1)->where('delivery', 0)->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])
                 ->offset($requestData['start'])
                 ->take($requestData['length'])
                 ->get();
@@ -706,7 +705,7 @@ class RequestsController extends Controller
             $dado[] = $item->product->name;
             $dado[] = $item->waiter;
             $dado[] = $this->Tools->sum_values_item($item->id);
-            $dado[] = $item->status != 2 ? '<button onclick="return  delete_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary m-t-3"><i class="fa-solid fa-eye"></i></button> <button onclick="return view_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>' : '<button onclick="return additional_item_request(\'' . $this->Tools->hash($item->product_id, 'encrypt') . '\',\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return  delete_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>';
+            $dado[] = $item->status != 2 ? '<button onclick="return  view_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary m-t-3"><i class="fa-solid fa-eye"></i></button> <button onclick="return delete_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>' : '<button onclick="return additional_item_request(\'' . $this->Tools->hash($item->product_id, 'encrypt') . '\',\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return  delete_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>';
             $dados[] = $dado;
         }
 

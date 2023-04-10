@@ -21,8 +21,17 @@ class AppSettingsController extends Controller
         $save_data->state = $data['establishment_state'];
         $save_data->cep = str_replace(['.', '-', '_'], '', $data['establishment_cep']);
         $save_data->save();
-        return 'success';
+        if ($data['general_tables']) {
+            $save_data = AppSettingsModel::all()->first();
+            $save_data->number_tables = str_replace(['/', '.', '-', '_'], '', $data['general_tables']);
+            $save_data->save();
+        }
+        if ($data['methods']) {
+            PaymentMethodsModel::select('active')->update(['active' => 0]);
+            PaymentMethodsModel::whereIn('id', $data['methods'])->update(['active' => 1]);
+        }
 
+        return 'success';
     }
     public function save_theme_settings(Request $request)
     {
@@ -38,18 +47,9 @@ class AppSettingsController extends Controller
     }
     public function save_general_settings(Request $request)
     {
-        $data = $request->all();
-        if ($data['general_tables']) {
-            $save_data = AppSettingsModel::all()->first();
-            $save_data->number_tables = str_replace(['/', '.', '-', '_'], '', $data['general_tables']);
-            $save_data->save();
-        }
-        if ($data['methods']) {
-            PaymentMethodsModel::select('active')->update(['active' => 0]);
-            PaymentMethodsModel::whereIn('id', $data['methods'])->update(['active' => 1]);
-        }
+        //     $data = $request->all();
 
-        return 'success';
+        //     return 'success';
     }
     public function installation()
     {
