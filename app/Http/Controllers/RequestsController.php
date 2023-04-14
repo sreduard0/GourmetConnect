@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\Tools;
 use App\Events\notificationNewRequest;
 use App\Models\AdditionalItemModel;
+use App\Models\DeliveryAddressModel;
 use App\Models\ItemModel;
 use App\Models\PaymentMethodsModel;
 use App\Models\RequestAdditionalItemModal;
@@ -25,7 +26,11 @@ class RequestsController extends Controller
     public function add_item_request(Request $request)
     {
         $data = $request->all();
-        $request = RequestsModel::select('id')->where('table', $data['table'])->where('client_name', $data['client'])->where('status', 1)->first();
+        if (isset($data['client_id'])) {
+            $request = RequestsModel::select('id')->where('id', $this->Tools->hash($data['client_id'], 'decrypt'))->where('status', 1)->first();
+        } else {
+            $request = RequestsModel::select('id')->where('table', $data['table'])->where('client_name', $data['client'])->where('status', 1)->first();
+        }
         $product = ItemModel::select('value')->find($this->Tools->hash($data['item'], 'decrypt'));
 
         for ($i = 1; $i <= $data['amount']; $i++) {
@@ -45,19 +50,25 @@ class RequestsController extends Controller
     public function send_item_request(Request $request)
     {
         $data = $request->all();
-        $request = RequestsModel::select('id')->where('table', $data['table'])->where('client_name', strtoupper($data['client']))->where('status', 1)->first();
-
+        if (isset($data['client_id'])) {
+            $request = RequestsModel::select('id')->where('id', $this->Tools->hash($data['client_id'], 'decrypt'))->where('status', 1)->first();
+        } else {
+            $request = RequestsModel::select('id')->where('table', $data['table'])->where('client_name', strtoupper($data['client']))->where('status', 1)->first();
+        }
         if (RequestsItemsModel::where('request_id', $request->id)->where('status', 1)->update(['waiter' => session('user')['name'], 'status' => 2])) {
-            event(new notificationNewRequest([
-                'notify' => 1,
-                'type' => 'bootbox',
-                'title' => 'NOVO PEDIDO',
-                'request_id' => $this->Tools->hash($request->id, 'encrypt'),
-                'messege' => 'Há um novo pedido na MESA #' . $data['table'] . ' para ' . strtoupper($data['client']),
-                'size' => 'large',
-                'centervertical' => 1,
-                'user_destination' => session('user')['id'],
-            ]));
+            if (!isset($data['client_id'])) {
+                event(new notificationNewRequest([
+                    'notify' => 1,
+                    'type' => 'bootbox',
+                    'title' => 'NOVO PEDIDO',
+                    'request_id' => $this->Tools->hash($request->id, 'encrypt'),
+                    'messege' => 'Há um novo pedido na MESA #' . $data['table'] . ' para ' . strtoupper($data['client']),
+                    'size' => 'large',
+                    'centervertical' => 1,
+                    'user_destination' => session('user')['id'],
+                ]));
+            }
+
             return 'success';
         } else {
             return 'not-send';
@@ -77,9 +88,9 @@ class RequestsController extends Controller
         $data = $request->all();
         $itemsCheck = RequestAdditionalItemModal::where('item_id', $this->Tools->hash($data['request_id'], 'decrypt'))->get();
         $items = AdditionalItemModel::where('item_id', $this->Tools->hash($data['item'], 'decrypt'))->get();
-        $observation = RequestsItemsModel::select('observation')->find($this->Tools->hash($data['request_id'], 'decrypt'));
+        $item = RequestsItemsModel::select('observation', 'value')->find($this->Tools->hash($data['request_id'], 'decrypt'));
 
-        $additionalItems['observation'] = $observation->observation;
+        $additionalItems['observation'] = $item->observation;
         $additionalItems['items'] = [];
         foreach ($items as $item) {
             if ($item->status == 1) {
@@ -120,10 +131,10 @@ class RequestsController extends Controller
                     RequestAdditionalItemModal::where('additional_id', $input['id'])->where('item_id', $this->Tools->hash($inputs['id'], 'decrypt'))->delete();
                 }
             }
-
         }
         $observation = RequestsItemsModel::find($this->Tools->hash($inputs['id'], 'decrypt'));
         $observation->observation = $inputs['obs'];
+        $observation->value = $this->Tools->sum_values_item_number($this->Tools->hash($inputs['id'], 'decrypt'));
         $observation->save();
         return 'success';
 
@@ -131,11 +142,10 @@ class RequestsController extends Controller
     public function print_request(Request $request)
     {
         if ($request->get('id') != 'all') {
-            $command = RequestsModel::find($this->Tools->hash($request->get('id'), 'decrypt'));
+            $command = RequestsModel::with('address')->find($this->Tools->hash($request->get('id'), 'decrypt'));
             $requests = RequestsItemsModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('status', 2)->orderBy('product_id', 'asc')->get();
 
             if ($command && count($requests) > 0) {
-
                 $items = [];
                 foreach ($requests as $item) {
 
@@ -171,7 +181,11 @@ class RequestsController extends Controller
                 return 'not-exists';
             }
         } else {
-            $commands = RequestsModel::where('status', 1)->get();
+            if ($request->get('delivery') == 1) {
+                $commands = RequestsModel::with('address')->where('status', 1)->where('delivery', 1)->get();
+            } else {
+                $commands = RequestsModel::where('status', 1)->where('delivery', 0)->get();
+            }
             $items = [];
             foreach ($commands as $command) {
                 $requests = RequestsItemsModel::where('request_id', $command->id)->where('status', 2)->orderBy('product_id', 'asc')->get();
@@ -216,21 +230,28 @@ class RequestsController extends Controller
     }
     public function delete_request(Request $request)
     {
-        if (RequestsItemsModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->delete()) {
-            RequestsModel::find($this->Tools->hash($request->get('id'), 'decrypt'))->delete();
-        }
+        DeliveryAddressModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->delete();
+        RequestsItemsModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->delete();
+        RequestsModel::find($this->Tools->hash($request->get('id'), 'decrypt'))->delete();
     }
     public function print_confirm(Request $request)
     {
         if ($request->get('id') != 'all') {
             RequestsItemsModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('status', 2)->update(['status' => 3]);
+            RequestsModel::where('id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('delivery', 1)->update(['status' => 2]);
         } else {
             RequestsItemsModel::where('status', 2)->update(['status' => 3]);
+            RequestsModel::where('id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('delivery', 1)->update(['status' => 2]);
         }
     }
     public function sum_requests_client(Request $request)
     {
-        return $this->Tools->sum_values_requests($this->Tools->hash($request->get('id'), 'decrypt'));
+        $location = DeliveryAddressModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->first();
+        if ($location) {
+            return $this->Tools->sum_values_requests($this->Tools->hash($request->get('id'), 'decrypt'), $location->delivery_value);
+        } else {
+            return $this->Tools->sum_values_requests($this->Tools->hash($request->get('id'), 'decrypt'));
+        }
     }
 // INFORMAÇÕES DO PEDIDO
     public function client_table(Request $request)
@@ -484,6 +505,14 @@ class RequestsController extends Controller
                     ->get();
                 $status = 2;
 
+            } elseif ($requestData['columns'][2]['search']['value'] == 'delivery') {
+                $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
+                    ->where('request_id', $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'))
+                    ->where('status', '>', 1)
+                    ->groupBy('product_id')
+                    ->orderBy('count', $requestData['order'][0]['dir'])
+                    ->get();
+                $status = 0;
             } else {
                 $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
                     ->where('request_id', $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'))
@@ -492,7 +521,6 @@ class RequestsController extends Controller
                     ->orderBy('count', $requestData['order'][0]['dir'])
                     ->get();
                 $status = 3;
-
             }
             $rows = count($items);
 

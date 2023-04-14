@@ -5,7 +5,7 @@ $tools = new App\Classes\Tools;
 @section('title', 'Encerrar comanda')
 @section('menu-requests', 'menu-open')
 @section('requests', 'active')
-@section('title-header', 'Encerrar de comanda')
+@section('title-header', 'Encerramento da comanda #'.$command->id)
 @section('meta')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection

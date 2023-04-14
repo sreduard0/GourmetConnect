@@ -26,7 +26,8 @@
             <div class="tab-content">
                 <div class="active tab-pane" id="establishment-settings">
                     <form id="form-establishment-settings">
-                        <div class="border-bottom border-light m-b-20 col-3">
+                        <div class="border-bottom border-default m-b-20 col-md-3">
+
                             <h5>ESTABELECIMENTO</h5>
                         </div>
                         <div class="row">
@@ -46,7 +47,7 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="border-bottom border-light m-b-20 col-3">
+                        <div class="border-bottom border-default m-b-20 col-md-3">
                             <h5>ENDEREÇO</h5>
                         </div>
 
@@ -85,7 +86,7 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="border-bottom border-light m-b-20 col-3">
+                        <div class="border-bottom border-default m-b-20 col-md-3">
                             <h5>MESAS</h5>
                         </div>
                         <div class="row">
@@ -97,7 +98,7 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="border-bottom border-light m-b-20 col-3">
+                        <div class="border-bottom border-default m-b-20 col-md-3">
                             <h5>PAGAMENTO</h5>
                         </div>
 
@@ -139,11 +140,54 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="delivery-settings">
-                    <form id="form-delivery-settings">
-                        teste
-                    </form>
-                    <div class="d-flex justify-content-sm-end">
-                        <button class="btn btn-accent rounded-pill" onclick="return save_delivery_settings()">SALVAR</button>
+                    <div class="row">
+                        <div class="col-md-6 m-b-50">
+                            <div class="border-bottom border-default m-b-20 col-md-8">
+                                <span>NOVA REGIÃO DE ENTREGA</span>
+                            </div>
+                            <div class="col-md-8">
+                                <form id="form-delivery-settings">
+                                    <div class="row">
+                                        <div class="form-group col">
+                                            <label for="delivery-neighborhood">Cidade/Bairro<span style="color:red">*</span></label>
+                                            <input value="" class="form-control" name="delivery-neighborhood" id="delivery-neighborhood" placeholder="EX: CENTRO">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col">
+                                            <label for="delivery-reference">Referência<span style="color:red">*</span></label>
+                                            <input value="" class="form-control" name="delivery-reference" id="delivery-reference" placeholder="EX: Até o mercado">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col">
+                                            <label for="delivery-value">Valor <span style="color:red">*</span></label>
+                                            <input onKeyPress="return(moeda(this,'.',',',event))" id="delivery-value" name="delivery-value" type="text" class="form-control" placeholder="EX: R$ 10,00">
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="d-flex justify-content-sm-end">
+                                    <button class="btn btn-accent rounded-pill" onclick="return add_delivery_location()">ADICIONAR</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border-bottom border-default m-b-20 col-md-6">
+                                <span>REGIÕES DE ENTREGA</span>
+                            </div>
+
+                            <table id="delivery-locations-table" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th width="100px">Bairro</th>
+                                        <th>Referencia</th>
+                                        <th width="100px">Valor</th>
+                                        <th width="30px">Excluir</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
 
@@ -241,5 +285,6 @@
 </div>
 @endsection
 @section('plugins')
+<script src="{{ asset('js/app-settings.js') }}"></script>
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 @endsection

@@ -51,14 +51,49 @@ class AppViewsController extends Controller
     public function delivery()
     {
         $data = [
+            'types' => TypeItemModel::all(),
             'locations' => DeliveryLocationsModel::all(),
+            'payment_methods' => PaymentMethodsModel::where('active', 1)->get(),
         ];
         return view('app.delivery', $data);
     }
     public function tables()
     {
+        $app_settings = AppSettingsModel::select('number_tables')->first();
+        $tables = [];
+        for ($i = 1; $i <= $app_settings->number_tables; ++$i) {
+            $table = [];
+            $requests = RequestsModel::where('table', $i)->where('delivery', 0)->where('status', 1)->get();
+            $table['table'] = $i;
+            if (count($requests) > 0) {
+                foreach ($requests as $request) {
+                    $waiter = RequestsItemsModel::select('waiter')->where('request_id', $request->id)->orderBy('id', 'desc')->first();
+
+                    if (!isset($table['client'])) {
+                        $table['client'] = $request->client_name;
+                        $id[] = $request->id;
+                    } else {
+                        $table['client'] = $table['client'] . ', ' . $request->client_name;
+                        $id[] = $request->id;
+                    }
+                    $table['value'] = $this->Tools->sum_values_table($i);
+                    $table['request'] = $waiter->waiter;
+                }
+                $table['pendent'] = RequestsItemsModel::select('status')->whereIn('request_id', $id)->where('status', 2)->exists();
+            } else {
+                $table['client'] = 'Vazia';
+                $table['value'] = '-';
+                $table['request'] = '-';
+                $table['pendent'] = false;
+
+            }
+            $table['qr_value'] = $this->Tools->hash($i, 'encrypt');
+            $tables[$i] = $table;
+        }
+
         $data = [
             'app_settings' => AppSettingsModel::select('number_tables')->first(),
+            'tables' => $tables,
         ];
         return view('app.tables', $data);
     }

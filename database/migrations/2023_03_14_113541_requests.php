@@ -11,10 +11,11 @@ return new class extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('table');
+            $table->integer('table')->nullable();
             $table->string('client_name', 255);
             $table->integer('client_id')->nullable();
             $table->integer('status');
+            $table->integer('payment_method')->nullable();
             $table->integer('delivery')->default(0);
             $table->timestamps();
         });

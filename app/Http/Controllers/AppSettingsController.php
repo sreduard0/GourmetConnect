@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\AppSettingsModel;
+use App\Models\DeliveryLocationsModel;
 use App\Models\PaymentMethodsModel;
 use Illuminate\Http\Request;
 
 class AppSettingsController extends Controller
 {
+    // CREIAR
     public function save_establishment_settings(Request $request)
     {
         $data = $request->all();
@@ -45,11 +47,69 @@ class AppSettingsController extends Controller
         return 'success';
 
     }
-    public function save_general_settings(Request $request)
+    public function delivery_local_settings(Request $request)
     {
-        //     $data = $request->all();
+        $data = $request->all();
+        $location = new DeliveryLocationsModel();
+        $location->neighborhood = strtoupper($data['delivery_neighborhood']);
+        $location->reference = $data['delivery_reference'];
+        $location->value_delivery = str_replace(',', '.', str_replace('.', '', $data['delivery_value']));
+        if ($location->save()) {
+            return 'success';
+        }
+    }
+    // Deleta
+    public function delete_delivery_local(Request $request)
+    {
+        if (DeliveryLocationsModel::find($request->get('id'))->delete()) {
+            return 'success';
+        }
+    }
 
-        //     return 'success';
+    // LOGO
+    public function logo()
+    {
+        $app = AppSettingsModel::all()->first();
+        return $app->logo_url;
+    }
+// TABELAS
+    public function delivery_locations(Request $request)
+    {
+        $locationData = $request->all();
+        $columns = array(
+            0 => 'neighborhood',
+            1 => 'reference',
+            2 => 'value',
+            3 => 'id',
+        );
+
+        $locations = DeliveryLocationsModel::orderBy($columns[$locationData['order'][0]['column']], $locationData['order'][0]['dir'])
+            ->offset($locationData['start'])
+            ->take($locationData['length'])
+            ->get();
+        $rows = DeliveryLocationsModel::all()->count();
+
+        $filtered = count($locations);
+        $dados = array();
+        foreach ($locations as $location) {
+            $dado = array();
+            $dado[] = $location->neighborhood;
+            $dado[] = $location->reference;
+            $dado[] = 'R$' . number_format($location->value_delivery, 2, ',', '.');
+            $dado[] = '<button onclick="return delete_local(' . $location->id . ')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+            $dados[] = $dado;
+        }
+
+        //Cria o array de informações a serem retornadas para o Javascript
+        $json_data = array(
+            "draw" => intval($locationData['draw']), //para cada requisição é enviado um número como parâmetro
+            "recordsTotal" => intval($filtered), //Quantidade de registros que há no banco de dados
+            "recordsFiltered" => intval($rows),
+            "data" => $dados, //Array de dados completo dos dados retornados da tabela
+        );
+
+        return json_encode($json_data); //enviar dados como formato json
+
     }
     public function installation()
     {

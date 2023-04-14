@@ -10,7 +10,7 @@ class LoginController extends Controller
         session()->put([
             'user' => [
                 'id' => 1,
-                'name' => 'Eduardo Martins',
+                'name' => 'Eduardo',
                 'photo' => 'img/avatar.png',
                 'permissions' => [
                     'dashboard' => true,

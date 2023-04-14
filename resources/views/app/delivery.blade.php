@@ -14,13 +14,13 @@
     <div class="card">
         <div class="card-header">
             <div class="d-flex justify-content-between row">
-                <select class="text-center w-250 select-rounded  res col-md-3 m-r-5" id="filter-item-table" class="form-control" onchange="return filter_all_requests()">
+                <select class="text-center w-250 select-rounded  res col-md-3 m-r-5" id="filter-delivery" class="form-control" onchange="return filter_delivery()">
                     <option value='' selected>TODAS LOCAIS</option>
                     @foreach($locations as $location)
-                    <option value='{{ $location->id }}'>{{ $location->local }}</option>
+                    <option value='{{ $location->id }}'>{{ $location->neighborhood }} - {{ $location->reference }}</option>
                     @endforeach
                 </select>
-                <button class="btn btn-accent rounded-pill btnres" onclick="modal_new_request()"><strong>NOVO PEDIDO</strong></button>
+                <button class="btn btn-accent rounded-pill btnres" onclick="modal_new_delivery()"><strong>NOVO DELIVERY</strong></button>
             </div>
         </div>
         <div class="card-body">
@@ -30,7 +30,7 @@
                         <th width="30px">Ord.</th>
                         <th>Cliente</th>
                         <th width="30px">Bairro</th>
-                        <th width='80px'>Status</th>
+                        <th width='130px'>Status</th>
                         <th width="130px">Valor</th>
                         <th width="110px">Ações</th>
 
@@ -40,7 +40,8 @@
         </div>
         <div class="card-footer">
             <div class="d-flex justify-content-end row">
-                <button class="btn btn-accent rounded-pill btnres" onclick="print_request_notification('all')"><strong>IMPRIMIR PENDENTES</strong></button>
+                <button class="btn btn-accent rounded-pill btnres" onclick="print_request('all')"><strong>IMPRIMIR PENDENTES</strong></button>
+
             </div>
         </div>
 
@@ -49,88 +50,169 @@
 @endsection
 @section('modal')
 {{-- NOVO PEDIDO --}}
-{{-- <div class="modal fade" id="new-request-modal" role="dialog" tabindex="-1" aria-labelledby="newReqLabel" aria-hidden="true">
+<div class="modal fade" id="new-delivery-modal" role="dialog" tabindex="-1" aria-labelledby="newReqLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="type-itemLabel">COMANDA</h5>
+                <h5 class="modal-title" id="newDeliveryLabel">DELIVERY</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div id="div-select-client" class="d-flex justify-content-center">
-                    <div class="col-md-6">
-                        <select class="text-center col select-rounded m-b-10" id="table-select">
-                            <option disabled selected value="">SELECIONE UMA MESA</option>
-                            @for ($t = 1; $t <= $app_settings->number_tables; $t++)
-                                <option value="{{ $t }}">MESA #{{ $t }}</option>
-@endfor
-</select>
-<input minlength="2" maxlength="200" id="client-name" value="" type="text" class="form-control rounded-pill text-center col m-b-10" placeholder="Nome do Cliente ou Nº da comanda">
-<div class="d-flex justify-content-center">
-    <button id="btn-select-request" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-chevron-right fs-35"></i></button>
-</div>
-</div>
+                <div id="div-select-client">
+                    <form id="form-new-delivery" class="d-flex justify-content-center">
+                        <div class="col-md-8">
+                            <div class="border-bottom border-default m-b-20 col-md-3">
+                                <h5>CLIENTE</h5>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="delivery-client">Nome<span style="color:red">*</span></label>
+                                    <input id="delivery-client" name="delivery-client" type="text" class="form-control" placeholder="EX: Pedro">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="delivery-client-phone">Telefone<span style="color:red">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="delivery-client-phone" name="delivery-client-phone" data-inputmask="'mask':'(99) 9 9999-9999'" data-mask="" inputmode="text" placeholder="EX: (51) 9 9999-9999">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="border-bottom border-default m-b-20 col-md-3">
+                                <h5>ENDEREÇO</h5>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="delivery-location">Região <span style="color:red">*</span></label>
+                                    <select class="text-center select-rounded form-control" id="delivery-location" name="delivery-location" class="form-control">
+                                        <option value='' disabled selected>Selecione uma região</option>
+                                        @foreach($locations as $location)
+                                        <option value='{{ $location->id }}'>{{ $location->neighborhood }} - {{ $location->reference }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <label for="delivery-address">Logradouro <span style="color:red">*</span></label>
+                                    <input id="delivery-address" name="delivery-address" type="text" class="form-control" placeholder="EX: Rua do Açai">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="delivery-number">Nº <span style="color:red">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="delivery-number" name="delivery-number" data-inputmask="'mask':'9999'" data-mask="" inputmode="text" placeholder="EX: 1800">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="delivery-neighborhood">Bairro <span style="color:red">*</span></label>
+                                    <input id="delivery-neighborhood" name="delivery-neighborhood" type="text" class="form-control" placeholder="EX: Centro">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="delivery-reference">Referência <span style="color:red">*</span></label>
+                                    <input id="delivery-reference" name="delivery-reference" type="text" class="form-control" placeholder="EX: Casa azul">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="border-bottom border-default m-b-20 col-md-3">
+                                <h5>PAGAMENTO</h5>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="payment-method">Método <span style="color:red">*</span></label>
+                                    <select class="text-center select-rounded form-control " id="payment-method" name="payment-method" class="form-control">
+                                        <optgroup label="Cartões de crédito">
+                                            @foreach ($payment_methods as $method)
+                                            @if ($method->group_payment == 'credit_card')
+                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                            @endif
+                                            @endforeach
+                                        </optgroup>
+                                        <optgroup label="Cartões de débito">
+                                            @foreach ($payment_methods as $method)
+                                            @if ($method->group_payment == 'debit_card')
+                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                            @endif
+                                            @endforeach
+                                        </optgroup>
+                                        <optgroup label="Outras formas de pagamento">
+                                            @foreach ($payment_methods as $method)
+                                            @if ($method->group_payment == 'other_forms')
+                                            <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                            @endif
+                                            @endforeach
+                                        </optgroup>
+                                        <option selected disabled value="">Selecione um método de pagamento</option>
 
-</div>
-<div style="display:none" id="div-add-request">
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between row">
-                <h3 class="card-title ">CARDÁPIO</h3>
-                <select class=" text-center select-rounded res" id="filter-type-item" name="filter-type-item">
-                    <option disabled selected>BUSQUE POR UM TIPO</option>
-                    <option value="">TODOS</option>
-                    @foreach ($types as $type)
-                    <option value="{{ $type->id }}">{{ $type->name }}</option>
-                    @endforeach
-                </select>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="col m-t-20">
+                        <div class="d-flex justify-content-center">
+                            <input type="hidden" id="client">
+                            <button style="width:100px" id="btn-new-delivery" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-chevron-right fs-35"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:none" id="div-add-request">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between row">
+                                <h3 class="card-title ">CARDÁPIO</h3>
+                                <select class=" text-center select-rounded res" id="filter-type-item" name="filter-type-item">
+                                    <option disabled selected>BUSQUE POR UM TIPO</option>
+                                    <option value="">TODOS</option>
+                                    @foreach ($types as $type)
+                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table style="width:100%" id="menu-table" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th width='25px'>Foto</th>
+                                        <th>Item</th>
+                                        <th width='100px'>Valor</th>
+                                        <th width='70px'>Ações</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between row">
+                                <h3 id="title-requests" class="card-title "></h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table style="width:100%" id="client-requests-table" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th width="25px">Foto</th>
+                                        <th>Item</th>
+                                        <th width="60px">Valor</th>
+                                        <th width="70px">Ações</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
 
+                </div>
+            </div>
+            <div id="modal-footer" class="modal-footer" style="display:none">
+                <button id="send-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>ENVIAR PEDIDO</strong></button>
             </div>
         </div>
-        <div class="card-body">
-            <table style="width:100%" id="menu-table" class="table table-bordered table-striped">
-
-                <thead>
-                    <tr>
-                        <th width='25px'>Foto</th>
-                        <th>Item</th>
-                        <th width='100px'>Valor</th>
-                        <th width='70px'>Ações</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
     </div>
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between row">
-                <h3 id="title-requests" class="card-title "></h3>
-            </div>
-        </div>
-        <div class="card-body">
-            <table style="width:100%" id="client-requests-table" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th width="25px">Foto</th>
-                        <th>Item</th>
-                        <th width="60px">Valor</th>
-                        <th width="70px">Ações</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-
 </div>
-</div>
-<div class="modal-footer" id="modal-footer" style="display:none">
-    <button id="send-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>ENVIAR PEDIDO</strong></button>
-</div>
-</div>
-</div>
-</div> --}}
 {{-- PEDIDOS DO CLIENTE --}}
 <div class="modal fade" id="delivery-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -142,6 +224,8 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div class="d-flex justify-content-end" id="edit_delivery_btn">
+                </div>
                 <table style="width:100%" id="client-delivery-view-table" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -154,9 +238,20 @@
                     </thead>
                 </table>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer d-flex justify-content-between row">
+                <div class="col-md-3">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th style="width:50%">TOTAL:</th>
+                                <td class="value-total"> R$00,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <input type="hidden" id="print_id">
-                <button type="button" onclick='print_request()' class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
+                <div id="btn-act"></div>
             </div>
         </div>
     </div>
@@ -177,7 +272,7 @@
                         <tr>
                             <th width="25px">Foto</th>
                             <th>Item</th>
-                            <th width="110px">Garçom</th>
+                            <th width="110px">Adic. por</th>
                             <th width="80px">Valor</th>
                             <th width="60px">Ações</th>
                         </tr>
@@ -188,7 +283,7 @@
     </div>
 </div>
 {{-- ADICIONAIS E OBS --}}
-{{-- <div class="modal fade" id="observation-item-modal" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
+<div class="modal fade" id="observation-item-modal" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -224,7 +319,7 @@
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 @include('app.component.view-item')
 @endsection
 @section('plugins')

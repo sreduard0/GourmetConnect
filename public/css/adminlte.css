@@ -610,6 +610,17 @@ pre code {
     animation-iteration-count: 10;
 }
 
+.bootom-0 {
+    bottom: 0 !important;
+    position: absolute !important;
+}
+
+.button-next {
+    top: 50%;
+    position: absolute;
+    right: 10px;
+}
+
 @keyframes treme {
     0% {
         margin-left: 0;

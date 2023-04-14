@@ -27,7 +27,10 @@ Route::get('administrator/site-settings', [AppViewsController::class, 'site_sett
 // App Settings Routes
 Route::post('administrator/post/save/establishment-settings', [AppSettingsController::class, 'save_establishment_settings']);
 Route::post('administrator/post/save/theme-settings', [AppSettingsController::class, 'save_theme_settings']);
-Route::post('administrator/post/save/general-settings', [AppSettingsController::class, 'save_general_settings']);
+Route::post('administrator/post/delete/delivery/local', [AppSettingsController::class, 'delete_delivery_local']);
+Route::post('administrator/post/save/delivery-local-settings', [AppSettingsController::class, 'delivery_local_settings']);
+Route::post('administrator/post/table/app-settings/delivery-locations', [AppSettingsController::class, 'delivery_locations']);
+Route::get('administrator/get/app-settings/logo', [AppSettingsController::class, 'logo']);
 
 // APP ROUTES CARDÁPIO
 // CRIAR
@@ -89,12 +92,19 @@ Route::post('administrator/post/table/request/menu', [RequestsController::class,
 Route::post('administrator/post/table/request/split-payment', [RequestsController::class, 'split_payment_table']);
 
 // APP ROUTES DELIVERY
+// CRIAR
+Route::post('administrator/post/delivery/request/new', [DeliveryController::class, 'new_delivery']);
+// ALTERAR STATUS
+Route::post('administrator/post/delivery/status/send', [DeliveryController::class, 'alt_status']);
+// FINALIZER DELIERY
+Route::post('administrator/post/delivery/status/finalize', [DeliveryController::class, 'finalize_delivery']);
 
 // INFORMAÇOES DO DELIVERY
 Route::post('administrator/post/delivery/client/delivery-view', [DeliveryController::class, 'delivery_client_view']);
 
 // TABELAS
 Route::post('administrator/post/table/delivery/all', [DeliveryController::class, 'delivery_table']);
+Route::post('administrator/post/table/delivery/client', [DeliveryController::class, 'delivery_client_table']);
 
 // NOTIFICAÇÃO
 Route::get('administrator/notification/events', [NotificationController::class, 'notification']);

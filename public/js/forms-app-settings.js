@@ -1,9 +1,11 @@
+
+
 function save_establishment_settings() {
     var Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 4000
+        toast: true
+        , position: 'top-end'
+        , showConfirmButton: false
+        , timer: 4000
     });
     const formData = new FormData(document.getElementById('form-establishment-settings'))
 
@@ -124,10 +126,10 @@ function save_establishment_settings() {
 }
 function save_theme_settings() {
     var Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 4000
+        toast: true
+        , position: 'top-end'
+        , showConfirmButton: false
+        , timer: 4000
     });
     const formData = new FormData(document.getElementById('form-theme-settings'))
 
@@ -233,59 +235,114 @@ function save_theme_settings() {
         }
     });
 }
-function save_delivery_settings() {
+function add_delivery_location() {
     var Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 4000
+        toast: true
+        , position: 'top-end'
+        , showConfirmButton: false
+        , timer: 4000
     });
     const formData = new FormData(document.getElementById('form-delivery-settings'))
     // Verificação
+    if (formData.get('delivery-neighborhood') == '') {
+        $('#delivery-neighborhood').addClass('is-invalid');
+        return false;
+    } else {
+        $('#delivery-neighborhood').removeClass('is-invalid');
+    }
+    if (formData.get('delivery-reference') == '') {
+        $('#delivery-reference').addClass('is-invalid');
+        return false;
+    } else {
+        $('#delivery-reference').removeClass('is-invalid');
+    }
+    if (formData.get('delivery-value') == '') {
+        $('#delivery-value').addClass('is-invalid');
+        return false;
+    } else {
+        $('#delivery-value').removeClass('is-invalid');
+    }
 
-    // if (formData.get('general-tables') == '') {
-    //     $('#general-tables').addClass('is-invalid');
-    //     return false;
-    // } else {
-    //     $('#general-tables').removeClass('is-invalid');
-    // }
+    var values = {
+        delivery_neighborhood: formData.get('delivery-neighborhood'),
+        delivery_reference: formData.get('delivery-reference'),
+        delivery_value: formData.get('delivery-value'),
+    }
 
-    // var values = {
-    //     general_tables: formData.get('general-tables').replace(/[._-]/g, ''),
-    //     methods: $('#payments').val()
-    // }
+    const URL = window.location.origin + '/administrator/post/save/delivery-local-settings'
+    $.ajax({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: URL,
+        type: 'POST',
+        data: values,
+        dataType: 'text',
+        success: function (response) {
+            if (response == 'success') {
+                Toast.fire({
+                    icon: 'success',
+                    title: '&nbsp&nbsp Local adicionado.'
+                })
+                $('#form-delivery-settings')[0].reset();
+                $('#delivery-locations-table').DataTable().clear().draw()
+            }
+        },
+        error: function (data) {
+            Toast.fire({
+                icon: 'error',
+                title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
+}
+function delete_local(id) {
+    var Toast = Swal.mixin({
+        toast: true
+        , position: 'top-end'
+        , showConfirmButton: false
+        , timer: 4000
+    });
+    bootbox.confirm({
+        title: ' Deseja excluir este local?',
+        message: '<strong>Essa operação não pode ser desfeita.</strong>.',
+        callback: function (confirmacao) {
+            if (confirmacao) {
+                const URL = '/administrator/post/delete/delivery/local'
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    url: URL,
+                    type: 'post',
+                    data: {
+                        id: id,
+                    },
+                    dataType: 'text',
+                    success: function (data) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: '&nbsp&nbsp Local excluído com sucesso.'
+                        });
+                        $('#delivery-locations-table').DataTable().clear().draw()
+                    },
+                    error: function (data) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: '&nbsp&nbsp Erro na rede.'
+                        });
+                    }
+                });
+            }
+        },
+        buttons: {
+            cancel: {
+                label: 'Cancelar',
+                className: 'btn-default'
+            },
+            confirm: {
+                label: 'Excluir',
+                className: 'btn-danger'
+            }
 
-    // const URL = '/administrator/post/save/general-settings'
-    // $.ajax({
-    //     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-    //     url: URL,
-    //     type: 'POST',
-    //     data: values,
-    //     dataType: 'text',
-    //     success: function (data) {
-    //         switch (data) {
-    //             case 'success':
-    //                 Toast.fire({
-    //                     icon: 'success',
-    //                     title: '&nbsp&nbsp Configurações salvas.'
-    //                 });
-    //                 break;
-    //             case 'error':
-    //                 Toast.fire({
-    //                     icon: 'warning',
-    //                     title: '&nbsp&nbsp  As configuraççoes não foram salvas'
-    //                 });
-    //                 break;
-    //         }
-    //     },
-
-    //     error: function (data) {
-    //         Toast.fire({
-    //             icon: 'error',
-    //             title: '&nbsp&nbsp Erro na rede.'
-    //         });
-    //     }
-    // });
+        }
+    });
 }
 $(function () {
     //Initialize Select2 Elements

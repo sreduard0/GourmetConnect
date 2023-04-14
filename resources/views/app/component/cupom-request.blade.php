@@ -45,6 +45,12 @@ $app_settings = AppSettingsModel::all()->first();
         }
 
 
+        .address {
+            padding-top: 20px;
+            font-size: 15px !important;
+            padding: @printer-padding-base*1.5 0;
+        }
+
         .title {
             font-size: 30px !important;
             padding: @printer-padding-base*1.5 0;
@@ -54,6 +60,7 @@ $app_settings = AppSettingsModel::all()->first();
         .table {
             font-size: 20px !important;
             padding: @printer-padding-base*1.5 0;
+            padding-bottom: 10px;
         }
 
         .client {
@@ -134,6 +141,44 @@ $app_settings = AppSettingsModel::all()->first();
 </head>
 <body>
     @if (isset($command))
+    @if($command->delivery == 1)
+    <table class="printer-ticket">
+        <thead>
+            <tr>
+                <th class="title" colspan="3">{{ $app_settings->establishment_name  }}
+                </th>
+            </tr>
+            <tr>
+                <th class="table" colspan="3">
+                    <hr size="1" style="border:1px dashed">
+                    DELIVERY</th>
+            </tr>
+            <tr>
+                <th class="client" colspan="3">
+                    {{ $command->client_name }}
+                </th>
+            </tr>
+            <tr>
+                <th class="address" colspan="3">
+                    {{ $command->address->street_address }}, {{ $command->address->number }} - {{ $command->address->neighborhood }} <br>
+                    {{ $command->address->reference }}
+                </th>
+            </tr>
+            <tr>
+                <th class="address" colspan="3">
+                    PAGAMENTO: {{ strtoupper($command->payment->name) }}
+                </th>
+            </tr>
+
+            <tr>
+                <th class="ttu" colspan="3">
+                    <hr size="1" style="border:1px dashed">
+                    <b>PEDIDO(S)</b>
+                </th>
+            </tr>
+        </thead>
+    </table>
+    @else
     <table class="printer-ticket">
         <thead>
             <tr>
@@ -158,6 +203,7 @@ $app_settings = AppSettingsModel::all()->first();
             </tr>
         </thead>
     </table>
+    @endif
     <table class="printer-ticket">
         <tbody>
             <tr> <strong>ITEM - QTD</strong> </tr>
@@ -191,6 +237,44 @@ $app_settings = AppSettingsModel::all()->first();
     </table>
     @else
     @foreach ($requests as $item)
+    @if($item['command']->delivery == 1)
+    <table class="printer-ticket">
+        <thead>
+            <tr>
+                <th class="title" colspan="3">{{ $app_settings->establishment_name  }}
+                </th>
+            </tr>
+            <tr>
+                <th class="table" colspan="3">
+                    <hr size="1" style="border:1px dashed">
+                    DELIVERY</th>
+            </tr>
+            <tr>
+                <th class="client" colspan="3">
+                    {{ $item['command']->client_name }}
+
+                </th>
+            </tr>
+            <tr>
+                <th class="address" colspan="3">
+                    {{ $item['command']->address->street_address }}, {{ $item['command']->address->number }} - {{ $item['command']->address->neighborhood }} <br>
+                    {{ $item['command']->address->reference }}
+                </th>
+            </tr>
+            <tr>
+                <th class="address" colspan="3">
+                    PAGAMENTO: {{ strtoupper($item['command']->payment->name) }}
+                </th>
+            </tr>
+            <tr>
+                <th class="ttu" colspan="3">
+                    <hr size="1" style="border:1px dashed">
+                    <b>PEDIDO(S)</b>
+                </th>
+            </tr>
+        </thead>
+    </table>
+    @else
     <table class="printer-ticket">
         <thead>
             <tr>
@@ -218,6 +302,8 @@ $app_settings = AppSettingsModel::all()->first();
             </tr>
         </thead>
     </table>
+
+    @endif
     <table class="printer-ticket">
         <tbody>
             <tr> <strong>ITEM - QTD</strong> </tr>

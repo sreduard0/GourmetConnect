@@ -11,12 +11,15 @@ return new class extends Migration
     {
         Schema::create('delivery_address', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('delivered')->default(0);
             $table->integer('request_id');
+            $table->integer('location_id');
             $table->string('recipient_name', 255);
             $table->string('street_address', 255);
             $table->string('neighborhood', 255);
-            $table->string('city', 255);
+            $table->string('reference', 255);
             $table->integer('number');
+            $table->decimal('delivery_value', 10, 2);
             $table->bigInteger('phone');
             $table->timestamps();
         });
