@@ -61,7 +61,12 @@ function view_requests_table(table) {
         , dataType: 'text'
         , success: function (response) {
             var data = JSON.parse(response);
+            var selected = [{
+                text: 'Selecione',
+                value: ''
+            }]
             if (data.length > 1) {
+                data.unshift(...selected)
                 bootbox.prompt({
                     title: 'Selecione um cliente',
                     inputType: 'select',
