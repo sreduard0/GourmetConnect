@@ -105,13 +105,16 @@ Route::post('administrator/post/delivery/client/delivery-view', [DeliveryControl
 // TABELAS
 Route::post('administrator/post/table/delivery/all', [DeliveryController::class, 'delivery_table']);
 Route::post('administrator/post/table/delivery/client', [DeliveryController::class, 'delivery_client_table']);
+// MESAS
+Route::get('administrator/post/table/events', [RequestsController::class, 'tables_events']);
+Route::post('administrator/post/table/info/clients', [RequestsController::class, 'table_info']);
 
 // NOTIFICAÇÃO
 Route::get('administrator/notification/events', [NotificationController::class, 'notification']);
 Route::post('administrator/notification/events/requests', [NotificationController::class, 'new_request_notification']);
 
-Route::get('teste', function () {
-
+Route::get('table/request/qr-code/client/{table}', function ($table) {
+    return $table;
 });
 
 //ROTA DE INSTALAÇÃO DO SISTEMA

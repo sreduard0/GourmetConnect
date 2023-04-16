@@ -65,10 +65,10 @@ class AppViewsController extends Controller
             $table = [];
             $requests = RequestsModel::where('table', $i)->where('delivery', 0)->where('status', 1)->get();
             $table['table'] = $i;
+            $id = [];
             if (count($requests) > 0) {
                 foreach ($requests as $request) {
                     $waiter = RequestsItemsModel::select('waiter')->where('request_id', $request->id)->orderBy('id', 'desc')->first();
-
                     if (!isset($table['client'])) {
                         $table['client'] = $request->client_name;
                         $id[] = $request->id;
@@ -92,6 +92,7 @@ class AppViewsController extends Controller
         }
 
         $data = [
+            'types' => TypeItemModel::all(),
             'app_settings' => AppSettingsModel::select('number_tables')->first(),
             'tables' => $tables,
         ];

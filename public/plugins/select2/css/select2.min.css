@@ -10,7 +10,7 @@
     box-sizing: border-box;
     cursor: pointer;
     display: block;
-    height: 28px;
+    height: calc(2.25rem + 2px);
     user-select: none;
     -webkit-user-select: none
 }
@@ -186,7 +186,7 @@
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 26px;
+    height: calc(2.25rem + 2px);
     position: absolute;
     top: 1px;
     right: 1px;

@@ -3020,18 +3020,20 @@ function print_request_notification(id) {
                                 , success: function () {
                                     if (window.location.pathname == '/administrator/requests') {
                                         $('#requests-table').DataTable().clear().draw()
-                                        if (id != 'all') {
-                                            // seleciona a tabela pelo ID
-                                            const table = document.getElementById('requests_bootbox');
-                                            // conta o número de linhas na tabela
-                                            const count = table.getElementsByTagName('tr').length;
-                                            if (count > 2) {
-                                                $('.' + id).remove()
-                                            } else {
-                                                $('.bootbox').modal('hide')
-                                            }
+                                    }
+                                    if (id != 'all') {
+                                        // seleciona a tabela pelo ID
+                                        const table = document.getElementById('requests_bootbox');
+                                        // conta o número de linhas na tabela
+                                        const count = table.getElementsByTagName('tr').length;
+                                        if (count > 2) {
+                                            $('.' + id).remove()
+                                        } else {
+
+                                            $('.bootbox').modal('hide')
                                         }
                                     }
+
                                 }
                                 , error: function () {
                                     Toast.fire({

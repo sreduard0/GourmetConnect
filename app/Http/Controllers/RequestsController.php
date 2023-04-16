@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Classes\Tools;
 use App\Events\notificationNewRequest;
 use App\Models\AdditionalItemModel;
+use App\Models\AppSettingsModel;
 use App\Models\DeliveryAddressModel;
 use App\Models\ItemModel;
+use App\Models\NotificationModel;
 use App\Models\PaymentMethodsModel;
 use App\Models\RequestAdditionalItemModal;
 use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class RequestsController extends Controller
@@ -21,6 +24,69 @@ class RequestsController extends Controller
     public function __construct()
     {
         $this->Tools = new Tools;
+    }
+// MESAS
+    public function tables_events()
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $new_event = NotificationModel::orderBy('created_at', 'desc')->first();
+        $tables = '';
+        if ($new_event && session('event_id') != $new_event->id) {
+            $app_settings = AppSettingsModel::select('number_tables')->first();
+            $tables = [];
+            for ($i = 1; $i <= $app_settings->number_tables; ++$i) {
+                $table = [];
+                $requests = RequestsModel::where('table', $i)->where('delivery', 0)->where('status', 1)->get();
+                $table['table'] = $i;
+                $id = [];
+                if (count($requests) > 0) {
+                    foreach ($requests as $request) {
+                        $waiter = RequestsItemsModel::select('waiter')->where('request_id', $request->id)->orderBy('id', 'desc')->first();
+
+                        if (!isset($table['client'])) {
+                            $table['client'] = $request->client_name;
+                            $id[] = $request->id;
+                        } else {
+                            $table['client'] = $table['client'] . ', ' . $request->client_name;
+                            $id[] = $request->id;
+                        }
+                        $table['value'] = $this->Tools->sum_values_table($i);
+                        $table['request'] = $waiter->waiter;
+                    }
+                    $table['pendent'] = RequestsItemsModel::select('status')->whereIn('request_id', $id)->where('status', 2)->exists();
+                } else {
+                    $table['client'] = 'Vazia';
+                    $table['value'] = '-';
+                    $table['request'] = '-';
+                    $table['pendent'] = false;
+
+                }
+                $table['qr_value'] = $this->Tools->hash($i, 'encrypt');
+                $tables[$i] = $table;
+            }
+            session()->put(['event_id' => $new_event->id]);
+        }
+
+        $response->setContent('data: ' . json_encode($tables) . "\n\n");
+        $response->send();
+
+    }
+    public function table_info(Request $request)
+    {
+        $data = [];
+        foreach (RequestsModel::where('table', $request->get('table'))->where('status', 1)->where('delivery', 0)->get() as $table) {
+            $ico = '';
+            if (RequestsItemsModel::select('status')->where('request_id', $table->id)->where('status', 2)->exists()) {
+                $ico = ' (Há pedido)';
+            }
+            $data[] = [
+                'text' => $table->client_name . $ico,
+                'value' => $this->Tools->hash($table->id, 'encrypt'),
+            ];
+        }
+        return $data;
     }
 // PEDIDO DO CLIENTE
     public function add_item_request(Request $request)
@@ -236,12 +302,22 @@ class RequestsController extends Controller
     }
     public function print_confirm(Request $request)
     {
+        event(new notificationNewRequest([
+            'notify' => 0,
+            'type' => 'event_table',
+            'title' => null,
+            'request_id' => null,
+            'messege' => null,
+            'size' => null,
+            'centervertical' => null,
+            'user_destination' => null,
+        ]));
         if ($request->get('id') != 'all') {
             RequestsItemsModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('status', 2)->update(['status' => 3]);
             RequestsModel::where('id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('delivery', 1)->update(['status' => 2]);
         } else {
             RequestsItemsModel::where('status', 2)->update(['status' => 3]);
-            RequestsModel::where('id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('delivery', 1)->update(['status' => 2]);
+            RequestsModel::where('status', 1)->where('delivery', 1)->update(['status' => 2]);
         }
     }
     public function sum_requests_client(Request $request)

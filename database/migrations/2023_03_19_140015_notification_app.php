@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('size', 255)->nullable();
             $table->integer('centervertical')->nullable();
             $table->integer('user_destination')->nullable();
+            $table->integer('delivery')->default(0);
             $table->string('request_id', 255)->nullable();
             $table->timestamps();
         });

@@ -267,7 +267,7 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="item-menu">Item <span style="color:red">*</span></label>
-                            <select id="item-menu" name="item-menu" class="form-control select2" style="width: 100%;">
+                            <select id="item-menu" name="item-menu" class="select2 form-control " style="width: 100%;">
                                 @foreach ($items as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach

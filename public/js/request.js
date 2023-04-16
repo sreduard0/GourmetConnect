@@ -8,7 +8,7 @@ var Toast = Swal.mixin({
 $(function () {
     $("#requests-table").DataTable({
         "order": [
-            [3, 'desc']
+            [3, 'asc']
         ],
         "bInfo": false
         , "paging": true
@@ -247,7 +247,6 @@ $(function () {
     //         // Define a largura da tabela com base no número de linhas e colunas
     //         minhaTabela.css('width', (numColunas * 100) + "px");
 });
-
 // SELEÇÃO DE MESA E CLIENTE
 $('#table-select').on('change', function (event) {
     $.ajax({

@@ -23,7 +23,7 @@ function qr_code(content, table) {
         };
         var qrcode = new QRCode(document.getElementById("qr_vtr_generate"), options);
 
-        qrcode.makeCode(content);
+        qrcode.makeCode(window.location.origin + "/table/request/qr-code/client/" + content);
         $("#table_label").text('QR code da MESA #' + table)
         $("#modal_qr").modal('show')
     });
