@@ -211,10 +211,8 @@ $app_settings = AppSettingsModel::all()->first();
             <!-- Main content -->
             <section class="content">
                 <div class="container-fluid ">
-                    <div class="row">
-                        {{-- Conteudo --}}
-                        @yield('content')
-                    </div>
+                    {{-- Conteudo --}}
+                    @yield('content')
                     <!-- /.row (main row) -->
                 </div><!-- /.container-fluid -->
             </section>
@@ -236,9 +234,6 @@ $app_settings = AppSettingsModel::all()->first();
 
     <!-- jQuery UI 1.11.4 -->
     <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-    <!-- OPTIONAL SCRIPTS -->
-    <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
-
     <script>
         $.widget.bridge('uibutton', $.ui.button)
 

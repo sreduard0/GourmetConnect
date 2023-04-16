@@ -15,94 +15,97 @@
 <link rel="stylesheet" href="{{ asset('css/croppie.css') }}" />
 @endsection
 @section('content')
-<div class="col-12">
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between row">
-                <h3 class="card-title">CARDÁPIO</h3>
-                <select class=" text-center select-rounded res" id="filter-type-item" name="filter-type-item">
-                    <option disabled selected>BUSQUE POR UM TIPO</option>
-                    <option value="">Todos</option>
-                    @foreach ($types as $type)
-                    <option value="{{ $type->id }}">{{ $type->name }}</option>
-                    @endforeach
-                </select>
-                <button class=" btn  btn-accent rounded-pill btnres" onclick="modal_new_item()"><strong>NOVO ITEM</strong></button>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between row">
+                    <h3 class="card-title">CARDÁPIO</h3>
+                    <select class=" text-center select-rounded res" id="filter-type-item" name="filter-type-item">
+                        <option disabled selected>BUSQUE POR UM TIPO</option>
+                        <option value="">Todos</option>
+                        @foreach ($types as $type)
+                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @endforeach
+                    </select>
+                    <button class=" btn  btn-accent rounded-pill btnres" onclick="modal_new_item()"><strong>NOVO ITEM</strong></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="table-menu" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="30px">Cod.</th>
+                            <th width="40px">Foto</th>
+                            <th>Item</th>
+                            <th width="130px">Status</th>
+                            <th width="130px">Tipo</th>
+                            <th width="100px">Valor</th>
+                            <th width="90px">Ações</th>
+
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
-        <div class="card-body">
-            <table id="table-menu" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th width="30px">Cod.</th>
-                        <th width="40px">Foto</th>
-                        <th>Item</th>
-                        <th width="130px">Status</th>
-                        <th width="130px">Tipo</th>
-                        <th width="100px">Valor</th>
-                        <th width="90px">Ações</th>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
 
-                    </tr>
-                </thead>
-            </table>
+                    <h3 class="card-title">TIPO</h3>
+                    <button class="btn btn-accent btn-sm rounded-pill btnres" onclick="modal_new_type_item()"><strong>NOVO TIPO</strong></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="type-item-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="mx-auto" style="width: 30px">Foto</th>
+                            <th>Tipo</th>
+                            <th style="width: 40px">Itens</th>
+                            <th style="width:70px">Ações</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between row">
+                    <h3 class="card-title ">ADICIONAIS</h3>
+                    <select class="text-center select-rounded res" id="filter-item">
+                        <option disabled selected>BUSQUE POR UM ITEM</option>
+                        <option value="">Todos</option>
+                        @foreach ($items as $item)
+                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                        @endforeach
+                    </select>
+                    <button class="btn btn-accent btn-sm rounded-pill btnres" onclick="modal_new_additional_item()"><strong>NOVO ADICIONAL</strong></button>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="additional-items-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="mx-auto" style="width: 10px">#</th>
+                            <th>Adicional</th>
+                            <th style="width: 50px">Status</th>
+                            <th>Produto</th>
+                            <th>Valor</th>
+                            <th style="width: 50px">Ações</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-<div class="col-md-6">
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between">
 
-                <h3 class="card-title">TIPO</h3>
-                <button class="btn btn-accent btn-sm rounded-pill btnres" onclick="modal_new_type_item()"><strong>NOVO TIPO</strong></button>
-            </div>
-        </div>
-        <div class="card-body">
-            <table id="type-item-table" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th class="mx-auto" style="width: 30px">Foto</th>
-                        <th>Tipo</th>
-                        <th style="width: 40px">Itens</th>
-                        <th style="width:70px">Ações</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-</div>
-<div class="col-md-6">
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between row">
-                <h3 class="card-title ">ADICIONAIS</h3>
-                <select class="text-center select-rounded res" id="filter-item">
-                    <option disabled selected>BUSQUE POR UM ITEM</option>
-                    <option value="">Todos</option>
-                    @foreach ($items as $item)
-                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                    @endforeach
-                </select>
-                <button class="btn btn-accent btn-sm rounded-pill btnres" onclick="modal_new_additional_item()"><strong>NOVO ADICIONAL</strong></button>
-
-            </div>
-        </div>
-        <div class="card-body">
-            <table id="additional-items-table" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th class="mx-auto" style="width: 10px">#</th>
-                        <th>Adicional</th>
-                        <th style="width: 50px">Status</th>
-                        <th>Produto</th>
-                        <th>Valor</th>
-                        <th style="width: 50px">Ações</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-</div>
 @endsection
 @section('modal')
 {{-- TIPO DE ITEM --}}
