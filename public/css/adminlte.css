@@ -46865,7 +46865,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 .users-list>li img {
     border-radius: 50%;
     height: auto;
-    max-width: 100%;
+    max-width: 65%;
 }
 
 .users-list>li>a:hover,

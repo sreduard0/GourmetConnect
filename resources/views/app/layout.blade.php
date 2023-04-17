@@ -197,14 +197,13 @@ $app_settings = AppSettingsModel::all()->first();
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-
                         <div class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></div>
-
                         <div class="col-sm-6">
                             <h1 class="m-0">@yield('title-header')</h1>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
+                        </div>
+                        @yield('btn-print')
+                    </div>
+                </div>
             </div>
             <!-- /.content-header -->
 
