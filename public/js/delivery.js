@@ -122,6 +122,7 @@ $('#btn-new-delivery').on('click', function () {
         }
     });
 })
+
 // APAGAR COMANDA E PEDIDOS
 function delete_delivery(id) {
     bootbox.confirm({
@@ -144,10 +145,8 @@ function delete_delivery(id) {
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
-                    , url: window.location.origin + '/administrator/post/request/delete'
-                    , type: 'post'
-                    , data: { id: id }
-                    , dataType: 'text'
+                    , url: window.location.origin + '/administrator/delete/order/' + id
+                    , type: 'DELETE'
                     , success: function (response) {
                         $('#delivery-table').DataTable().clear().draw()
                         Toast.fire({

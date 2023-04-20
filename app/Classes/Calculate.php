@@ -79,7 +79,7 @@ class Calculate
         $items = RequestsItemsModel::with('additionals', 'product')
             ->where('request_id', $request)
             ->where('product_id', $item)
-            ->whereBetween('status', $status)
+            ->whereIn('status', $status)
             ->get();
 
         $sum = [];

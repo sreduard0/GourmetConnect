@@ -32,7 +32,7 @@ $(function () {
         "processing": true
         , "serverSide": true
         , "ajax": {
-            "url": window.location.origin + "/administrator/post/table/request/all"
+            "url": window.location.origin + "/administrator/post/table/orders"
             , "type": "POST"
             , "headers": {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -76,7 +76,7 @@ $(function () {
         }
 
     });
-    $("#client-requests-table").DataTable({
+    $("#order-requests-table").DataTable({
         "order": [
             [3, 'asc']
         ],
@@ -247,20 +247,22 @@ $(function () {
     //         // Define a largura da tabela com base no número de linhas e colunas
     //         minhaTabela.css('width', (numColunas * 100) + "px");
 });
+
+
+// MODAL
+function modal_new_request() {
+    $('#new-request-modal').modal('show');
+}
 // SELEÇÃO DE MESA E CLIENTE
 $('#table-select').on('change', function (event) {
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-        , url: window.location.origin + '/administrator/post/info/table/client'
-        , type: 'post'
-        , data: {
-            number: event.target.value
-        }
-        , dataType: 'text'
-        , success: function (response) {
-            var data = JSON.parse(response)
+        , url: window.location.origin + '/administrator/get/table/orders/' + event.target.value
+        , type: 'GET'
+        , success: function (data) {
+            // var data = JSON.parse(response)
             $("#client-name").autocomplete({
                 source: data
                 , minLength: 0
@@ -277,7 +279,7 @@ $('#table-select').on('change', function (event) {
     });
 })
 
-$('#btn-select-request').on('click', function () {
+$('#btn-select-order').on('click', function () {
     if (!$('#table-select').val()) {
         $('#table-select').css('border', '2px solid red')
         return false
@@ -290,21 +292,47 @@ $('#btn-select-request').on('click', function () {
     } else {
         $('#client-name').removeClass('is-invalid')
     }
-    $('#client-requests-table').DataTable().column(1).search($('#table-select').val().toUpperCase()).column(2).search($('#client-name').val().toUpperCase()).draw()
 
-    $('#type-itemLabel').text('NOVO PEDIDO')
-    $('#title-requests').text('PEDIDOS DE ' + $('#client-name').val().toUpperCase())
-    $('#div-select-client').removeClass('d-flex')
-    $('#div-select-client').addClass('d-none')
-    $('#div-add-request').css('display', 'block')
-    $('.modal-footer').css('display', 'block')
-    $('#requests-table').DataTable().clear().draw()
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+        , url: window.location.origin + '/administrator/post/order/new'
+        , type: 'post'
+        , data: {
+            table: $('#table-select').val(),
+            client_name: $('#client-name').val().toUpperCase(),
+        }
+        , dataType: 'text'
+        , success: function (data) {
+            var response = JSON.parse(data)
+            if (response.error) {
+                Toast.fire({
+                    icon: 'error'
+                    , title: '&nbsp&nbsp ' + response.message
+                });
+            } else {
+                $('#order-requests-table').DataTable().column(1).search(response.order).draw()
+                $('#type-itemLabel').text('NOVO PEDIDO')
+                $('#title-requests').text('PEDIDOS DE ' + $('#client-name').val().toUpperCase())
+                $('#div-select-client').removeClass('d-flex')
+                $('#div-select-client').addClass('d-none')
+                $('#div-add-request').css('display', 'block')
+                $('.modal-footer').css('display', 'block')
+                $('#requests-table').DataTable().clear().draw()
+            }
+
+        }
+        , error: function () {
+            Toast.fire({
+                icon: 'error'
+                , title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
 })
 
-// MODAL
-function modal_new_request() {
-    $('#new-request-modal').modal('show');
-}
 $('#new-request-modal').on('show.bs.modal', function () {
     setTimeout(() => {
         $("#menu-table").DataTable()
@@ -406,7 +434,7 @@ function add_item_request(item, amt) {
         }
         , dataType: 'text'
         , success: function (response) {
-            $('#client-requests-table').DataTable().clear().draw()
+            $('#order-requests-table').DataTable().clear().draw()
             Toast.fire({
                 icon: 'success'
                 , title: '&nbsp&nbsp Item adicionado.'
@@ -633,17 +661,12 @@ function delete_item_request(id) {
 
 // PEDIDOS DO CLIENTE
 function requests_client_view_modal(id) {
-    const URL = window.location.origin + '/administrator/post/request/client/requests-view'
+    const URL = window.location.origin + '/administrator/get/order/requests/' + id
     $.ajax({
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: URL,
-        type: 'post',
-        data: {
-            id: id,
-        },
-        dataType: 'text',
-        success: function (response) {
-            var data = JSON.parse(response)
+        type: 'GET',
+        success: function (data) {
             if (data.pending) {
                 $('.requests').removeClass('active');
                 $('.pending').addClass('active treme');
@@ -676,7 +699,7 @@ function list_items_equals_request(request, item, product, status) {
     $('#list-items-equals-modal').modal('show')
 
 }
-function delete_request(id) {
+function delete_order(id) {
     bootbox.confirm({
         title: 'Tem certeza que deseja excluir essa comanda?',
         message: '<p class="text-danger"> <strong>ESTA AÇÃO NÃO PODE SER DESFEITA</strong></p><p>Ao excluir esta comanda você apagará todos itens pendentes ou não.</p>',
@@ -696,11 +719,9 @@ function delete_request(id) {
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                    , url: window.location.origin + '/administrator/post/request/delete'
-                    , type: 'post'
-                    , data: { id: id }
-                    , dataType: 'text'
+                    },
+                    url: window.location.origin + '/administrator/delete/order/' + id
+                    , type: 'DELETE'
                     , success: function (response) {
                         $('#requests-table').DataTable().clear().draw()
                         Toast.fire({
@@ -857,7 +878,7 @@ function finalize_payment() {
         , success: function (status) {
             if (status) {
                 bootbox.prompt({
-                    title: 'COMANDA FINALIZADA',
+                    title: 'PRONTO!',
                     message: '<p>Escolha como o cliente ira receber sua nota fiscal.</p>',
                     inputType: 'select',
                     inputOptions: [{
@@ -910,7 +931,7 @@ function finalize_payment() {
                                         });
                                         $('#split-payment-table').DataTable().clear().draw()
                                         $('#client-requests-payment-table').DataTable().clear().draw()
-                                        $.get("/administrator/get/info/request/finish/" + $('#print_id').val(),
+                                        $.get("/administrator/get/check/order/finish/" + $('#print_id').val(),
                                             function (data) {
                                                 if (data == 'true') {
                                                     window.location.reload()

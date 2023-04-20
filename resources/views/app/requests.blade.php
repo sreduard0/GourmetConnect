@@ -69,7 +69,7 @@
                         </select>
                         <input minlength="2" maxlength="200" id="client-name" value="" type="text" class="form-control rounded-pill text-center col m-b-10" placeholder="Nome do Cliente ou Nº da comanda">
                         <div class="d-flex justify-content-center">
-                            <button id="btn-select-request" style="width:100px" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-chevron-right fs-35"></i></button>
+                            <button id="btn-select-order" style="width:100px" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-chevron-right fs-35"></i></button>
                         </div>
                     </div>
 
@@ -110,7 +110,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <table style="width:100%" id="client-requests-table" class="table table-bordered table-striped">
+                            <table style="width:100%" id="order-requests-table" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th width="25px">Foto</th>

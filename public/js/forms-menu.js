@@ -103,7 +103,7 @@ function edit_type_item() {
         obs_type_product: formData.get('obs-type-product')
     }
 
-    const URL = window.location.origin + '/administrator/post/save/menu/type/edit'
+    const URL = window.location.origin + '/administrator/put/save/menu/type/edit'
     $.ajax({
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: URL,
@@ -153,7 +153,7 @@ function delete_type_item(id) {
         message: '<strong class="text-danger">Essa operação não pode ser desfeita.</strong><br> Será excluido também os itens e adicionais vinculados.',
         callback: function (confirmacao) {
             if (confirmacao) {
-                const URL = window.location.origin + '/administrator/post/delete/menu/type/' + id
+                const URL = window.location.origin + '/administrator/delete/menu/type/' + id
                 $.ajax({
                     url: URL,
                     type: 'delete',
@@ -312,7 +312,7 @@ function delete_item(id) {
         message: '<strong>Essa operação não pode ser desfeita.</strong><br>Será excluido também seus adicionais.',
         callback: function (confirmacao) {
             if (confirmacao) {
-                const URL = window.location.origin + '/administrator/post/delete/menu/item/' + id
+                const URL = window.location.origin + '/administrator/delete/menu/item/' + id
                 $.ajax({
                     url: URL,
                     type: 'DELETE',
@@ -405,7 +405,7 @@ function edit_item() {
         obs_product: formData.get('obs-product')
     }
 
-    const URL = window.location.origin + '/administrator/post/save/menu/item/edit'
+    const URL = window.location.origin + '/administrator/put/save/menu/item/edit'
     $.ajax({
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: URL,
@@ -538,7 +538,7 @@ function delete_additional_item(id) {
         message: '<strong class="text-danger">Essa operação não pode ser desfeita.</strong><br>Este adicional sairá do cardápio',
         callback: function (confirmacao) {
             if (confirmacao) {
-                const URL = window.location.origin + '/administrator/post/delete/menu/additional-item/' + id
+                const URL = window.location.origin + '/administrator/delete/menu/additional-item/' + id
                 $.ajax({
                     url: URL,
                     type: 'DELETE',
@@ -630,7 +630,7 @@ function edit_additional_item() {
         obs_additional: formData.get('obs-additional')
     }
 
-    const URL = window.location.origin + '/administrator/post/save/menu/additional-item/edit'
+    const URL = window.location.origin + '/administrator/put/save/menu/additional-item/edit'
     $.ajax({
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: URL,

@@ -9,7 +9,10 @@ use Illuminate\Http\Request;
 
 class AppSettingsController extends Controller
 {
-    // CRIAR / EDITAR
+    //--------------------------------
+    // ESTABELECIMENTO
+    //--------------------------------
+    // EDITA AS CONFIGURAÇÕES
     public function save_establishment_settings(Request $request)
     {
         $data = $request->all();
@@ -35,7 +38,17 @@ class AppSettingsController extends Controller
 
         return 'success';
     }
+    // EXIBE
+    public function logo()
+    {
+        $app = AppSettingsModel::all()->first();
+        return $app->logo_url;
+    }
 
+    //--------------------------------
+    // APP TEMA
+    //--------------------------------
+    // SALVA CONFIGURAÇÕES DE TEMA
     public function save_theme_settings(Request $request)
     {
         $data = $request->all();
@@ -49,6 +62,9 @@ class AppSettingsController extends Controller
 
     }
 
+    //--------------------------------
+    // ESTABELECIMENTO
+    //--------------------------------
     public function save_delivery_local_settings(Request $request)
     {
         $data = $request->all();
@@ -60,20 +76,12 @@ class AppSettingsController extends Controller
             return 'success';
         }
     }
-
     // DELETAR
     public function delete_delivery_local(Request $request)
     {
         if (DeliveryLocationsModel::find($request->get('id'))->delete()) {
             return 'success';
         }
-    }
-
-    // EXIBE
-    public function logo()
-    {
-        $app = AppSettingsModel::all()->first();
-        return $app->logo_url;
     }
 
     public function delivery_locations(Request $request)
@@ -115,7 +123,9 @@ class AppSettingsController extends Controller
 
     }
 
+    // ---------------------------
     // INTALAÇÃO DO SISTEMA
+    // ---------------------------
     public function installation()
     {
         // EXECUTAR MIGRATES
