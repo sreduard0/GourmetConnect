@@ -86,7 +86,7 @@ class Tools
         return 'R$' . number_format(array_sum($sum), 2, ',', '.');
     }
     // CRIPTOGRAFA VALORES
-    public function hash($value, $function)
+    public static function hash($value, $function)
     {
         switch ($function) {
             case 'encrypt':
@@ -110,7 +110,7 @@ class Tools
         return array_sum($sum);
     }
     //====================[Mascara para strings]===========================
-    public function mask($mask, $str)
+    public static function mask($mask, $str)
     {
         $str = str_replace(" ", "", $str);
 
@@ -118,5 +118,11 @@ class Tools
             $mask[strpos($mask, "#")] = $str[$i];
         }
         return $mask;
+    }
+
+    public static function colorGenerate($value)
+    {
+        $hash = md5($value);
+        return '#' . substr($hash, 0, 6);
     }
 }

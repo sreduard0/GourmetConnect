@@ -2,107 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\Calculate;
 use App\Classes\Tools;
 use App\Events\notificationNewRequest;
 use App\Models\AdditionalItemModel;
-use App\Models\AppSettingsModel;
 use App\Models\DeliveryAddressModel;
 use App\Models\ItemModel;
-use App\Models\NotificationModel;
 use App\Models\PaymentMethodsModel;
 use App\Models\RequestAdditionalItemModal;
 use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class RequestsController extends Controller
 {
-// FERRAMENTAS
-    private $Tools;
-    public function __construct()
-    {
-        $this->Tools = new Tools;
-    }
 // MESAS
-    public function tables_events()
-    {
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/event-stream');
-        $response->headers->set('Cache-Control', 'no-cache');
-        $new_event = NotificationModel::orderBy('created_at', 'desc')->first();
-        $tables = '';
-        if ($new_event && session('event_id') != $new_event->id) {
-            $app_settings = AppSettingsModel::select('number_tables')->first();
-            $tables = [];
-            for ($i = 1; $i <= $app_settings->number_tables; ++$i) {
-                $table = [];
-                $requests = RequestsModel::where('table', $i)->where('delivery', 0)->where('status', 1)->get();
-                $table['table'] = $i;
-                $id = [];
-                if (count($requests) > 0) {
-                    foreach ($requests as $request) {
-                        $waiter = RequestsItemsModel::select('waiter')->where('request_id', $request->id)->orderBy('id', 'desc')->first();
 
-                        if (!isset($table['client'])) {
-                            $table['client'] = $request->client_name;
-                            $id[] = $request->id;
-                        } else {
-                            $table['client'] = $table['client'] . ', ' . $request->client_name;
-                            $id[] = $request->id;
-                        }
-                        $table['value'] = $this->Tools->sum_values_table($i);
-                        $table['request'] = $waiter->waiter;
-                    }
-                    $table['pendent'] = RequestsItemsModel::select('status')->whereIn('request_id', $id)->where('status', 2)->exists();
-                } else {
-                    $table['client'] = 'Vazia';
-                    $table['value'] = '-';
-                    $table['request'] = '-';
-                    $table['pendent'] = false;
-
-                }
-                $table['qr_value'] = $this->Tools->hash($i, 'encrypt');
-                $tables[$i] = $table;
-            }
-            session()->put(['event_id' => $new_event->id]);
-        }
-
-        $response->setContent('data: ' . json_encode($tables) . "\n\n");
-        $response->send();
-
-    }
-    public function table_info(Request $request)
-    {
-        $data = [];
-        foreach (RequestsModel::where('table', $request->get('table'))->where('status', 1)->where('delivery', 0)->get() as $table) {
-            $ico = '';
-            if (RequestsItemsModel::select('status')->where('request_id', $table->id)->where('status', 2)->exists()) {
-                $ico = ' (Há pedido)';
-            }
-            $data[] = [
-                'text' => $table->client_name . $ico,
-                'value' => $this->Tools->hash($table->id, 'encrypt'),
-            ];
-        }
-        return $data;
-    }
 // PEDIDO DO CLIENTE
     public function add_item_request(Request $request)
     {
         $data = $request->all();
         if (isset($data['client_id'])) {
-            $request = RequestsModel::select('id')->where('id', $this->Tools->hash($data['client_id'], 'decrypt'))->where('status', 1)->first();
+            $request = RequestsModel::select('id')->where('id', Tools::hash($data['client_id'], 'decrypt'))->where('status', 1)->first();
         } else {
             $request = RequestsModel::select('id')->where('table', $data['table'])->where('client_name', $data['client'])->where('status', 1)->first();
         }
-        $product = ItemModel::select('value')->find($this->Tools->hash($data['item'], 'decrypt'));
+        $product = ItemModel::select('value')->find(Tools::hash($data['item'], 'decrypt'));
 
         for ($i = 1; $i <= $data['amount']; $i++) {
             $requestItems[] = [
                 'request_id' => $request->id,
-                'product_id' => $this->Tools->hash($data['item'], 'decrypt'),
+                'product_id' => Tools::hash($data['item'], 'decrypt'),
                 'status' => 1,
                 'value' => $product->value,
                 'waiter' => session('user')['name'],
@@ -117,7 +48,7 @@ class RequestsController extends Controller
     {
         $data = $request->all();
         if (isset($data['client_id'])) {
-            $request = RequestsModel::select('id')->where('id', $this->Tools->hash($data['client_id'], 'decrypt'))->where('status', 1)->first();
+            $request = RequestsModel::select('id')->where('id', Tools::hash($data['client_id'], 'decrypt'))->where('status', 1)->first();
         } else {
             $request = RequestsModel::select('id')->where('table', $data['table'])->where('client_name', strtoupper($data['client']))->where('status', 1)->first();
         }
@@ -127,7 +58,7 @@ class RequestsController extends Controller
                     'notify' => 1,
                     'type' => 'bootbox',
                     'title' => 'NOVO PEDIDO',
-                    'request_id' => $this->Tools->hash($request->id, 'encrypt'),
+                    'request_id' => Tools::hash($request->id, 'encrypt'),
                     'messege' => 'Há um novo pedido na MESA #' . $data['table'] . ' para ' . strtoupper($data['client']),
                     'size' => 'large',
                     'centervertical' => 1,
@@ -143,7 +74,7 @@ class RequestsController extends Controller
     public function delete_item_request(Request $request)
     {
         $data = $request->all();
-        if (RequestsItemsModel::where('id', $this->Tools->hash($data['item'], 'decrypt'))->delete()) {
+        if (RequestsItemsModel::where('id', Tools::hash($data['item'], 'decrypt'))->delete()) {
             return 'success';
         } else {
             return 'not-delete';
@@ -152,9 +83,9 @@ class RequestsController extends Controller
     public function additionals_items_request(Request $request)
     {
         $data = $request->all();
-        $itemsCheck = RequestAdditionalItemModal::where('item_id', $this->Tools->hash($data['request_id'], 'decrypt'))->get();
-        $items = AdditionalItemModel::where('item_id', $this->Tools->hash($data['item'], 'decrypt'))->get();
-        $item = RequestsItemsModel::select('observation', 'value')->find($this->Tools->hash($data['request_id'], 'decrypt'));
+        $itemsCheck = RequestAdditionalItemModal::where('item_id', Tools::hash($data['request_id'], 'decrypt'))->get();
+        $items = AdditionalItemModel::where('item_id', Tools::hash($data['item'], 'decrypt'))->get();
+        $item = RequestsItemsModel::select('observation', 'value')->find(Tools::hash($data['request_id'], 'decrypt'));
 
         $additionalItems['observation'] = $item->observation;
         $additionalItems['items'] = [];
@@ -189,18 +120,18 @@ class RequestsController extends Controller
                     $additional = AdditionalItemModel::select('value')->find($input['id']);
                     $additionals = [
                         'additional_id' => $input['id'],
-                        'item_id' => $this->Tools->hash($inputs['id'], 'decrypt'),
+                        'item_id' => Tools::hash($inputs['id'], 'decrypt'),
                         'value' => $additional->value,
                     ];
-                    RequestAdditionalItemModal::updateOrCreate(['additional_id' => $input['id'], 'item_id' => $this->Tools->hash($inputs['id'], 'decrypt')], $additionals);
+                    RequestAdditionalItemModal::updateOrCreate(['additional_id' => $input['id'], 'item_id' => Tools::hash($inputs['id'], 'decrypt')], $additionals);
                 } else {
-                    RequestAdditionalItemModal::where('additional_id', $input['id'])->where('item_id', $this->Tools->hash($inputs['id'], 'decrypt'))->delete();
+                    RequestAdditionalItemModal::where('additional_id', $input['id'])->where('item_id', Tools::hash($inputs['id'], 'decrypt'))->delete();
                 }
             }
         }
-        $observation = RequestsItemsModel::find($this->Tools->hash($inputs['id'], 'decrypt'));
+        $observation = RequestsItemsModel::find(Tools::hash($inputs['id'], 'decrypt'));
         $observation->observation = $inputs['obs'];
-        $observation->value = $this->Tools->sum_values_item_number($this->Tools->hash($inputs['id'], 'decrypt'));
+        $observation->value = Calculate::itemValue(Tools::hash($inputs['id'], 'decrypt'));
         $observation->save();
         return 'success';
 
@@ -208,8 +139,8 @@ class RequestsController extends Controller
     public function print_request(Request $request)
     {
         if ($request->get('id') != 'all') {
-            $command = RequestsModel::with('address')->find($this->Tools->hash($request->get('id'), 'decrypt'));
-            $requests = RequestsItemsModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('status', 2)->orderBy('product_id', 'asc')->get();
+            $command = RequestsModel::with('address')->find(Tools::hash($request->get('id'), 'decrypt'));
+            $requests = RequestsItemsModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->where('status', 2)->orderBy('product_id', 'asc')->get();
 
             if ($command && count($requests) > 0) {
                 $items = [];
@@ -296,9 +227,9 @@ class RequestsController extends Controller
     }
     public function delete_request(Request $request)
     {
-        DeliveryAddressModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->delete();
-        RequestsItemsModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->delete();
-        RequestsModel::find($this->Tools->hash($request->get('id'), 'decrypt'))->delete();
+        DeliveryAddressModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->delete();
+        RequestsItemsModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->delete();
+        RequestsModel::find(Tools::hash($request->get('id'), 'decrypt'))->delete();
     }
     public function print_confirm(Request $request)
     {
@@ -313,8 +244,8 @@ class RequestsController extends Controller
             'user_destination' => null,
         ]));
         if ($request->get('id') != 'all') {
-            RequestsItemsModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('status', 2)->update(['status' => 3]);
-            RequestsModel::where('id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('delivery', 1)->update(['status' => 2]);
+            RequestsItemsModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->where('status', 2)->update(['status' => 3]);
+            RequestsModel::where('id', Tools::hash($request->get('id'), 'decrypt'))->where('delivery', 1)->update(['status' => 2]);
         } else {
             RequestsItemsModel::where('status', 2)->update(['status' => 3]);
             RequestsModel::where('status', 1)->where('delivery', 1)->update(['status' => 2]);
@@ -322,11 +253,11 @@ class RequestsController extends Controller
     }
     public function sum_requests_client(Request $request)
     {
-        $location = DeliveryAddressModel::where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->first();
+        $location = DeliveryAddressModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->first();
         if ($location) {
-            return $this->Tools->sum_values_requests($this->Tools->hash($request->get('id'), 'decrypt'), $location->delivery_value);
+            return Calculate::requestValue(Tools::hash($request->get('id'), 'decrypt'), [1, 3], true, true);
         } else {
-            return $this->Tools->sum_values_requests($this->Tools->hash($request->get('id'), 'decrypt'));
+            return Calculate::requestValue(Tools::hash($request->get('id'), 'decrypt'), [1, 3], false, true);
         }
     }
 // INFORMAÇÕES DO PEDIDO
@@ -344,26 +275,26 @@ class RequestsController extends Controller
     {
         $id = $request->get('id');
 
-        $requestData = RequestsModel::find($this->Tools->hash($id, 'decrypt'));
-        $requestItems = RequestsItemsModel::where('request_id', $this->Tools->hash($id, 'decrypt'))->where('status', 2)->exists();
+        $requestData = RequestsModel::find(Tools::hash($id, 'decrypt'));
+        $requestItems = RequestsItemsModel::where('request_id', Tools::hash($id, 'decrypt'))->where('status', 2)->exists();
         $data = [
             'table' => $requestData->table,
             'client' => $requestData->client_name,
-            'total' => $this->Tools->sum_values_requests($this->Tools->hash($id, 'decrypt')),
+            'total' => Calculate::requestValue(Tools::hash($id, 'decrypt'), [1, 3], false, true),
             'pending' => $requestItems,
         ];
         return $data;
     }
     public function request_finish($id)
     {
-        if (RequestsModel::find($this->Tools->hash($id, 'decrypt'))) {
+        if (RequestsModel::find(Tools::hash($id, 'decrypt'))) {
             return 'true';
         }
     }
     public function view_item_request(Request $request)
     {
-        $data = RequestsItemsModel::with('product', 'additionals')->find($this->Tools->hash($request->get('id'), 'decrypt'));
-        $data->value = $this->Tools->sum_values_item($this->Tools->hash($request->get('id'), 'decrypt'));
+        $data = RequestsItemsModel::with('product', 'additionals')->find(Tools::hash($request->get('id'), 'decrypt'));
+        $data->value = Calculate::itemValue(Tools::hash($request->get('id'), 'decrypt'), true);
         return $data;
     }
 // PAGAMENTO
@@ -378,16 +309,16 @@ class RequestsController extends Controller
         //  PAGAMENTO DIVIDIDO
         if ($data['split_payment']['active'] == 'true') {
             RequestsItemsModel::whereIn('id', $data['split_payment']['items'])->update(['status' => 4, 'payment_method' => $data['method']]);
-            if (RequestsItemsModel::where('request_id', $this->Tools->hash($data['id'], 'decrypt'))->where('status', 3)->count() < 1) {
-                RequestsModel::find($this->Tools->hash($data['id'], 'decrypt'))->update(['status' => 2]);
-                RequestsItemsModel::where('request_id', $this->Tools->hash($data['id'], 'decrypt'))->where('status', 2)->delete();
+            if (RequestsItemsModel::where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 3)->count() < 1) {
+                RequestsModel::find(Tools::hash($data['id'], 'decrypt'))->update(['status' => 2]);
+                RequestsItemsModel::where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 2)->delete();
             }
 
             return 'split_success';
         } else {
-            if (RequestsItemsModel::where('request_id', $this->Tools->hash($data['id'], 'decrypt'))->where('status', 3)->update(['status' => 4, 'payment_method' => $data['method']])) {
-                RequestsModel::find($this->Tools->hash($data['id'], 'decrypt'))->update(['status' => 2]);
-                RequestsItemsModel::where('request_id', $this->Tools->hash($data['id'], 'decrypt'))->where('status', 2)->delete();
+            if (RequestsItemsModel::where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 3)->update(['status' => 4, 'payment_method' => $data['method']])) {
+                RequestsModel::find(Tools::hash($data['id'], 'decrypt'))->update(['status' => 2]);
+                RequestsItemsModel::where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 2)->delete();
             }
             return 'success';
 
@@ -401,8 +332,8 @@ class RequestsController extends Controller
             $requests = RequestsItemsModel::with('additionals')->whereIn('id', $data['split_payment']['items'])->where('status', 4)->where('print', null)->orderBy('product_id', 'asc')->get();
             RequestsItemsModel::whereIn('id', $data['split_payment']['items'])->where('status', 4)->where('print', null)->update(['print' => 1]);
         } else {
-            $requests = RequestsItemsModel::with('additionals')->where('request_id', $this->Tools->hash($data['id'], 'decrypt'))->where('status', 4)->where('print', null)->orderBy('product_id', 'asc')->get();
-            RequestsItemsModel::where('request_id', $this->Tools->hash($data['id'], 'decrypt'))->where('status', 4)->where('print', null)->update(['print' => 1]);
+            $requests = RequestsItemsModel::with('additionals')->where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 4)->where('print', null)->orderBy('product_id', 'asc')->get();
+            RequestsItemsModel::where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 4)->where('print', null)->update(['print' => 1]);
         }
 
         if ($data['action'] == 'not') {
@@ -413,9 +344,9 @@ class RequestsController extends Controller
         $items = [];
         foreach ($requests as $item) {
             if (isset($total)) {
-                $total += $this->Tools->sum_values_item_number($item->id);
+                $total += Calculate::itemValue($item->id);
             } else {
-                $total = $this->Tools->sum_values_item_number($item->id);
+                $total = Calculate::itemValue($item->id);
             }
             if ($item->additionals != '[]' || $item->observation) {
                 $items[] = [
@@ -448,7 +379,7 @@ class RequestsController extends Controller
             }
         }
         $response = [
-            'command' => RequestsModel::find($this->Tools->hash($data['id'], 'decrypt')),
+            'command' => RequestsModel::find(Tools::hash($data['id'], 'decrypt')),
             'items' => $items,
             'total' => 'R$' . number_format($total, 2, ',', '.'),
             'method' => $method,
@@ -510,8 +441,8 @@ class RequestsController extends Controller
             $dado = array();
             $dado[] = '<img class="img-circle" src="' . asset($item->product->photo_url) . '" alt="" width="35">';
             $dado[] = $item->product->name;
-            $dado[] = $this->Tools->sum_values_item($item->id);
-            $dado[] = '<button onclick="return additional_item_request(\'' . $this->Tools->hash($item->product_id, 'encrypt') . '\',\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return  delete_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>';
+            $dado[] = Calculate::itemValue($item->id, true);
+            $dado[] = '<button onclick="return additional_item_request(\'' . Tools::hash($item->product_id, 'encrypt') . '\',\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return  delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>';
             // $dado[] = $item->description;'R$' . number_format($item->value, 2, ',', '.')
             $dados[] = $dado;
         }
@@ -537,7 +468,7 @@ class RequestsController extends Controller
         );
 
         if ($requestData['columns'][1]['search']['value']) {
-            $items = RequestsItemsModel::with('product')->where('request_id', $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'))->where('status', 3)->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])->get();
+            $items = RequestsItemsModel::with('product')->where('request_id', Tools::hash($requestData['columns'][1]['search']['value'], 'decrypt'))->where('status', 3)->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])->get();
         } else {
             $items = array();
         }
@@ -549,7 +480,7 @@ class RequestsController extends Controller
             $dado = array();
             $dado[] = '#' . $item->id;
             $dado[] = $item->product->name;
-            $dado[] = $this->Tools->sum_values_item($item->id);
+            $dado[] = Calculate::itemValue($item->id, true);
             $dado[] = '<div class="custom-control custom-checkbox">
                        <input class="custom-control-input custom-control-input-secondary" type="checkbox" name="item" id="item' . $item->id . '" value="' . $item->id . '">
                        <label for="item' . $item->id . '" class="custom-control-label"></label>
@@ -574,7 +505,7 @@ class RequestsController extends Controller
         if ($requestData['columns'][1]['search']['value']) {
             if ($requestData['columns'][2]['search']['value'] == 'true') {
                 $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
-                    ->where('request_id', $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'))
+                    ->where('request_id', Tools::hash($requestData['columns'][1]['search']['value'], 'decrypt'))
                     ->where('status', 2)
                     ->groupBy('product_id')
                     ->orderBy('count', $requestData['order'][0]['dir'])
@@ -583,7 +514,7 @@ class RequestsController extends Controller
 
             } elseif ($requestData['columns'][2]['search']['value'] == 'delivery') {
                 $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
-                    ->where('request_id', $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'))
+                    ->where('request_id', Tools::hash($requestData['columns'][1]['search']['value'], 'decrypt'))
                     ->where('status', '>', 1)
                     ->groupBy('product_id')
                     ->orderBy('count', $requestData['order'][0]['dir'])
@@ -591,7 +522,7 @@ class RequestsController extends Controller
                 $status = 0;
             } else {
                 $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
-                    ->where('request_id', $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'))
+                    ->where('request_id', Tools::hash($requestData['columns'][1]['search']['value'], 'decrypt'))
                     ->where('status', '>', 2)
                     ->groupBy('product_id')
                     ->orderBy('count', $requestData['order'][0]['dir'])
@@ -613,8 +544,8 @@ class RequestsController extends Controller
             $dado[] = '<img class="img-circle" src="' . asset($item->product->photo_url) . '" alt="" width="35">';
             $dado[] = $item->product->name;
             $dado[] = $item->count;
-            $dado[] = $this->Tools->sum_values_items_equals($item->product_id, $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'));
-            $dado[] = '<button onclick="return  list_items_equals_request(\'' . $requestData['columns'][1]['search']['value'] . '\',\'' . $this->Tools->hash($item->product->id, 'encrypt') . '\',\'' . $item->product->name . '\',\'' . $this->Tools->hash($status, 'encrypt') . '\')" class="btn btn-sm btn-primary m-t-3"><i class="fa-solid fa-eye"></i></button>';
+            $dado[] = Calculate::itemEqualsValue($item->product_id, Tools::hash($requestData['columns'][1]['search']['value'], 'decrypt'), [2, 3], true);
+            $dado[] = '<button onclick="return  list_items_equals_request(\'' . $requestData['columns'][1]['search']['value'] . '\',\'' . Tools::hash($item->product->id, 'encrypt') . '\',\'' . $item->product->name . '\',\'' . Tools::hash($status, 'encrypt') . '\')" class="btn btn-sm btn-primary m-t-3"><i class="fa-solid fa-eye"></i></button>';
             $dados[] = $dado;
         }
 
@@ -633,7 +564,7 @@ class RequestsController extends Controller
         $requestData = $request->all();
         if ($id) {
             $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
-                ->where('request_id', $this->Tools->hash($id, 'decrypt'))
+                ->where('request_id', Tools::hash($id, 'decrypt'))
                 ->where('status', 3)
                 ->groupBy('product_id')
                 ->orderBy('count', $requestData['order'][0]['dir'])
@@ -652,8 +583,8 @@ class RequestsController extends Controller
             $dado[] = '<img class="img-circle" src="' . asset($item->product->photo_url) . '" alt="" width="35">';
             $dado[] = $item->product->name;
             $dado[] = $item->count;
-            $dado[] = $this->Tools->sum_values_items_equals($item->product_id, $this->Tools->hash($id, 'decrypt'));
-            $dado[] = '<button onclick="return  list_items_equals_request(\'' . $id . '\',\'' . $this->Tools->hash($item->product->id, 'encrypt') . '\',\'' . $item->product->name . '\',\'\')" class="btn btn-sm btn-primary m-t-3"><i class="fa-solid fa-eye"></i></button>';
+            $dado[] = Calculate::itemEqualsValue($item->product_id, Tools::hash($id, 'decrypt'), [2, 3], true);
+            $dado[] = '<button onclick="return  list_items_equals_request(\'' . $id . '\',\'' . Tools::hash($item->product->id, 'encrypt') . '\',\'' . $item->product->name . '\',\'\')" class="btn btn-sm btn-primary m-t-3"><i class="fa-solid fa-eye"></i></button>';
             $dados[] = $dado;
         }
 
@@ -706,8 +637,8 @@ class RequestsController extends Controller
             $dado[] = $request->client_name;
             $dado[] = $request->table;
             $dado[] = $request->request_items ? 'SIM' : 'NÃO';
-            $dado[] = $this->Tools->sum_values_requests($request->id);
-            $dado[] = '<button onclick="return requests_client_view_modal(\'' . $this->Tools->hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-default" ><i class="fa-solid fa-eye"></i></button> <button onclick="return delete_request(\'' . $this->Tools->hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button> <a class="btn btn-sm btn-success" href="' . route('close-request', ['id' => $this->Tools->hash($request->id, 'encrypt')]) . '"><i class="fa-solid fa-check"></i></a>';
+            $dado[] = Calculate::requestValue($request->id, [2, 3], false, true);
+            $dado[] = '<button onclick="return requests_client_view_modal(\'' . Tools::hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-default" ><i class="fa-solid fa-eye"></i></button> <button onclick="return delete_request(\'' . Tools::hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button> <a class="btn btn-sm btn-success" href="' . route('close-request', ['id' => Tools::hash($request->id, 'encrypt')]) . '"><i class="fa-solid fa-check"></i></a>';
             $dados[] = $dado;
         }
 
@@ -753,7 +684,7 @@ class RequestsController extends Controller
             $dado[] = '<img class="img-circle" src="' . asset($item->photo_url) . '" alt="' . $item->name . '" width="35">';
             $dado[] = $item->name;
             $dado[] = 'R$' . number_format($item->value, 2, ',', '.');
-            $dado[] = '<button onclick="return modal_view_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-dark" ><i class="fa-solid fa-eye"></i></button> <button onclick="return select_amount_item(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i></button>';
+            $dado[] = '<button onclick="return modal_view_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-dark" ><i class="fa-solid fa-eye"></i></button> <button onclick="return select_amount_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i></button>';
             $dados[] = $dado;
         }
 
@@ -773,10 +704,10 @@ class RequestsController extends Controller
 
         if ($requestData['columns'][1]['search']['value'] && $requestData['columns'][2]['search']['value']) {
             $query = RequestsItemsModel::with('product')
-                ->where('request_id', $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'))
-                ->where('product_id', $this->Tools->hash($requestData['columns'][2]['search']['value'], 'decrypt'));
+                ->where('request_id', Tools::hash($requestData['columns'][1]['search']['value'], 'decrypt'))
+                ->where('product_id', Tools::hash($requestData['columns'][2]['search']['value'], 'decrypt'));
             if ($requestData['columns'][3]['search']['value']) {
-                $query->where('status', $this->Tools->hash($requestData['columns'][3]['search']['value'], 'decrypt'));
+                $query->where('status', Tools::hash($requestData['columns'][3]['search']['value'], 'decrypt'));
 
             } else {
                 $query->whereBetween('status', [2, 3]);
@@ -785,10 +716,10 @@ class RequestsController extends Controller
                 ->offset($requestData['start'])
                 ->take($requestData['length'])
                 ->get();
-            $queryrows = RequestsItemsModel::where('request_id', $this->Tools->hash($requestData['columns'][1]['search']['value'], 'decrypt'))
-                ->where('product_id', $this->Tools->hash($requestData['columns'][2]['search']['value'], 'decrypt'));
+            $queryrows = RequestsItemsModel::where('request_id', Tools::hash($requestData['columns'][1]['search']['value'], 'decrypt'))
+                ->where('product_id', Tools::hash($requestData['columns'][2]['search']['value'], 'decrypt'));
             if ($requestData['columns'][3]['search']['value']) {
-                $queryrows->where('status', $this->Tools->hash($requestData['columns'][3]['search']['value'], 'decrypt'));
+                $queryrows->where('status', Tools::hash($requestData['columns'][3]['search']['value'], 'decrypt'));
 
             } else {
                 $queryrows->whereBetween('status', [2, 3]);
@@ -808,8 +739,8 @@ class RequestsController extends Controller
             $dado[] = '<img class="img-circle" src="' . asset($item->product->photo_url) . '" alt="" width="35">';
             $dado[] = $item->product->name;
             $dado[] = $item->waiter;
-            $dado[] = $this->Tools->sum_values_item($item->id);
-            $dado[] = $item->status != 2 ? '<button onclick="return  view_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary m-t-3"><i class="fa-solid fa-eye"></i></button> <button onclick="return delete_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>' : '<button onclick="return additional_item_request(\'' . $this->Tools->hash($item->product_id, 'encrypt') . '\',\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return  delete_item_request(\'' . $this->Tools->hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>';
+            $dado[] = Calculate::itemValue($item->id, true);
+            $dado[] = $item->status != 2 ? '<button onclick="return  view_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary m-t-3"><i class="fa-solid fa-eye"></i></button> <button onclick="return delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>' : '<button onclick="return additional_item_request(\'' . Tools::hash($item->product_id, 'encrypt') . '\',\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return  delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>';
             $dados[] = $dado;
         }
 

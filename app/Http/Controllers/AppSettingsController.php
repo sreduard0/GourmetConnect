@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class AppSettingsController extends Controller
 {
-    // CREIAR
+    // CRIAR / EDITAR
     public function save_establishment_settings(Request $request)
     {
         $data = $request->all();
@@ -35,6 +35,7 @@ class AppSettingsController extends Controller
 
         return 'success';
     }
+
     public function save_theme_settings(Request $request)
     {
         $data = $request->all();
@@ -47,7 +48,8 @@ class AppSettingsController extends Controller
         return 'success';
 
     }
-    public function delivery_local_settings(Request $request)
+
+    public function save_delivery_local_settings(Request $request)
     {
         $data = $request->all();
         $location = new DeliveryLocationsModel();
@@ -58,7 +60,8 @@ class AppSettingsController extends Controller
             return 'success';
         }
     }
-    // Deleta
+
+    // DELETAR
     public function delete_delivery_local(Request $request)
     {
         if (DeliveryLocationsModel::find($request->get('id'))->delete()) {
@@ -66,13 +69,13 @@ class AppSettingsController extends Controller
         }
     }
 
-    // LOGO
+    // EXIBE
     public function logo()
     {
         $app = AppSettingsModel::all()->first();
         return $app->logo_url;
     }
-// TABELAS
+
     public function delivery_locations(Request $request)
     {
         $locationData = $request->all();
@@ -111,6 +114,8 @@ class AppSettingsController extends Controller
         return json_encode($json_data); //enviar dados como formato json
 
     }
+
+    // INTALAÇÃO DO SISTEMA
     public function installation()
     {
         // EXECUTAR MIGRATES

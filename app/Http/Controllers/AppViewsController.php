@@ -13,15 +13,15 @@ use App\Models\TypeItemModel;
 
 class AppViewsController extends Controller
 {
-    // FERRAMENTAS
-    private $Tools;
-    public function __construct()
-    {
-        $this->Tools = new Tools;
-    }
     public function control_panel()
     {
-        return view('app.control-panel');
+        $data = [
+            'delivery_qty' => RequestsModel::where('delivery', 1)->where('status', 4)->count(),
+            'sales_item_type' => ControlPanelController::sales_item_type(),
+            'total_sales' => ControlPanelController::month_and_year_sales(),
+            'newly_added_items' => ItemModel::latest()->take(4)->get(),
+        ];
+        return view('app.control-panel', $data);
     }
     public function requests()
     {
@@ -34,15 +34,13 @@ class AppViewsController extends Controller
     }
     public function close_request($id)
     {
-        if (RequestsModel::where('id', $this->Tools->hash($id, 'decrypt'))->where('status', 1)->first()) {
-
+        if (RequestsModel::where('id', Tools::hash($id, 'decrypt'))->where('status', 1)->first()) {
             $data = [
                 'app_settings' => AppSettingsModel::all()->first(),
-                'command' => RequestsModel::find($this->Tools->hash($id, 'decrypt')),
+                'command' => RequestsModel::find(Tools::hash($id, 'decrypt')),
                 'payment_methods' => PaymentMethodsModel::where('active', 1)->get(),
-                'finalize' => RequestsItemsModel::select('status')->where('request_id', $this->Tools->hash($id, 'decrypt'))->where('status', 3)->first(),
+                'finalize' => RequestsItemsModel::select('status')->where('request_id', Tools::hash($id, 'decrypt'))->where('status', 3)->first(),
             ];
-
             return view('app.close-request', $data);
         } else {
             return back();
@@ -59,42 +57,10 @@ class AppViewsController extends Controller
     }
     public function tables()
     {
-        $app_settings = AppSettingsModel::select('number_tables')->first();
-        $tables = [];
-        for ($i = 1; $i <= $app_settings->number_tables; ++$i) {
-            $table = [];
-            $requests = RequestsModel::where('table', $i)->where('delivery', 0)->where('status', 1)->get();
-            $table['table'] = $i;
-            $id = [];
-            if (count($requests) > 0) {
-                foreach ($requests as $request) {
-                    $waiter = RequestsItemsModel::select('waiter')->where('request_id', $request->id)->orderBy('id', 'desc')->first();
-                    if (!isset($table['client'])) {
-                        $table['client'] = $request->client_name;
-                        $id[] = $request->id;
-                    } else {
-                        $table['client'] = $table['client'] . ', ' . $request->client_name;
-                        $id[] = $request->id;
-                    }
-                    $table['value'] = $this->Tools->sum_values_table($i);
-                    $table['request'] = $waiter->waiter;
-                }
-                $table['pendent'] = RequestsItemsModel::select('status')->whereIn('request_id', $id)->where('status', 2)->exists();
-            } else {
-                $table['client'] = 'Vazia';
-                $table['value'] = '-';
-                $table['request'] = '-';
-                $table['pendent'] = false;
-
-            }
-            $table['qr_value'] = $this->Tools->hash($i, 'encrypt');
-            $tables[$i] = $table;
-        }
-
         $data = [
             'types' => TypeItemModel::all(),
             'app_settings' => AppSettingsModel::select('number_tables')->first(),
-            'tables' => $tables,
+            'tables' => TablesController::tables(),
         ];
         return view('app.tables', $data);
     }
@@ -121,7 +87,6 @@ class AppViewsController extends Controller
     }
     public function site_settings()
     {
-
         return view('app.site-settings');
     }
 }

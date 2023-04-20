@@ -1,3 +1,11 @@
+// AUTO SELECIONAR ABA VIA URL
+$(function () {
+    // Obtém o ID do elemento na URL
+    var url = window.location.href;
+    var element_id = url.split('#')[1];
+    // Ativa a aba correspondente
+    $('a[href="#' + element_id + '"]').tab('show');
+});
 // TABLES
 $(function () {
     $("#delivery-locations-table").DataTable({

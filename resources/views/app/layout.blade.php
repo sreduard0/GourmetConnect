@@ -115,7 +115,7 @@ $app_settings = AppSettingsModel::all()->first();
                                 <li class="nav-item">
                                     <a href="{{ route('delivery') }}" class="rounded-pill nav-link  @yield('delivery')">
                                         <i class="fa-duotone fa-moped nav-icon"></i>
-                                        <p>Entregas</p>
+                                        <p>Delivery</p>
                                     </a>
                                 </li>
                                 @endif

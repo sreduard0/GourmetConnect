@@ -11,6 +11,11 @@ class DeliveryAddressModel extends Model
     {
         return $this->hasOne('App\Models\RequestsModel', 'id', 'request_id');
     }
+    public function location()
+    {
+        return $this->hasOne('App\Models\DeliveryLocationsModel', 'id', 'location_id');
+    }
+
     use HasFactory;
     protected $table = 'delivery_address';
     protected $primarykey = 'id';

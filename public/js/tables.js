@@ -91,8 +91,13 @@ function view_requests_table(table) {
                         }
                     },
                 });
-            } else {
+            } else if (data.length == 1) {
                 requests_client_view_modal(data[0].value)
+            } else {
+                Toast.fire({
+                    icon: 'warning'
+                    , title: '&nbsp&nbsp Mesa vazia.'
+                });
             }
         }
         , error: function () {
