@@ -143,7 +143,7 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 //-------------------------------
 // ASSETS ADMINISTRATIVOS
 //-------------------------------
-Route::get('assets/{local}/{local2?}/{local3?}/{local4?}/{local5?}', AssetsController::class);
+Route::get('private/assets/{local?}/{file?}', AssetsController::class);
 
 Route::get('teste3', function () {
     // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);

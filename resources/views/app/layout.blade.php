@@ -17,34 +17,34 @@ $app_settings = AppSettingsModel::all()->first();
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@200..900&display=swap">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/fontawesome/css/all.min.css') }}">
     <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css') }}">
 
     {{-- CSS ESPECIFICO --}}
     @yield('css')
     {{-- CSS ESPECIFICO --}}
     {{-- sweetalert2 --}}
-    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/toastr/toastr.min.css') }}">
     <!-- daterange picker -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/daterangepicker/daterangepicker.css') }}">
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('assets/css/adminlte.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/css/adminlte.css') }}">
     <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <!-- summernote -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/summernote/summernote-bs4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/summernote/summernote-bs4.min.css') }}">
     <!-- jQuery -->
-    <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/mask-jquery.js') }}"></script>
-    <script src="{{ asset('assets/js/bootbox.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/app/js/mask-jquery.js') }}"></script>
+    <script src="{{ asset('assets/app/js/bootbox.min.js') }}"></script>
     {{-- datatables --}}
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     {{-- NOTIFICAÇÕES --}}
-    <script type="module" src="{{ asset('assets/js/notification.js') }}"></script>
+    <script type="module" src="{{ asset('private/assets/js/notification.js') }}"></script>
 
     @yield('script')
 
@@ -232,47 +232,47 @@ $app_settings = AppSettingsModel::all()->first();
     {{-- ==================================== PLUGINS ===================================== --}}
 
     <!-- jQuery UI 1.11.4 -->
-    <script src="{{ asset('assets/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
     <script>
         $.widget.bridge('uibutton', $.ui.button)
 
     </script>
     <!-- Bootstrap 4 -->
-    <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
 
     <!-- Tempusdominus Bootstrap 4 -->
-    <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/moment/locales.js') }}"></script>
-    <script src="{{ asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/moment/locales.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
     <!-- SweetAlert2 -->
-    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/toastr/toastr.min.js') }}"></script>
     <!-- overlayScrollbars -->
-    <script src="{{ asset('assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.j') }}s"></script>
+    <script src="{{ asset('assets/app/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.j') }}s"></script>
     <!-- AdminLTE App -->
-    <script src="{{ asset('assets/js/adminlte.js') }}"></script>
+    <script src="{{ asset('assets/app/js/adminlte.js') }}"></script>
     <!-- date-range-picker -->
-    <script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/daterangepicker/daterangepicker.js') }}"></script>
     <!-- Summernote -->
-    <script src="{{ asset('assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/summernote/summernote-bs4.min.js') }}"></script>
     <!-- DataTables  & Plugins -->
-    <script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables/numeric-comma.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.bootstrap4.js') }}"></script>
-    <script src="{{ asset('assets/plugins/jszip/jszip.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/pdfmake/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('assets/js/inputmask.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/datatables/numeric-comma.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/datatables-buttons/js/buttons.bootstrap4.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/jszip/jszip.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/pdfmake/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/pdfmake/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('assets/app/js/inputmask.js') }}"></script>
 
     @yield('plugins')
     {{-- ====================================/ PLUGINS ===================================== --}}

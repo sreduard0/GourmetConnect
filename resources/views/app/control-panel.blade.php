@@ -14,7 +14,7 @@ use App\Classes\Tools;
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('css')
-<link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/app/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
 @endsection
 @section('content')
 <div class="row">
@@ -340,11 +340,11 @@ use App\Classes\Tools;
 @endsection
 @section('plugins')
 <!-- overlayScrollbars -->
-<script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+<script src="{{ asset('assets/app/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 <!-- PAGE PLUGINS -->
 <!-- jQuery Mapael -->
-<script src="{{ asset('plugins/jquery-mousewheel/jquery.mousewheel.js') }}"></script>
+<script src="{{ asset('assets/app/plugins/jquery-mousewheel/jquery.mousewheel.js') }}"></script>
 <!-- ChartJS -->
-<script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
-<script src="{{ asset('js/control-panel.js') }}"></script>
+<script src="{{ asset('assets/app/plugins/chart.js/Chart.min.js') }}"></script>
+<script src="{{ asset('private/assets/js/control-panel.js') }}"></script>
 @endsection
