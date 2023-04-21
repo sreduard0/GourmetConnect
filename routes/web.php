@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdditionalItemsController;
 use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\AppViewsController;
+use App\Http\Controllers\AssetsController;
 use App\Http\Controllers\ControlPanelController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\ItemsController;
@@ -142,22 +143,7 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 //-------------------------------
 // ASSETS ADMINISTRATIVOS
 //-------------------------------
-Route::get('assets/{file}', function ($file) {
-    $path = storage_path("app/private/assets/" . $file);
-
-    // Verifica se o arquivo existe
-    if (!file_exists($path)) {
-        abort(404);
-    }
-
-    // Verifica se o usuário está autenticado e tem permissão de administrador
-    if (true) {
-        abort(403, 'Você não tem autorização para acesso');
-    }
-
-    // Retorna o arquivo
-    return response()->file($path);
-});
+Route::get('assets/{local}/{local2?}/{local3?}/{local4?}/{local5?}', AssetsController::class);
 
 Route::get('teste3', function () {
     // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);
