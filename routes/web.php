@@ -13,6 +13,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RequestsController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
+use App\Models\LoginAppModel;
 use Illuminate\Support\Facades\Route;
 
 // ----------------------------
@@ -117,6 +118,10 @@ Route::get('administrator/get/control-panel/chart/monthly-sales-chart', [Control
 Route::get('administrator/get/control-panel/chart/areas-with-more-delivery', [ControlPanelController::class, 'areas_with_more_delivery']);
 
 //-------------------------------
+// APP/ USUARIOS
+//-------------------------------
+
+//-------------------------------
 // APP/ NOTIFICAÇÕES
 //-------------------------------
 // PEDIDOS
@@ -134,6 +139,55 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 // TESTES
 //-------------------------------
 
+Route::get('teste3', function () {
+    // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);
+
+    if (auth()->attempt(['login' => 'Eduardo', 'password' => 'xivunk'])) {
+        // usuário autenticado com sucesso
+        // return redirect()->intended('/dashboard');
+
+        echo 'logado';
+    } else {
+        // credenciais inválidas
+        // return back()->withErrors(['email' => 'Credenciais inválidas']);
+        echo 'Erro';
+    }
+
+});
+Route::get('teste2', function () {
+    // Permission::create(['name' => 'Teste']);
+
+    // $editor = Role::create(['name' => 'Teste']);
+    // $editor->givePermissionTo('Teste');
+
+    $login = LoginAppModel::find(1);
+    // $login->assignRole('Teste');
+    // $login->givePermissionTo('Teste');
+    $login->removeRole('Teste');
+    // $login->revokePermissionTo('Teste');
+
+    // if ($login->hasRole('Teste')) {
+    //     echo 'Tem a Hole teste.';
+    // }
+    // if ($login->hasPermissionTo('Teste')) {
+    //     echo 'Tem a permissão teste.';
+    // }
+
+});
 Route::get('teste', function () {
+    // Permission::create(['name' => 'Teste']);
+
+    // $editor = Role::create(['name' => 'Teste']);
+    // $editor->givePermissionTo('Teste');
+
+    $login = LoginAppModel::find(1);
+    // $login->givePermissionTo('Teste');
+
+    if ($login->hasRole('Teste')) {
+        echo 'Tem a Hole teste.';
+    }
+    if ($login->hasPermissionTo('Teste')) {
+        echo 'Tem a permissão teste.';
+    }
 
 });

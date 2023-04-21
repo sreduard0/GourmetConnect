@@ -14,29 +14,29 @@ return [
      */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'app',
         'passwords' => 'users',
     ],
 
     /*
-    |--------------------------------------------------------------------------
-    | Authentication Guards
-    |--------------------------------------------------------------------------
+    |------------------------------------------------- -------------------------
+    | Guardas de Autenticação
+    |------------------------------------------------- -------------------------
     |
-    | Next, you may define every authentication guard for your application.
-    | Of course, a great default configuration has been defined for you
-    | here which uses session storage and the Eloquent user provider.
+    | Em seguida, você pode definir cada proteção de autenticação para seu aplicativo.
+    | Claro, uma ótima configuração padrão foi definida para você
+    | aqui que usa armazenamento de sessão e o provedor de usuário Eloquent.
     |
-    | All authentication drivers have a user provider. This defines how the
-    | users are actually retrieved out of your database or other storage
-    | mechanisms used by this application to persist your user's data.
+    | Todos os drivers de autenticação têm um provedor de usuário. Isso define como o
+    | os usuários são realmente recuperados de seu banco de dados ou outro armazenamento
+    | mecanismos usados ​​por este aplicativo para manter os dados do seu usuário.
     |
-    | Supported: "session"
+    | Suportado: "sessão"
     |
      */
 
     'guards' => [
-        'web' => [
+        'app' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
