@@ -12,12 +12,6 @@ use Illuminate\Http\Response;
 
 class NotificationController extends Controller
 {
-// FERRAMENTAS
-    private $Tools;
-    public function __construct()
-    {
-        $this->Tools = new Tools;
-    }
 // NOTIFICAÇÃO
     public function notification()
     {
@@ -51,7 +45,7 @@ class NotificationController extends Controller
     }
     public function new_request_notification(Request $request)
     {
-        $requests = RequestsItemsModel::with('product', 'additionals')->where('request_id', $this->Tools->hash($request->get('id'), 'decrypt'))->where('status', 2)->orderBy('product_id', 'desc')->get();
+        $requests = RequestsItemsModel::with('product', 'additionals')->where('request_id', Tools::hash($request->get('id'), 'decrypt'))->where('status', 2)->orderBy('product_id', 'desc')->get();
         $items = [];
         foreach ($requests as $item) {
 

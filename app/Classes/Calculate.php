@@ -11,7 +11,6 @@ class Calculate
 // -------------------------------
 // SOMA VALORES
 // -------------------------------
-
     // SOMA O VALOR DE PRODUTOS
     public static function requestValue($id, $status, $delivery_value = false, $formated = false)
     {
@@ -31,8 +30,10 @@ class Calculate
 
         if ($delivery_value) {
             $delivery_address = DeliveryAddressModel::select('delivery_value')->whereIn('request_id', $id)->get();
-            foreach ($delivery_address as $delivery) {
-                $sum[] = $delivery->delivery_value;
+            if (count($items) > 0) {
+                foreach ($delivery_address as $delivery) {
+                    $sum[] = $delivery->delivery_value;
+                }
             }
 
         }
@@ -49,7 +50,6 @@ class Calculate
             return array_sum($sum);
         }
     }
-
     // SOMA VALORES DE UM ITEM
     public static function itemValue($id, $formated = false)
     {
@@ -127,7 +127,6 @@ class Calculate
 // -------------------------------
 // OUTROS CALCULOS
 // -------------------------------
-
     // PORCENTAGEM
     public static function percentage($value1, $value2, $value_difference = false, $simbol = false)
     {

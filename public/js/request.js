@@ -661,7 +661,7 @@ function delete_item_request(id) {
 
 // PEDIDOS DO CLIENTE
 function requests_client_view_modal(id) {
-    const URL = window.location.origin + '/administrator/get/order/requests/' + id
+    const URL = window.location.origin + '/administrator/get/order/information/' + id
     $.ajax({
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: URL,

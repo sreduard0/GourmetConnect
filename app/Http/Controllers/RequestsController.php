@@ -8,7 +8,6 @@ use App\Events\notificationNewRequest;
 use App\Models\AdditionalItemModel;
 use App\Models\DeliveryAddressModel;
 use App\Models\ItemModel;
-use App\Models\PaymentMethodsModel;
 use App\Models\RequestAdditionalItemModal;
 use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class RequestsController extends Controller
 {
-// PEDIDO DO CLIENTE
+    // ADICIONA UM ITEM NO PEDIDO
     public function add_item_request(Request $request)
     {
         $data = $request->all();
@@ -42,6 +41,7 @@ class RequestsController extends Controller
         }
         return 'success';
     }
+    // DELETA UM ITEM DO PEDIDO
     public function delete_item_request(Request $request)
     {
         $data = $request->all();
@@ -51,6 +51,7 @@ class RequestsController extends Controller
             return 'not-delete';
         }
     }
+    // ENVIA PEDIDO PARA O CAIXA
     public function send_item_request(Request $request)
     {
         $data = $request->all();
@@ -78,7 +79,7 @@ class RequestsController extends Controller
             return 'not-send';
         }
     }
-
+    // EXIBE ITEMS ADICIONAIS
     public function additionals_items_request(Request $request)
     {
         $data = $request->all();
@@ -110,6 +111,7 @@ class RequestsController extends Controller
         }
         return $additionalItems;
     }
+    // SALVA AS OBSERVAÇÕES DO ITEM JUNTO COM ADICIONAIS
     public function save_obs_item_request(Request $request)
     {
         $inputs = $request->all();
@@ -135,6 +137,24 @@ class RequestsController extends Controller
         return 'success';
 
     }
+    // RETORNA O VALOR DE UM ITEM
+    public function sum_requests_client(Request $request)
+    {
+        $location = DeliveryAddressModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->first();
+        if ($location) {
+            return Calculate::requestValue(Tools::hash($request->get('id'), 'decrypt'), [1, 3], true, true);
+        } else {
+            return Calculate::requestValue(Tools::hash($request->get('id'), 'decrypt'), [1, 3], false, true);
+        }
+    }
+    // RETORNA INFORMAÇÕES DO ITEM
+    public function view_item_request(Request $request)
+    {
+        $data = RequestsItemsModel::with('product', 'additionals')->find(Tools::hash($request->get('id'), 'decrypt'));
+        $data->value = Calculate::itemValue(Tools::hash($request->get('id'), 'decrypt'), true);
+        return $data;
+    }
+    // IMPRIME O PEDIDO
     public function print_request(Request $request)
     {
         if ($request->get('id') != 'all') {
@@ -224,6 +244,7 @@ class RequestsController extends Controller
 
         }
     }
+    // MUDA O STATUS DO DO PEDIDO AO CONFIRMAR QUE FOI IMPRESSO
     public function print_confirm(Request $request)
     {
         event(new notificationNewRequest([
@@ -244,124 +265,7 @@ class RequestsController extends Controller
             RequestsModel::where('status', 1)->where('delivery', 1)->update(['status' => 2]);
         }
     }
-    public function sum_requests_client(Request $request)
-    {
-        $location = DeliveryAddressModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->first();
-        if ($location) {
-            return Calculate::requestValue(Tools::hash($request->get('id'), 'decrypt'), [1, 3], true, true);
-        } else {
-            return Calculate::requestValue(Tools::hash($request->get('id'), 'decrypt'), [1, 3], false, true);
-        }
-    }
-    // INFORMAÇÕES DO PEDIDO
-    public function view_item_request(Request $request)
-    {
-        $data = RequestsItemsModel::with('product', 'additionals')->find(Tools::hash($request->get('id'), 'decrypt'));
-        $data->value = Calculate::itemValue(Tools::hash($request->get('id'), 'decrypt'), true);
-        return $data;
-    }
-// PAGAMENTO
-    public function finalize_payment(Request $request)
-    {
-        $data = $request->all();
-
-        // ENVIA DADOS PARA A RECEITA
-        // RETORNA SE DEU CERTO
-
-        // FINALIZA ITENS NO SISTEMA
-        //  PAGAMENTO DIVIDIDO
-        if ($data['split_payment']['active'] == 'true') {
-            RequestsItemsModel::whereIn('id', $data['split_payment']['items'])->update(['status' => 4, 'payment_method' => $data['method']]);
-            if (RequestsItemsModel::where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 3)->count() < 1) {
-                RequestsModel::find(Tools::hash($data['id'], 'decrypt'))->update(['status' => 2]);
-                RequestsItemsModel::where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 2)->delete();
-            }
-
-            return 'split_success';
-        } else {
-            if (RequestsItemsModel::where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 3)->update(['status' => 4, 'payment_method' => $data['method']])) {
-                RequestsModel::find(Tools::hash($data['id'], 'decrypt'))->update(['status' => 2]);
-                RequestsItemsModel::where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 2)->delete();
-            }
-            return 'success';
-
-        }
-    }
-    public function tax_coupon(Request $request)
-    {
-        $data = $request->all();
-
-        if ($data['split_payment']['active'] == 'true') {
-            $requests = RequestsItemsModel::with('additionals')->whereIn('id', $data['split_payment']['items'])->where('status', 4)->where('print', null)->orderBy('product_id', 'asc')->get();
-            RequestsItemsModel::whereIn('id', $data['split_payment']['items'])->where('status', 4)->where('print', null)->update(['print' => 1]);
-        } else {
-            $requests = RequestsItemsModel::with('additionals')->where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 4)->where('print', null)->orderBy('product_id', 'asc')->get();
-            RequestsItemsModel::where('request_id', Tools::hash($data['id'], 'decrypt'))->where('status', 4)->where('print', null)->update(['print' => 1]);
-        }
-
-        if ($data['action'] == 'not') {
-            return false;
-        }
-
-        $method = PaymentMethodsModel::select('name')->find($data['method']);
-        $items = [];
-        foreach ($requests as $item) {
-            if (isset($total)) {
-                $total += Calculate::itemValue($item->id);
-            } else {
-                $total = Calculate::itemValue($item->id);
-            }
-            if ($item->additionals != '[]' || $item->observation) {
-                $items[] = [
-                    'name' => $item->product->name,
-                    'val_un' => 'R$' . number_format($item->product->value, 2, ',', '.'),
-                    'val_total' => 'R$' . number_format($item->product->value, 2, ',', '.'),
-                    'additionals' => $item->additionals,
-                    'amount' => '1',
-                ];
-
-            } else {
-                if (isset($count[$item->product->id])) {
-                    $count[$item->product->id]++;
-                } else {
-                    $count[$item->product->id] = 1;
-                }
-                if (isset($sum[$item->product->id])) {
-                    $sum[$item->product->id] += $item->product->value;
-                } else {
-                    $sum[$item->product->id] = $item->product->value;
-                }
-
-                $items[$item->product->id . 'item'] = [
-                    'name' => $item->product->name,
-                    'val_un' => 'R$' . number_format($item->product->value, 2, ',', '.'),
-                    'val_total' => 'R$' . number_format($sum[$item->product->id], 2, ',', '.'),
-                    'additionals' => [],
-                    'amount' => $count[$item->product->id],
-                ];
-            }
-        }
-        $response = [
-            'command' => RequestsModel::find(Tools::hash($data['id'], 'decrypt')),
-            'items' => $items,
-            'total' => 'R$' . number_format($total, 2, ',', '.'),
-            'method' => $method,
-
-        ];
-
-        switch ($data['action']) {
-            case 'email':
-                # code...
-                break;
-            case 'whatsapp':
-                # code...
-                break;
-            case 'print':
-                return view('app.component.non-tax-coupon', $response);
-                break;
-        }
-    }
-// TABELAS
+    // TABELA COM PEDIDOS DO CLIENTE AINDA NÃO ENVIADO
     public function request_client_table(Request $request)
     {
         $requestData = $request->all();
@@ -395,7 +299,6 @@ class RequestsController extends Controller
             $dado[] = $item->product->name;
             $dado[] = Calculate::itemValue($item->id, true);
             $dado[] = '<button onclick="return additional_item_request(\'' . Tools::hash($item->product_id, 'encrypt') . '\',\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return  delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>';
-            // $dado[] = $item->description;'R$' . number_format($item->value, 2, ',', '.')
             $dados[] = $dado;
         }
 
@@ -409,47 +312,7 @@ class RequestsController extends Controller
 
         return json_encode($json_data); //enviar dados como formato json
     }
-    public function split_payment_table(Request $request)
-    {
-        $requestData = $request->all();
-        $columns = array(
-            0 => 'id',
-            1 => 'product_id',
-            2 => 'value',
-            3 => 'id',
-        );
-
-        if ($requestData['columns'][1]['search']['value']) {
-            $items = RequestsItemsModel::with('product')->where('request_id', Tools::hash($requestData['columns'][1]['search']['value'], 'decrypt'))->where('status', 3)->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])->get();
-        } else {
-            $items = array();
-        }
-        $rows = 0;
-        $filtered = count($items);
-        $dados = array();
-
-        foreach ($items as $item) {
-            $dado = array();
-            $dado[] = '#' . $item->id;
-            $dado[] = $item->product->name;
-            $dado[] = Calculate::itemValue($item->id, true);
-            $dado[] = '<div class="custom-control custom-checkbox">
-                       <input class="custom-control-input custom-control-input-secondary" type="checkbox" name="item" id="item' . $item->id . '" value="' . $item->id . '">
-                       <label for="item' . $item->id . '" class="custom-control-label"></label>
-                       </div>';
-            $dados[] = $dado;
-        }
-
-        //Cria o array de informações a serem retornadas para o Javascript
-        $json_data = array(
-            "draw" => intval($requestData['draw']), //para cada requisição é enviado um número como parâmetro
-            "recordsTotal" => intval($filtered), //Quantidade de registros que há no banco de dados
-            "recordsFiltered" => intval($rows), //Total de registros quando houver pesquisa
-            "data" => $dados, //Array de dados completo dos dados retornados da tabela
-        );
-
-        return json_encode($json_data); //enviar dados como formato json
-    }
+    // PEDIDOS DO CLIENTE COM STATUS "EM ANDAMENTO"
     public function request_client_view(Request $request)
     {
         $requestData = $request->all();
@@ -511,46 +374,7 @@ class RequestsController extends Controller
 
         return json_encode($json_data); //enviar dados como formato json
     }
-    public function client_payment($id, Request $request)
-    {
-        $requestData = $request->all();
-        if ($id) {
-            $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
-                ->where('request_id', Tools::hash($id, 'decrypt'))
-                ->where('status', 3)
-                ->groupBy('product_id')
-                ->orderBy('count', $requestData['order'][0]['dir'])
-                ->get();
-            $rows = count($items);
-        } else {
-            $items = array();
-            $rows = 0;
-        }
-
-        $filtered = count($items);
-        $dados = array();
-        foreach ($items as $item) {
-            $dado = array();
-            $dado[] = '#' . $item->product->id;
-            $dado[] = '<img class="img-circle" src="' . asset($item->product->photo_url) . '" alt="" width="35">';
-            $dado[] = $item->product->name;
-            $dado[] = $item->count;
-            $dado[] = Calculate::itemEqualsValue($item->product_id, Tools::hash($id, 'decrypt'), 3, true);
-            $dado[] = '<button onclick="return  list_items_equals_request(\'' . $id . '\',\'' . Tools::hash($item->product->id, 'encrypt') . '\',\'' . $item->product->name . '\',\'\')" class="btn btn-sm btn-primary m-t-3"><i class="fa-solid fa-eye"></i></button>';
-            $dados[] = $dado;
-        }
-
-        //Cria o array de informações a serem retornadas para o Javascript
-        $json_data = array(
-            "draw" => intval($requestData['draw']), //para cada requisição é enviado um número como parâmetro
-            "recordsTotal" => intval($filtered), //Quantidade de registros que há no banco de dados
-            "recordsFiltered" => intval($rows), //Total de registros quando houver pesquisa
-            "data" => $dados, //Array de dados completo dos dados retornados da tabela
-        );
-
-        return json_encode($json_data); //enviar dados como formato json
-    }
-
+    // TABELA COM ITENS DO MENU
     public function table_menu(Request $request)
     {
         $requestData = $request->all();
@@ -597,6 +421,7 @@ class RequestsController extends Controller
 
         return json_encode($json_data); //enviar dados como formato json
     }
+    // TABELA COM ITEMS IGUAIS DO PEDIDO
     public function list_items_equals(Request $request)
     {
         $requestData = $request->all();

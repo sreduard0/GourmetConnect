@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Classes\Calculate;
 use App\Classes\Tools;
-use App\Models\DeliveryAddressModel;
 use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
 use Exception;
@@ -48,7 +47,6 @@ class OrderController extends Controller
     public function delete($id)
     {
         try {
-            DeliveryAddressModel::where('request_id', Tools::hash($id, 'decrypt'))->delete();
             RequestsItemsModel::where('request_id', Tools::hash($id, 'decrypt'))->delete();
             RequestsModel::find(Tools::hash($id, 'decrypt'))->delete();
         } catch (Exception $e) {
@@ -67,7 +65,7 @@ class OrderController extends Controller
         return $clients;
     }
     // INFORMAÇÕES DA CAMANDA
-    public function order_requests($id)
+    public function order_information($id)
     {
         $requestData = RequestsModel::find(Tools::hash($id, 'decrypt'));
         $requestItems = RequestsItemsModel::where('request_id', Tools::hash($id, 'decrypt'))->where('status', 2)->exists();

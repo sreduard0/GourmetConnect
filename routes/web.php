@@ -1,6 +1,5 @@
 <?php
 
-use App\Classes\Calculate;
 use App\Http\Controllers\AdditionalItemsController;
 use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\AppViewsController;
@@ -10,14 +9,11 @@ use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RequestsController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
-use App\Models\RequestsModel;
 use Illuminate\Support\Facades\Route;
-
-// Login routes
-Route::get('/', [LoginController::class, 'login'])->name('login');
 
 // ----------------------------
 // APP VIEWS
@@ -31,6 +27,11 @@ Route::get('administrator/menu', [AppViewsController::class, 'menu'])->name('men
 Route::get('administrator/users', [AppViewsController::class, 'users'])->name('users');
 Route::get('administrator/app-settings', [AppViewsController::class, 'app_settings'])->name('app_settings');
 Route::get('administrator/site-settings', [AppViewsController::class, 'site_settings'])->name('site_settings');
+
+//-------------------------------
+// APP/ LOGIN
+//-------------------------------
+Route::get('/', [LoginController::class, 'login'])->name('login');
 
 // -----------------------------
 // APP SETTINGS
@@ -73,60 +74,66 @@ Route::post('administrator/post/table/menu/additional-items', [AdditionalItemsCo
 Route::post('administrator/post/order/new', [OrderController::class, 'create']);
 Route::delete('administrator/delete/order/{id}', [OrderController::class, 'delete']);
 Route::get('administrator/get/table/orders/{table}', [OrderController::class, 'table_orders_list']);
-Route::get('administrator/get/order/requests/{id}', [OrderController::class, 'order_requests']);
+Route::get('administrator/get/order/information/{id}', [OrderController::class, 'order_information']);
 Route::get('administrator/get/check/order/finish/{id}', [OrderController::class, 'check_order_finish']);
 Route::post('administrator/post/table/orders', [OrderController::class, 'table']);
-
 // DELIVERY
-
+Route::post('administrator/post/delivery/new', [DeliveryController::class, 'create']);
+Route::put('administrator/post/delivery/edit', [DeliveryController::class, 'update']);
+Route::delete('administrator/delete/delivery/{id}', [DeliveryController::class, 'delete']);
+Route::put('administrator/put/delivery/status/out', [DeliveryController::class, 'out_for_delivery']);
+Route::put('administrator/put/delivery/status/finalize', [DeliveryController::class, 'finalize_delivery']);
+Route::get('administrator/get/delivery/information/{id}', [DeliveryController::class, 'delivery_information_modal']);
+Route::get('administrator/get/delivery/information/edit/{id}', [DeliveryController::class, 'delivery_information_edit']);
+Route::post('administrator/post/table/delivery', [DeliveryController::class, 'delivery_table']);
 // PEDIDOS
 Route::post('administrator/post/request/item/add', [RequestsController::class, 'add_item_request']);
 Route::post('administrator/post/request/item/delete', [RequestsController::class, 'delete_item_request']);
 Route::post('administrator/post/request/item/send', [RequestsController::class, 'send_item_request']);
 Route::post('administrator/post/request/additional-item/save', [RequestsController::class, 'save_obs_item_request']);
+Route::post('administrator/post/request/item/additionals', [RequestsController::class, 'additionals_items_request']);
 Route::post('administrator/post/request/print', [RequestsController::class, 'print_request']);
 Route::post('administrator/post/request/print/confirm', [RequestsController::class, 'print_confirm']);
-Route::post('administrator/post/request/item/additionals', [RequestsController::class, 'additionals_items_request']);
 Route::post('administrator/post/info/request/item', [RequestsController::class, 'view_item_request']);
-Route::post('administrator/post/request/finalize-payment', [RequestsController::class, 'finalize_payment']);
-Route::post('administrator/post/request/tax-coupon', [RequestsController::class, 'tax_coupon']);
 Route::post('administrator/post/table/request/client', [RequestsController::class, 'request_client_table']);
 Route::post('administrator/post/table/request/client-view', [RequestsController::class, 'request_client_view']);
-Route::post('administrator/post/table/request/client-payment/{id}', [RequestsController::class, 'client_payment']);
 Route::post('administrator/post/sum/request/client-payment', [RequestsController::class, 'sum_requests_client']);
 Route::post('administrator/post/table/request/list-items-equals', [RequestsController::class, 'list_items_equals']);
 Route::post('administrator/post/table/request/menu', [RequestsController::class, 'table_menu']);
-Route::post('administrator/post/table/request/split-payment', [RequestsController::class, 'split_payment_table']);
-Route::post('administrator/post/delivery/request/new', [DeliveryController::class, 'new_delivery']);
-Route::post('administrator/post/delivery/status/send', [DeliveryController::class, 'out_for_delivery']);
-Route::post('administrator/post/delivery/status/finalize', [DeliveryController::class, 'finalize_delivery']);
-Route::post('administrator/post/delivery/client/delivery-view', [DeliveryController::class, 'delivery_client_view']);
-Route::post('administrator/post/table/delivery/all', [DeliveryController::class, 'delivery_table']);
-Route::post('administrator/post/table/delivery/client', [DeliveryController::class, 'delivery_client_table']);
-
+// PAGAMENTO
+Route::post('administrator/post/table/request/client-payment/{id}', [PaymentController::class, 'client_payment']);
+Route::post('administrator/post/table/request/split-payment', [PaymentController::class, 'split_payment_table']);
+Route::post('administrator/post/request/finalize-payment', [PaymentController::class, 'finalize_payment']);
+Route::post('administrator/post/request/tax-coupon', [PaymentController::class, 'tax_coupon']);
 // MESAS
 Route::get('administrator/post/table/events', [TablesController::class, 'tables_events']);
 Route::post('administrator/post/table/info/clients', [TablesController::class, 'table_info']);
 
-// APP ROUTES PAINEL DE CONTROLE
+//-------------------------------
+// APP/ PAINEL DE CONTROLE
+//-------------------------------
 // VENDAS MENSAIS
 Route::get('administrator/get/control-panel/chart/monthly-sales-chart', [ControlPanelController::class, 'monthly_sales_chart']);
 Route::get('administrator/get/control-panel/chart/areas-with-more-delivery', [ControlPanelController::class, 'areas_with_more_delivery']);
 
-// NOTIFICAÇÃO
+//-------------------------------
+// APP/ NOTIFICAÇÕES
+//-------------------------------
+// PEDIDOS
 Route::get('administrator/notification/events', [NotificationController::class, 'notification']);
 Route::post('administrator/notification/events/requests', [NotificationController::class, 'new_request_notification']);
 
+//-------------------------------
+// SITE/ PEDIDOS
+//-------------------------------
 Route::get('table/request/qr-code/client/{table}', function ($table) {
     return $table;
 });
-Route::get('teste', function () {
-    $local = RequestsModel::select('id')->where('delivery', 0)->where('status', 2)->whereYear('updated_at', date('Y'))->whereMonth('updated_at', date('m'))->get()->toArray();
-    $local_old = RequestsModel::select('id')->where('delivery', 0)->where('status', 2)->whereYear('updated_at', date('Y'))->whereMonth('updated_at', date('m', strtotime('-1 month')))->get()->toArray();
 
-    $statistics['local'] = [
-        'percentage' => Calculate::percentage(Calculate::requestValue($local_old, 4), Calculate::requestValue($local, 4), true),
-    ];
-    dd($statistics);
+//-------------------------------
+// TESTES
+//-------------------------------
+
+Route::get('teste', function () {
 
 });

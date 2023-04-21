@@ -49,7 +49,7 @@
 </div>
 @endsection
 @section('modal')
-{{-- NOVO PEDIDO --}}
+{{-- NOVO PEDIDO / EDIDAR PEDIDO--}}
 <div class="modal fade" id="new-delivery-modal" role="dialog" tabindex="-1" aria-labelledby="newReqLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -152,9 +152,9 @@
                         </div>
                     </form>
                     <div class="col m-t-20">
-                        <div class="d-flex justify-content-center">
-                            <input type="hidden" id="client">
-                            <button style="width:100px" id="btn-new-delivery" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-chevron-right fs-35"></i></button>
+                        <input type="hidden" id="client">
+                        <div id="btn-act-form" class="d-flex justify-content-center">
+
                         </div>
                     </div>
                 </div>
@@ -219,12 +219,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title" id="DeliveryViewtitle"></div>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <div class="row float-right">
+                    <div id="edit-delivery-btn"></div>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="btn"><i class="fs-18 fa-solid fa-times"></i></button>
+                </div>
+
             </div>
             <div class="modal-body">
-                <div class="d-flex justify-content-end" id="edit_delivery_btn">
+                <div class="d-flex justify-content-end" id="edit_request_btn">
                 </div>
                 <table style="width:100%" id="client-delivery-view-table" class="table table-bordered table-striped">
                     <thead>

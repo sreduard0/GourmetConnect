@@ -20,10 +20,34 @@ function sum_requests_client(id) {
         },
     });
 }
-
+// MODAL
+function modal_new_delivery() {
+    $('#btn-act-form').html('<button style="width:100px" onclick="return new_delivery_form()" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-chevron-right fs-35"></i></button>');
+    $('#newDeliveryLabel').text('DELIVERY')
+    $('#new-delivery-modal').modal('show');
+}
+$('#new-delivery-modal').on('show.bs.modal', function () {
+    setTimeout(() => {
+        $("#menu-table").DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+        $("#client-requests-table").DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+    }, 200);
+});
+$('#new-delivery-modal').on('hide.bs.modal', function () {
+    $('#client-requests-table').DataTable().column(1).search('').draw()
+    $('#newDeliveryLabel').text('DELIVERY')
+    $('#form-new-delivery')[0].reset();
+    $('#title-requests').text('-')
+    $('#div-select-client').css('display', 'block')
+    $('#div-add-request').css('display', 'none')
+    $('#modal-footer').css('display', 'none')
+});
 
 // CRIA COMANDA DE DELIVERY
-$('#btn-new-delivery').on('click', function () {
+function new_delivery_form() {
     const formData = new FormData(document.getElementById('form-new-delivery'))
     // Verificação
     if (formData.get('delivery-client') == '' || formData.get('delivery-client').length > 255) {
@@ -80,7 +104,7 @@ $('#btn-new-delivery').on('click', function () {
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-        , url: window.location.origin + '/administrator/post/delivery/request/new'
+        , url: window.location.origin + '/administrator/post/delivery/new'
         , type: 'post'
         , data: {
             client: formData.get('delivery-client').toUpperCase(),
@@ -121,9 +145,155 @@ $('#btn-new-delivery').on('click', function () {
             });
         }
     });
-})
+}
+// EDITA INFORMAÇÕES DO DELIVERY
+function edit_information_delivery(id) {
+    $.ajax({
+        type: "GET",
+        url: window.location.origin + "/administrator/get/delivery/information/edit/" + id,
+        success: function (response) {
+            $('#btn-act-form').html('<button style="width:100px" onclick="return edit_delivery_form()" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-check fs-35"></i></button>');
+            $('#newDeliveryLabel').text('EDITAR DELIVERY')
+            $('#client').val(id)
+            // CAMPOS DO FORM
+            $('#delivery-client').val(response.delivery.client_name)
+            $('#delivery-client-phone').val(response.address.phone)
+            $('#delivery-location').val(response.address.location_id)
+            $('#delivery-address').val(response.address.street_address)
+            $('#delivery-number').val(response.address.number)
+            $('#delivery-neighborhood').val(response.address.neighborhood)
+            $('#delivery-reference').val(response.address.reference)
+            $('#payment-method').val(response.delivery.payment_method)
+            //
+            $('#div-select-client').css('display', 'block')
+            $('#div-add-request').css('display', 'none')
+            $('#modal-footer').css('display', 'none')
+            $('#delivery-client-modal').modal('hide')
+            $('#new-delivery-modal').modal('show')
+            setTimeout(() => {
+                $('body').addClass('modal-open')
+            }, 500)
+        },
+        error: function () {
+            Toast.fire({
+                icon: 'error'
+                , title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
+}
+// EDITA PEDIDOS DO DELIVERY
+function edit_request_delivery(id, client) {
+    $('#type-itemLabel').text('ITEMS DO DELIVERY')
+    $('#title-requests').text('PEDIDOS DE ' + client.toUpperCase())
+    $('#client').val(id)
+    $('#div-select-client').css('display', 'none')
+    $('#div-add-request').css('display', 'block')
+    $('#modal-footer').css('display', 'block')
+    $('#delivery-client-modal').modal('hide')
+    $('#client-requests-table').DataTable().column(1).search(id).draw()
+    $('#new-delivery-modal').modal('show')
+    setTimeout(() => {
+        $('body').addClass('modal-open')
+    }, 500)
+}
+// EDITAR COMANDA DE DELIVERY
+function edit_delivery_form() {
+    const formData = new FormData(document.getElementById('form-new-delivery'))
+    // Verificação
+    if (formData.get('delivery-client') == '' || formData.get('delivery-client').length > 255) {
+        $('#delivery-client').addClass('is-invalid');
+        return false;
+    } else {
+        $('#delivery-client').removeClass('is-invalid');
+    }
+    var phone = formData.get('delivery-client-phone').replace(/[()  ._-]/g, '')
+    if (formData.get('delivery-client-phone') == '' || phone.length != 11) {
+        $('#delivery-client-phone').addClass('is-invalid');
+        return false;
+    } else {
+        $('#delivery-client-phone').removeClass('is-invalid');
+    }
 
-// APAGAR COMANDA E PEDIDOS
+    if (formData.get('delivery-location') == '') {
+        $('#delivery-location').css('border', '2px solid red');
+        return false;
+    } else {
+        $('#delivery-location').removeAttr('style');
+    }
+    if (formData.get('delivery-address') == '' || formData.get('delivery-address').length > 255) {
+        $('#delivery-address').addClass('is-invalid');
+        return false;
+    } else {
+        $('#delivery-address').removeClass('is-invalid');
+    }
+    if (formData.get('delivery-number') == '') {
+        $('#delivery-number').addClass('is-invalid');
+        return false;
+    } else {
+        $('#delivery-number').removeClass('is-invalid');
+    }
+    if (formData.get('delivery-neighborhood') == '' || formData.get('delivery-neighborhood').length > 255) {
+        $('#delivery-neighborhood').addClass('is-invalid');
+        return false;
+    } else {
+        $('#delivery-neighborhood').removeClass('is-invalid');
+    }
+    if (formData.get('delivery-reference') == '' || formData.get('delivery-reference').length > 255) {
+        $('#delivery-reference').addClass('is-invalid');
+        return false;
+    } else {
+        $('#delivery-reference').removeClass('is-invalid');
+    }
+    if (formData.get('payment-method') == '') {
+        $('#payment-method').addClass('is-invalid');
+        return false;
+    } else {
+        $('#payment-method').removeClass('is-invalid');
+    }
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+        , url: window.location.origin + '/administrator/post/delivery/edit'
+        , type: 'PUT'
+        , data: {
+
+            id: $('#client').val(),
+            client: formData.get('delivery-client').toUpperCase(),
+            phone: formData.get('delivery-client-phone'),
+            location: formData.get('delivery-location'),
+            address: formData.get('delivery-address'),
+            number: formData.get('delivery-number'),
+            neighborhood: formData.get('delivery-neighborhood'),
+            reference: formData.get('delivery-reference'),
+            payment: formData.get('payment-method')
+        }
+        , dataType: 'text'
+        , success: function (response) {
+            if (response == 'error') {
+                Toast.fire({
+                    icon: 'error'
+                    , title: '&nbsp&nbsp Algo deu errado atualize a página e tente novamente.'
+                });
+            } else {
+                $('#delivery-table').DataTable().clear().draw()
+                $('#new-delivery-modal').modal('hide')
+                Toast.fire({
+                    icon: 'success'
+                    , title: '&nbsp&nbsp Informações salvas!.'
+                });
+            }
+        }
+        , error: function () {
+            Toast.fire({
+                icon: 'error'
+                , title: '&nbsp&nbsp Erro na rede.'
+            });
+        }
+    });
+}
+// APAGA COMANDA
 function delete_delivery(id) {
     bootbox.confirm({
         title: 'Tem certeza que deseja excluir essa delivery?',
@@ -145,13 +315,68 @@ function delete_delivery(id) {
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
-                    , url: window.location.origin + '/administrator/delete/order/' + id
+                    , url: window.location.origin + '/administrator/delete/delivery/' + id
                     , type: 'DELETE'
+                    , success: function (data) {
+                        var response = JSON.parse(data)
+                        if (response.error) {
+                            Toast.fire({
+                                icon: 'danger'
+                                , title: '&nbsp&nbsp ' + response.message
+                            });
+                        } else {
+                            $('#delivery-table').DataTable().clear().draw()
+                            Toast.fire({
+                                icon: 'success'
+                                , title: '&nbsp&nbsp Delivery excluído.'
+                            });
+                        }
+                    }
+                    , error: function () {
+                        Toast.fire({
+                            icon: 'error'
+                            , title: '&nbsp&nbsp Erro na rede.'
+                        });
+                    }
+                });
+            }
+        }
+    });
+}
+// ALTERA PARA SAIU PARA ENTREGA ENTREGA
+function out_for_delivery(id) {
+    bootbox.confirm({
+        title: 'Mudar status do pedido',
+        message: 'Deseja mudar o status para "Saiu para entrega"?',
+        size: 'small',
+        buttons: {
+            cancel: {
+                label: 'Cancelar',
+                className: 'btn-secondary'
+            },
+            confirm: {
+                label: 'Sim',
+                className: 'btn-primary'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                    , url: window.location.origin + '/administrator/put/delivery/status/out'
+                    , type: 'PUT'
+                    , data: {
+                        id: id,
+                    }
+                    , dataType: 'text'
                     , success: function (response) {
                         $('#delivery-table').DataTable().clear().draw()
+                        $('#delivery-client-modal').modal('hide')
                         Toast.fire({
                             icon: 'success'
-                            , title: '&nbsp&nbsp Delivery excluído.'
+                            , title: '&nbsp&nbsp Status alterado para "Saiu para entrega"'
                         });
                     }
                     , error: function () {
@@ -187,8 +412,8 @@ function finalize_delivery(id) {
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
-                    , url: window.location.origin + '/administrator/post/delivery/status/finalize'
-                    , type: 'post'
+                    , url: window.location.origin + '/administrator/put/delivery/status/finalize'
+                    , type: 'PUT'
                     , data: {
                         id: id,
                     }
@@ -213,53 +438,9 @@ function finalize_delivery(id) {
     });
 }
 
-// ALTERA PARA SAIU PARA ENTREGA ENTREGA
-function alt_status(id) {
-    bootbox.confirm({
-        title: 'Mudar status do pedido',
-        message: 'Deseja mudar o status para "Saiu para entrega"?',
-        size: 'small',
-        buttons: {
-            cancel: {
-                label: 'Cancelar',
-                className: 'btn-secondary'
-            },
-            confirm: {
-                label: 'Sim',
-                className: 'btn-primary'
-            }
-        },
-        callback: function (result) {
-            if (result) {
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                    , url: window.location.origin + '/administrator/post/delivery/status/send'
-                    , type: 'post'
-                    , data: {
-                        id: id,
-                    }
-                    , dataType: 'text'
-                    , success: function (response) {
-                        $('#delivery-table').DataTable().clear().draw()
-                        $('#delivery-client-modal').modal('hide')
-                        Toast.fire({
-                            icon: 'success'
-                            , title: '&nbsp&nbsp Status alterado para "Saiu para entrega"'
-                        });
-                    }
-                    , error: function () {
-                        Toast.fire({
-                            icon: 'error'
-                            , title: '&nbsp&nbsp Erro na rede.'
-                        });
-                    }
-                });
-            }
-        }
-    });
-}
+
+
+
 // ADICIONAR ITEM NO PEDIDO
 function select_amount_item(item) {
     bootbox.prompt({
@@ -425,21 +606,16 @@ $('#send-request').on('click', function (event) {
 })
 // VE PEDIDOS DO CLIENTE
 function delivery_client_view_modal(id) {
-    const URL = window.location.origin + '/administrator/post/delivery/client/delivery-view'
+    const URL = window.location.origin + '/administrator/get/delivery/information/' + id
     $.ajax({
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: URL,
-        type: 'post',
-        data: {
-            id: id,
-        },
-        dataType: 'text',
-        success: function (response) {
-            var data = JSON.parse(response)
+        type: 'GET',
+        success: function (data) {
             $('#client-delivery-view-table').DataTable().column(1).search(id).column(2).search('delivery').draw()
             $('#btn-act').html(data.btn)
             $('#DeliveryViewtitle').html('<strong>CLIENTE: </strong>' + data.client + '<br><strong> STATUS: </strong>' + data.status + '<br><strong> PAGAMENTO: </strong>' + data.payment + '<br><strong> DELIVERY: </strong> R$' + data.value + '<br><strong> ENDEREÇO: </strong>' + data.address)
-            $('#edit_delivery_btn').html(data.edit)
+            $('#edit_request_btn').html(data.btn_request)
+            $('#edit-delivery-btn').html(data.btn_delivery)
             $('.value-total').text(data.value_total)
             $('#print_id').val(id)
             $('#delivery-client-modal').modal('show')
@@ -447,31 +623,7 @@ function delivery_client_view_modal(id) {
 
     });
 }
-function edit_delivery(id, client) {
-    // const URL = window.location.origin + '/administrator/post/delivery/client/delivery-view'
-    // $.ajax({
-    //     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-    //     url: URL,
-    //     type: 'post',
-    //     data: {
-    //         id: id,
-    //     },
-    //     dataType: 'text',
-    //     success: function (response) {
-    //         var data = JSON.parse(response)
-    $('#type-itemLabel').text('ITEMS DO DELIVERY')
-    $('#title-requests').text('PEDIDOS DE ' + client.toUpperCase())
-    $('#client').val(id)
-    $('#div-select-client').css('display', 'none')
-    $('#div-add-request').css('display', 'block')
-    $('#modal-footer').css('display', 'block')
-    $('#delivery-client-modal').modal('hide')
-    $('#client-requests-table').DataTable().column(1).search(id).draw()
-    $('#new-delivery-modal').modal('show')
-    //     },
 
-    // });
-}
 
 // ADICIONAIS E OBSERVAÇÃO
 function additional_item_request(product_id, request_id) {
@@ -662,29 +814,7 @@ function list_items_equals_request(request, item, product) {
     $('#list-items-equals-modal').modal('show')
 }
 
-// MODAL
-function modal_new_delivery() {
-    $('#new-delivery-modal').modal('show');
-}
-$('#new-delivery-modal').on('show.bs.modal', function () {
-    setTimeout(() => {
-        $("#menu-table").DataTable()
-            .columns.adjust()
-            .responsive.recalc();
-        $("#client-requests-table").DataTable()
-            .columns.adjust()
-            .responsive.recalc();
-    }, 200);
-});
-$('#new-delivery-modal').on('hide.bs.modal', function () {
-    $('#client-requests-table').DataTable().column(1).search('').draw()
-    $('#newDeliveryLabel').text('DELIVERY')
-    $('#form-new-delivery')[0].reset();
-    $('#title-requests').text('-')
-    $('#div-select-client').css('display', 'block')
-    $('#div-add-request').css('display', 'none')
-    $('#modal-footer').css('display', 'none')
-});
+
 
 // TABLES
 $(function () {
@@ -709,7 +839,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": window.location.origin + "/administrator/post/table/delivery/all"
+            "url": window.location.origin + "/administrator/post/table/delivery"
             , "type": "POST"
             , "headers": {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -778,7 +908,7 @@ $(function () {
         }],
         "serverSide": true
         , "ajax": {
-            "url": window.location.origin + "/administrator/post/table/delivery/client"
+            "url": window.location.origin + "/administrator/post/table/request/client"
             , "type": "POST"
             , "headers": {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
