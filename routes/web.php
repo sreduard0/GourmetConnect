@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 // APP VIEWS
 // ----------------------------
 Route::get('administrator/control-panel', [AppViewsController::class, 'control_panel'])->name('control_panel');
+Route::get('administrator/control-panel', [AppViewsController::class, 'control_panel'])->name('control_panel');
 Route::get('administrator/requests', [AppViewsController::class, 'requests'])->name('requests');
 Route::get('administrator/requests/close-request/{id}', [AppViewsController::class, 'close_request'])->name('close-request');
 Route::get('administrator/delivery', [AppViewsController::class, 'delivery'])->name('delivery');
@@ -138,6 +139,25 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 //-------------------------------
 // TESTES
 //-------------------------------
+//-------------------------------
+// ASSETS ADMINISTRATIVOS
+//-------------------------------
+Route::get('assets/{file}', function ($file) {
+    $path = storage_path("app/private/assets/" . $file);
+
+    // Verifica se o arquivo existe
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    // Verifica se o usuário está autenticado e tem permissão de administrador
+    if (true) {
+        abort(403, 'Você não tem autorização para acesso');
+    }
+
+    // Retorna o arquivo
+    return response()->file($path);
+});
 
 Route::get('teste3', function () {
     // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);
