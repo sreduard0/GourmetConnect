@@ -260,8 +260,8 @@
 @include('app.component.view-item')
 @endsection
 @section('plugins')
-<script src="{{ asset('plugins\qr-generator\qr_generator.js') }}"></script>
-<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-<script src="{{ asset('js/request.js') }}"></script>
-<script src="{{ asset('js/tables.js') }}"></script>
+<script src="{{ asset('assets/app/plugins/qr-generator/qr_generator.js') }}"></script>
+<script src="{{ asset('assets/appplugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('private/assets/js/request.js') }}"></script>
+<script src="{{ asset('private/assets/js/tables.js') }}"></script>
 @endsection

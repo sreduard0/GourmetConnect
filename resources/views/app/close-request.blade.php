@@ -210,7 +210,7 @@ $tools = new App\Classes\Tools;
         </div>
         @endsection
         @section('plugins')
-        <script src="{{ asset('js/request.js') }}"></script>
+        <script src="{{ asset('private/assets/js/request.js') }}"></script>
         <script>
             $(window).on("load", function() {
                 sum_requests_client($('#print_id').val())

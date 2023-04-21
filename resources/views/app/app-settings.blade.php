@@ -7,10 +7,10 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('css')
-<link rel="stylesheet" href="{{asset('plugins/select2/css/select2.css')}}">
+<link rel="stylesheet" href="{{asset('assets/app/plugins/select2/css/select2.css')}}">
 @endsection
 @section('script')
-<script src="{{ asset('js/forms-app-settings.js') }}"></script>
+<script src="{{ asset('private/assets/js/forms-app-settings.js') }}"></script>
 @endsection
 @section('content')
 <div class="col-12">
@@ -285,6 +285,7 @@
 </div>
 @endsection
 @section('plugins')
-<script src="{{ asset('js/app-settings.js') }}"></script>
-<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('private/assets/js/app-settings.js') }}"></script>
+<script src="{{ asset('assets/app/plugins/select2/js/select2.full.min.js') }}"></script>
+
 @endsection

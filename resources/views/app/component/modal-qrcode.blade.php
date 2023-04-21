@@ -1,7 +1,7 @@
 @section('script')
-<script src="{{ asset('plugins/qr-generator/dist/easy.qrcode.min.js') }}" type="text/javascript" charset="utf-8">
+<script src="{{ asset('assets/app/plugins/qr-generator/dist/easy.qrcode.min.js') }}" type="text/javascript" charset="utf-8">
 </script>
-<script src="{{ asset('plugins/qr-generator/qr_generator.js') }}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ asset('assets/app/plugins/qr-generator/qr_generator.js') }}" type="text/javascript" charset="utf-8"></script>
 @endsection
 
 <!-- DIV QR CODE-->

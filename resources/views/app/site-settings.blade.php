@@ -41,6 +41,3 @@
 
 </div>
 @endsection
-@section('plugins')
-
-@endsection

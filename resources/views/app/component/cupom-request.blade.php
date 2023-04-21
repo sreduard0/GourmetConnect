@@ -11,7 +11,7 @@ $app_settings = AppSettingsModel::all()->first();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $app_settings->establishment_name  }} - Imprimir pedido</title>
     <link rel="shortcut icon" href="{{ asset($app_settings->logo_url) }}" type="image/x-icon">
-    <link rel="stylesheet" href="{{ asset('plugins/fontawesome/css/all.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/app/plugins/fontawesome/css/all.css') }}">
     <style>
         @media print {
             @page {

@@ -8,8 +8,9 @@
 @endsection
 @section('content')
 @section('script')
-<script src="{{ asset('js/users.js') }}"></script>
-<script src="{{ asset('js/form-users.js') }}"></script>
+<script src="{{ asset('private/assets/js/users.js') }}"></script>
+<script src="{{ asset('private/assets/js/form-users.js') }}"></script>
+
 @endsection
 <div class="col-12">
     <div class="card">

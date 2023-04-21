@@ -6,9 +6,6 @@
 @section('meta')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
-@section('script')
-{{-- CRUD --}}
-@endsection
 @section('content')
 <div class="col-12">
     <div class="card">
@@ -250,6 +247,6 @@
 @include('app.component.view-item')
 @endsection
 @section('plugins')
-<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-<script src="{{ asset('js/request.js') }}"></script>
+<script src="{{ asset('assets/app/plugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('private/assets/js/request.js') }}"></script>
 @endsection

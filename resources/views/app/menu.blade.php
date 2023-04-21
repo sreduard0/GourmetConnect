@@ -12,7 +12,7 @@
 @section('css')
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('css/croppie.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/app/css/croppie.css') }}" />
 @endsection
 @section('content')
 <div class="row">
@@ -105,7 +105,6 @@
         </div>
     </div>
 </div>
-
 @endsection
 @section('modal')
 {{-- TIPO DE ITEM --}}
@@ -329,7 +328,8 @@
 @endsection
 @section('plugins')
 <!-- Select2 -->
-<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-<script src="{{ asset('js/crop-img.js') }}"></script>
-<script src="{{ asset('js/menu.js') }}"></script>
+<script src="{{ asset('assets/app/plugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('private/assets/js/crop-img.js') }}"></script>
+<script src="{{ asset('private/assets/js/menu.js') }}"></script>
+
 @endsection
