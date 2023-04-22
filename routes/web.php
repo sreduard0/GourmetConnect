@@ -133,7 +133,7 @@ Route::get('administrator/post/user/edit/{id}', [UsersController::class, 'edit']
 Route::put('administrator/post/user/update', [UsersController::class, 'update']);
 Route::delete('administrator/post/user/delete/{id}', [UsersController::class, 'delete']);
 Route::post('administrator/post/table/users-app', [UsersController::class, 'table']);
-Route::get('administrator/get/check/email', [UsersController::class, 'check_email']);
+Route::get('administrator/get/check/email/{email}', [UsersController::class, 'check_email']);
 
 //-------------------------------
 // APP/ NOTIFICAÇÕES

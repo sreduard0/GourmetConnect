@@ -16,6 +16,11 @@ class UsersController extends Controller
     public function create(Request $request)
     {
         $userRequest = $request->all();
+
+        if (UsersAppModel::where('email', strtolower($userRequest['user_email']))->exists()) {
+            return ['error' => true, 'message' => 'Há um usuário com este e-mail'];
+        }
+
         $create_login = new LoginAppModel();
         $create_login->active = $userRequest['user_status'];
         $create_login->login = strtolower($userRequest['user_email']);
@@ -50,10 +55,10 @@ class UsersController extends Controller
             return ['error' => true, 'message' => 'Erro ao criar usuário'];
         }
     }
-    // FORM EDITAR USUARIO
+    //PREENCHE FORM EDITAR USUARIO
     public function edit($id)
     {
-
+        return UsersAppModel::find(Tools::hash($id, 'decrypt'));
     }
     // EDITAR USUÁRIOS
     public function update(Request $request)
@@ -64,6 +69,10 @@ class UsersController extends Controller
     public function delete($id)
     {
 
+    }
+    public function check_email($email)
+    {
+        return UsersAppModel::select('id', 'email')->where('email', $email)->first();
     }
     // TABELA DATATABLES DE USUÁRIOS
     public function table(Request $request)
@@ -118,7 +127,7 @@ class UsersController extends Controller
             $dado[] = $user->job;
             $dado[] = $user->active == 1 ? 'Ativo' : 'Inativo';
             $dado[] = 'admin';
-            $dado[] = '<button onclick="return modal_item(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-warning"><i class="fa-solid fa-user-shield"></i></button> <button onclick="return modal_item(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_item(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+            $dado[] = '<button onclick="return modal_item(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-warning"><i class="fa-solid fa-user-shield"></i></button> <button onclick="return user_modal(\'update\',\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_item(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
             $dados[] = $dado;
         }
 
