@@ -14,8 +14,15 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RequestsController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
+use App\Http\Controllers\UsersController;
 use App\Models\LoginAppModel;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+
+//-------------------------------
+// ASSETS ADMINISTRATIVOS
+//-------------------------------
+Route::get('private/assets/{local?}/{file?}', AssetsController::class);
 
 // ----------------------------
 // APP VIEWS
@@ -115,18 +122,22 @@ Route::post('administrator/post/table/info/clients', [TablesController::class, '
 //-------------------------------
 // APP/ PAINEL DE CONTROLE
 //-------------------------------
-// VENDAS MENSAIS
 Route::get('administrator/get/control-panel/chart/monthly-sales-chart', [ControlPanelController::class, 'monthly_sales_chart']);
 Route::get('administrator/get/control-panel/chart/areas-with-more-delivery', [ControlPanelController::class, 'areas_with_more_delivery']);
 
 //-------------------------------
 // APP/ USUARIOS
 //-------------------------------
+Route::post('administrator/post/user/create', [UsersController::class, 'create']);
+Route::get('administrator/post/user/edit/{id}', [UsersController::class, 'edit']);
+Route::put('administrator/post/user/update', [UsersController::class, 'update']);
+Route::delete('administrator/post/user/delete/{id}', [UsersController::class, 'delete']);
+Route::post('administrator/post/table/users-app', [UsersController::class, 'table']);
+Route::get('administrator/get/check/email', [UsersController::class, 'check_email']);
 
 //-------------------------------
 // APP/ NOTIFICAÇÕES
 //-------------------------------
-// PEDIDOS
 Route::get('administrator/notification/events', [NotificationController::class, 'notification']);
 Route::post('administrator/notification/events/requests', [NotificationController::class, 'new_request_notification']);
 
@@ -140,11 +151,10 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 //-------------------------------
 // TESTES
 //-------------------------------
-//-------------------------------
-// ASSETS ADMINISTRATIVOS
-//-------------------------------
-Route::get('private/assets/{local?}/{file?}', AssetsController::class);
+Route::get('teste4', function () {
+    echo Str::random(10);
 
+});
 Route::get('teste3', function () {
     // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);
 

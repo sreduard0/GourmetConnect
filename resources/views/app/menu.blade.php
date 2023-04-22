@@ -6,12 +6,12 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('script')
-<script src="{{ asset('js/forms-menu.js') }}"></script>
-<script src="{{ asset('js/croppie.js') }}"></script>
+<script src="{{ asset('private/assets/js/forms-menu.js') }}"></script>
+<script src="{{ asset('assets/app/js/croppie.js') }}"></script>
 @endsection
 @section('css')
 <!-- Select2 -->
-<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/app/plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/app/css/croppie.css') }}" />
 @endsection
 @section('content')
@@ -329,7 +329,7 @@
 @section('plugins')
 <!-- Select2 -->
 <script src="{{ asset('assets/app/plugins/select2/js/select2.full.min.js') }}"></script>
-<script src="{{ asset('private/assets/js/crop-img.js') }}"></script>
+<script src="{{ asset('private/assets/js/crop-img-menu.js') }}"></script>
 <script src="{{ asset('private/assets/js/menu.js') }}"></script>
 
 @endsection
