@@ -31,7 +31,7 @@ class UsersController extends Controller
                 $image_array_1 = explode(";", $userRequest['img_user']);
                 $image_array_2 = explode(",", $image_array_1[1]);
                 $img = base64_decode($image_array_2[1]);
-                $imageName = 'image_profile_' . strtolower($userRequest['first_name']) . date('d-m-Y') . '.png';
+                $imageName = 'image_profile_' . strtolower($userRequest['first_name']) . '.png';
                 $fileDir = 'private/img/' . strtolower($userRequest['user_email']) . '/';
                 Storage::put($fileDir . $imageName, $img);
             }
@@ -58,17 +58,79 @@ class UsersController extends Controller
     //PREENCHE FORM EDITAR USUARIO
     public function edit($id)
     {
-        return UsersAppModel::find(Tools::hash($id, 'decrypt'));
+        $query = UsersAppModel::where('users_app.id', Tools::hash($id, 'decrypt'))
+            ->join('login_app', 'users_app.login_id', 'login_app.id')
+            ->select(['login_app.active', 'users_app.*'])
+            ->first();
+        return $query;
     }
     // EDITAR USUÁRIOS
     public function update(Request $request)
     {
+        $userRequest = $request->all();
+        // CHECANDO SE EMAIL QUE FOI ALTERADO JA EXISTE
+        $check_email = UsersAppModel::where('email', $userRequest['user_email'])->first();
+        if ($check_email && $check_email->id != $userRequest['user_id']) {
+            return ['error' => true, 'message' => 'Há um usuário com este e-mail'];
+        }
 
+        // BUSCANDO DADOS DO USUARIO
+        $edit_user = UsersAppModel::find($userRequest['user_id']);
+
+        // VERIFICANDO SE A FOTO DE PERFIL FOI ALTERADA E SALVANDO NO CAMPO
+        if ($userRequest['img_user']) {
+            $image_array_1 = explode(";", $userRequest['img_user']);
+            $image_array_2 = explode(",", $image_array_1[1]);
+            $img = base64_decode($image_array_2[1]);
+            $imageName = 'image_profile_' . strtolower($userRequest['first_name']) . '.png';
+            $fileDir = 'private/img/' . strtolower($userRequest['user_email']) . '/';
+            Storage::delete($fileDir . $imageName);
+            Storage::put($fileDir . $imageName, $img);
+            $edit_user->photo_url = 'private/assets/' . strtolower($userRequest['user_email']) . '/' . $imageName;
+        }
+
+        // SALVANDO OUTRAS INFORMAÇOES
+        $edit_user->first_name = ucfirst(strtolower($userRequest['first_name']));
+        $edit_user->last_name = ucfirst(strtolower($userRequest['last_name']));
+        $edit_user->job = strtoupper($userRequest['user_job']);
+        $edit_user->phone = str_replace(['(', ')', '-', ' '], '', $userRequest['user_phone']);
+
+        // BUSCANDO DADOS DO LOGIN
+        $edit_login = LoginAppModel::find($edit_user->login_id);
+        $edit_login->active = $userRequest['user_status'];
+
+        // VERIFICANDO SE O EMAIL FOI ALTERADO E RESETANDO SENHA E ENVIANDO EMAIL
+        if ($edit_user->email != strtolower($userRequest['user_email'])) {
+            $edit_user->email = strtolower($userRequest['user_email']);
+            $edit_login->login = strtolower($userRequest['user_email']);
+            $edit_login->password = Hash::make(Str::random(8));
+
+            // envia email para para usuario
+        }
+
+        if ($edit_user->save()) {
+            if ($edit_login->save()) {
+                return ['error' => false, 'message' => 'Usuário criado com sucesso'];
+            }
+
+        } else {
+            return ['error' => true, 'message' => 'Erro ao criar usuário'];
+        }
     }
     // DELETAR USUÁRIOS
     public function delete($id)
     {
+        try {
+            $user = UsersAppModel::find(Tools::hash($id, 'decrypt'));
+            if (LoginAppModel::find($user->login_id)->delete()) {
+                Storage::delete('private/img/' . strtolower($user->email));
+                $user->delete();
+                return ['error' => false, 'message' => 'Usuário excluído com sucesso'];
+            }
 
+        } catch (\Throwable$th) {
+            return ['error' => true, 'message' => 'Ouve algum erro, tente novamente.'];
+        }
     }
     public function check_email($email)
     {
@@ -97,7 +159,7 @@ class UsersController extends Controller
             $users = $query->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])
                 ->offset($requestData['start'])
                 ->take($requestData['length'])
-                ->get();
+                ->get(['login_app.active', 'users_app.*']);
 
             $count = UsersAppModel::where('first_name', 'LIKE', '%' . $nameParts[0] . '%');
             if (isset($nameParts[1])) {
@@ -109,7 +171,7 @@ class UsersController extends Controller
                 ->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])
                 ->offset($requestData['start'])
                 ->take($requestData['length'])
-                ->get();
+                ->get(['login_app.active', 'users_app.*']);
 
             $rows = count(UsersAppModel::all());
         }
@@ -127,7 +189,7 @@ class UsersController extends Controller
             $dado[] = $user->job;
             $dado[] = $user->active == 1 ? 'Ativo' : 'Inativo';
             $dado[] = 'admin';
-            $dado[] = '<button onclick="return modal_item(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-warning"><i class="fa-solid fa-user-shield"></i></button> <button onclick="return user_modal(\'update\',\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_item(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+            $dado[] = '<button onclick="return modal_item(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-warning"><i class="fa-solid fa-user-shield"></i></button> <button onclick="return user_modal(\'update\',\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_user(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
             $dados[] = $dado;
         }
 

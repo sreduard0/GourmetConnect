@@ -16,8 +16,8 @@ use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
 use App\Http\Controllers\UsersController;
 use App\Models\LoginAppModel;
+use App\Models\UsersAppModel;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 //-------------------------------
 // ASSETS ADMINISTRATIVOS
@@ -51,6 +51,7 @@ Route::post('administrator/post/save/theme-settings', [AppSettingsController::cl
 Route::post('administrator/post/delete/delivery/local', [AppSettingsController::class, 'delete_delivery_local']);
 Route::post('administrator/post/save/delivery-local-settings', [AppSettingsController::class, 'save_delivery_local_settings']);
 Route::post('administrator/post/table/app-settings/delivery-locations', [AppSettingsController::class, 'delivery_locations']);
+Route::post('administrator/post/save/app-settings/mailer', [AppSettingsController::class, 'save_email_settings']);
 Route::get('administrator/get/app-settings/logo', [AppSettingsController::class, 'logo']);
 
 // ------------------------------
@@ -129,9 +130,9 @@ Route::get('administrator/get/control-panel/chart/areas-with-more-delivery', [Co
 // APP/ USUARIOS
 //-------------------------------
 Route::post('administrator/post/user/create', [UsersController::class, 'create']);
-Route::get('administrator/post/user/edit/{id}', [UsersController::class, 'edit']);
-Route::put('administrator/post/user/update', [UsersController::class, 'update']);
-Route::delete('administrator/post/user/delete/{id}', [UsersController::class, 'delete']);
+Route::get('administrator/get/user/edit/{id}', [UsersController::class, 'edit']);
+Route::put('administrator/put/user/update', [UsersController::class, 'update']);
+Route::delete('administrator/delete/user/{id}', [UsersController::class, 'delete']);
 Route::post('administrator/post/table/users-app', [UsersController::class, 'table']);
 Route::get('administrator/get/check/email/{email}', [UsersController::class, 'check_email']);
 
@@ -152,8 +153,7 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 // TESTES
 //-------------------------------
 Route::get('teste4', function () {
-    echo Str::random(10);
-
+    dd(UsersAppModel::where('users_app.id', 12)->join('login_app', 'users_app.login_id', 'login_app.id')->select(['login_app.active', 'users_app.*'])->first());
 });
 Route::get('teste3', function () {
     // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);

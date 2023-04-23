@@ -123,6 +123,22 @@ class AppSettingsController extends Controller
 
     }
 
+    //--------------------------------
+    // ENVIO DE E-MAILS
+    //--------------------------------
+    public function save_email_settings(Request $request)
+    {
+        $app_settings = AppSettingsModel::all()->first();
+        $app_settings->mailer_host = '';
+        $app_settings->mailer_port = '';
+        $app_settings->mailer_encryption = '';
+        $app_settings->mailer_email = '';
+        $app_settings->mailer_password = '';
+        if ($app_settings->save()) {
+            return true;
+        }
+    }
+
     // ---------------------------
     // INTALAÇÃO DO SISTEMA
     // ---------------------------

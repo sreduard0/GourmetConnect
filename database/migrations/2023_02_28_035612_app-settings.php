@@ -24,6 +24,11 @@ return new class extends Migration
             $table->string('theme_background', 255)->nullable();
             $table->string('theme_accent', 255)->nullable();
             $table->string('theme_sidebar', 255)->nullable();
+            $table->string('mailer_host', 255)->nullable();
+            $table->integer('mailer_port')->nullable();
+            $table->string('mailer_encryption', 4)->nullable();
+            $table->string('mailer_email', 255)->nullable();
+            $table->string('mailer_password', 255)->nullable();
             $table->integer('number_tables')->default(0);
             $table->timestamps();
         });

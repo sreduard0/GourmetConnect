@@ -79,7 +79,7 @@ class AppViewsController extends Controller
     public function app_settings()
     {
         $data = [
-            'app_settings' => AppSettingsModel::all()->first(),
+            'app_settings' => AppSettingsModel::first(),
             'payment_methods' => PaymentMethodsModel::all(),
         ];
 

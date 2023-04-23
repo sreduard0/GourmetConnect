@@ -19,6 +19,7 @@
             <ul class="nav nav-pills">
                 <li class="nav-item"><a class="rounded-pill nav-link active" href="#establishment-settings" data-toggle="tab">Dados</a></li>
                 <li class="nav-item"><a class="rounded-pill nav-link" href="#delivery-settings" data-toggle="tab">Delivery</a></li>
+                <li class="nav-item"><a class="rounded-pill nav-link" href="#email-settings" data-toggle="tab">E-mail</a></li>
                 <li class="nav-item"><a class="rounded-pill nav-link" href="#theme-settings" data-toggle="tab">Cores</a></li>
             </ul>
         </div>
@@ -187,10 +188,48 @@
                                 </thead>
                             </table>
                         </div>
-
                     </div>
                 </div>
-
+                <div class="tab-pane" id="email-settings">
+                    <form id="form-email-settings">
+                        <div class="border-bottom border-default m-b-20 col-md-3">
+                            <h5>CONFIGURAÇÃOES SMTP</h5>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="mailer-user">Usuário <span style="color:red">*</span></label>
+                                <input value="{{ $app_settings->mailer_user }}" class="form-control" name="mailer-user" id="mailer-user" placeholder="exemplo@gmail.com">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="mailer-password">Senha <span style="color:red">*</span></label>
+                                <input value="{{ $app_settings->mailer_password }}" class="form-control" name="mailer-password" id="mailer-password" placeholder="12345678">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="mailer-host">Host <span style="color:red">*</span></label>
+                                <input value="{{ $app_settings->mailer_host }}" class="form-control" name="mailer-host" id="mailer-host" placeholder="smtp.email.com">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="mailer-port">Porta <span style="color:red">*</span></label>
+                                <input value="{{ $app_settings->mailer_port }}" class="form-control" type="number" name="mailer-port" id="mailer-port" placeholder="583">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="mailer-encryption">Tipo de encripitação<span style="color:red">*</span></label>
+                                <input value="{{ $app_settings->mailer_encryption }}" class="form-control" name="mailer-encryption" id="mailer-encryption" placeholder="TLS">
+                            </div>
+                        </div>
+                    </form>
+                    <div class="d-flex justify-content-sm-end">
+                        <button class="btn btn-accent rounded-pill" onclick="return save_email_settings()">SALVAR</button>
+                    </div>
+                </div>
                 <div class="tab-pane" id="theme-settings">
                     <form id="form-theme-settings">
                         <div class="row">
