@@ -13,6 +13,13 @@ use App\Models\TypeItemModel;
 
 class AppViewsController extends Controller
 {
+    public function form_login()
+    {
+        $data = [
+            'app_settings' => AppSettingsModel::first(),
+        ];
+        return view('app.login.form-login', $data);
+    }
     public function control_panel()
     {
         $data = [

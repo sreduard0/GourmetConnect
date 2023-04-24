@@ -27,7 +27,7 @@ Route::get('private/assets/{local?}/{file?}', AssetsController::class);
 // ----------------------------
 // APP VIEWS
 // ----------------------------
-Route::get('login', [AppViewsController::class, 'form_login'])->name('form_login');
+Route::get('administrator/login', [AppViewsController::class, 'form_login'])->name('form_login');
 Route::get('administrator/control-panel', [AppViewsController::class, 'control_panel'])->name('control_panel');
 Route::get('administrator/requests', [AppViewsController::class, 'requests'])->name('requests');
 Route::get('administrator/requests/close-request/{id}', [AppViewsController::class, 'close_request'])->name('close-request');
