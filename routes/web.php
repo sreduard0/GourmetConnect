@@ -1,5 +1,6 @@
 <?php
 
+use App\Classes\Email;
 use App\Http\Controllers\AdditionalItemsController;
 use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\AppViewsController;
@@ -16,7 +17,6 @@ use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
 use App\Http\Controllers\UsersController;
 use App\Models\LoginAppModel;
-use App\Models\UsersAppModel;
 use Illuminate\Support\Facades\Route;
 
 //-------------------------------
@@ -27,7 +27,7 @@ Route::get('private/assets/{local?}/{file?}', AssetsController::class);
 // ----------------------------
 // APP VIEWS
 // ----------------------------
-Route::get('administrator/control-panel', [AppViewsController::class, 'control_panel'])->name('control_panel');
+Route::get('login', [AppViewsController::class, 'form_login'])->name('form_login');
 Route::get('administrator/control-panel', [AppViewsController::class, 'control_panel'])->name('control_panel');
 Route::get('administrator/requests', [AppViewsController::class, 'requests'])->name('requests');
 Route::get('administrator/requests/close-request/{id}', [AppViewsController::class, 'close_request'])->name('close-request');
@@ -153,7 +153,12 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 // TESTES
 //-------------------------------
 Route::get('teste4', function () {
-    dd(UsersAppModel::where('users_app.id', 12)->join('login_app', 'users_app.login_id', 'login_app.id')->select(['login_app.active', 'users_app.*'])->first());
+    $data = [
+        'login' => 'Eduardo',
+        'password' => 'Teste',
+        'name' => 'Eduardo',
+    ];
+    Email::LoginUser($data, 'dudu.martins373@gmail.com');
 });
 Route::get('teste3', function () {
     // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);

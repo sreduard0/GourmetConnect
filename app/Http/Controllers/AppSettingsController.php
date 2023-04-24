@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\Tools;
 use App\Models\AppSettingsModel;
 use App\Models\DeliveryLocationsModel;
 use App\Models\PaymentMethodsModel;
@@ -124,18 +125,21 @@ class AppSettingsController extends Controller
     }
 
     //--------------------------------
-    // ENVIO DE E-MAILS
+    // CONFIGURAÇÃO DO SMTP
     //--------------------------------
     public function save_email_settings(Request $request)
     {
+        $mailer_settings = $request->all();
         $app_settings = AppSettingsModel::all()->first();
-        $app_settings->mailer_host = '';
-        $app_settings->mailer_port = '';
-        $app_settings->mailer_encryption = '';
-        $app_settings->mailer_email = '';
-        $app_settings->mailer_password = '';
+        $app_settings->mailer_host = $mailer_settings['mailer_host'];
+        $app_settings->mailer_port = $mailer_settings['mailer_port'];
+        $app_settings->mailer_encryption = $mailer_settings['mailer_encryption'];
+        $app_settings->mailer_email = $mailer_settings['mailer_user'];
+        $app_settings->mailer_password = Tools::hash($mailer_settings['mailer_password'], 'encrypt');
         if ($app_settings->save()) {
-            return true;
+            return ['error' => false, 'message' => 'Configurações de email salvas.'];
+        } else {
+            return ['error' => true, 'message' => 'Ouve algum erro, tente novamente.'];
         }
     }
 

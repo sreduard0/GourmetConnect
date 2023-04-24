@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\Email;
 use App\Classes\Tools;
 use App\Models\LoginAppModel;
 use App\Models\UsersAppModel;
@@ -24,7 +25,8 @@ class UsersController extends Controller
         $create_login = new LoginAppModel();
         $create_login->active = $userRequest['user_status'];
         $create_login->login = strtolower($userRequest['user_email']);
-        $create_login->password = Hash::make(Str::random(8));
+        $pass = Str::random(8);
+        $create_login->password = Hash::make($pass);
 
         if ($create_login->save()) {
             if ($userRequest['img_user']) {
@@ -43,16 +45,27 @@ class UsersController extends Controller
             $create_user->job = strtoupper($userRequest['user_job']);
             $create_user->phone = str_replace(['(', ')', '-', ' '], '', $userRequest['user_phone']);
             $create_user->email = strtolower($userRequest['user_email']);
+            try {
+                Email::LoginUser(
+                    [
+                        'login' => strtolower($userRequest['user_email']),
+                        'password' => $pass,
+                        'name' => ucfirst(strtolower($userRequest['first_name'])),
+                    ],
+                    strtolower($userRequest['user_email'])
+                );
+            } catch (\Throwable$th) {
+                return ['error' => true, 'message' => 'ERRO AO ENVIAR E-MAIL COM LOGIN E SENHA.'];
+            }
 
             if ($create_user->save()) {
-                // envia email para para usuario
                 return ['error' => false, 'message' => 'Usuário criado com sucesso'];
             } else {
                 LoginAppModel::find($create_login->id)->delete();
-                return ['error' => true, 'message' => 'Erro ao criar usuário'];
+                return ['error' => true, 'message' => 'ERRO AO CRIAR USUÁRIO'];
             }
         } else {
-            return ['error' => true, 'message' => 'Erro ao criar usuário'];
+            return ['error' => true, 'message' => 'ERRO AO CRIAR USUÁRIO'];
         }
     }
     //PREENCHE FORM EDITAR USUARIO
@@ -103,18 +116,30 @@ class UsersController extends Controller
         if ($edit_user->email != strtolower($userRequest['user_email'])) {
             $edit_user->email = strtolower($userRequest['user_email']);
             $edit_login->login = strtolower($userRequest['user_email']);
-            $edit_login->password = Hash::make(Str::random(8));
+            $pass = Str::random(8);
+            $edit_login->password = Hash::make($pass);
 
-            // envia email para para usuario
+            try {
+                Email::LoginUser(
+                    [
+                        'login' => strtolower($userRequest['user_email']),
+                        'password' => $pass,
+                        'name' => ucfirst(strtolower($userRequest['first_name'])),
+                    ],
+                    strtolower($userRequest['user_email'])
+                );
+            } catch (\Throwable$th) {
+                return ['error' => true, 'message' => 'ERRO AO ENVIAR E-MAIL COM LOGIN E SENHA PARA ' . $userRequest['user_email']];
+            }
+
         }
 
         if ($edit_user->save()) {
             if ($edit_login->save()) {
-                return ['error' => false, 'message' => 'Usuário criado com sucesso'];
+                return ['error' => false, 'message' => 'USUÁRIO CRIADO COM SUCESSO'];
             }
-
         } else {
-            return ['error' => true, 'message' => 'Erro ao criar usuário'];
+            return ['error' => true, 'message' => 'ERRO AO EDITAR USUÁRIO'];
         }
     }
     // DELETAR USUÁRIOS

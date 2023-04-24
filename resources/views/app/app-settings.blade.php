@@ -1,3 +1,6 @@
+@php
+use App\Classes\Tools;
+@endphp
 @extends('app.layout')
 @section('title', 'Configurações do aplicativo')
 @section('app-settings', 'active')
@@ -192,19 +195,20 @@
                 </div>
                 <div class="tab-pane" id="email-settings">
                     <form id="form-email-settings">
-                        <div class="border-bottom border-default m-b-20 col-md-3">
+                        <div class="border-bottom border-default m-b-20 col-md-4">
                             <h5>CONFIGURAÇÃOES SMTP</h5>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="mailer-user">Usuário <span style="color:red">*</span></label>
-                                <input value="{{ $app_settings->mailer_user }}" class="form-control" name="mailer-user" id="mailer-user" placeholder="exemplo@gmail.com">
+                                <label for="mailer-user">Usuário</label>
+                                <input value="{{ $app_settings->mailer_email }}" class="form-control" name="mailer-user" id="mailer-user" placeholder="exemplo@gmail.com">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="mailer-password">Senha <span style="color:red">*</span></label>
-                                <input value="{{ $app_settings->mailer_password }}" class="form-control" name="mailer-password" id="mailer-password" placeholder="12345678">
+                                <label for="mailer-password">Senha</label>
+                                <input type="password" value="{{ Tools::hash($app_settings->mailer_password ,'decrypt') }}" class="form-control" name="mailer-password" id="mailer-password" placeholder="12345678">
+
                             </div>
                         </div>
                         <div class="row">
