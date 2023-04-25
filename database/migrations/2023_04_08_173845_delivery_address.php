@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('delivery_address', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('delivered')->default(0);
-            $table->integer('request_id');
+            $table->bigInteger('request_id');
             $table->integer('location_id');
             $table->string('recipient_name', 255);
             $table->string('street_address', 255);

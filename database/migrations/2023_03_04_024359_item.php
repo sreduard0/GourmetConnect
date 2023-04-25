@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('type_id');
+            $table->bigInteger('type_id');
             $table->integer('status');
             $table->string('photo_url', 255);
             $table->string('name', 255);

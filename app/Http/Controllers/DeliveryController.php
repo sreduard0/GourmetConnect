@@ -126,14 +126,14 @@ class DeliveryController extends Controller
                 $status = 'NOVO PEDIDO';
                 $btn = '<button type="button" onclick="print_request(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn btn-info rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>';
                 $btn_request = '<button class="btn btn-accent rounded-pill" onclick="edit_request_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\',\'' . $requestData->client_name . '\')"><i class="fa-solid fa-pen"></i><strong> EDITAR PEDIDO</strong></button>';
-                $btn_delivery = '<button onclick="edit_information_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn"><i class="fa-solid fa-pen"></i> EDITAR <strong></strong></button>';
+                $btn_delivery = '<button onclick="edit_information_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn text-success"><i class="fa-solid fa-pen"></i> EDITAR <strong></strong></button>';
 
                 break;
             case 2:
                 $status = 'EM ANDAMENTO';
                 $btn = '<button type="button" onclick="out_for_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn btn-primary rounded-pill float-right m-t-10"><strong>SAIU PARA ENTREGA</strong></button>';
                 $btn_request = '';
-                $btn_delivery = '<button onclick="edit_information_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn"><i class="fa-solid fa-pen"></i><strong></strong></button>';
+                $btn_delivery = '<button onclick="edit_information_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn text-success"><i class="fa-solid fa-pen"></i><strong></strong></button>';
 
                 break;
             case 3:

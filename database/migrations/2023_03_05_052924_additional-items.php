@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('additional_items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('item_id');
+            $table->bigInteger('item_id');
             $table->string('name');
             $table->integer('status');
             $table->decimal('value', 10, 2);

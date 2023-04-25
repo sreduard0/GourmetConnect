@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use App\Mail\LoginUserMail;
+use App\Mail\TwoFactorCheckMail;
 use App\Models\AppSettingsModel;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
@@ -30,5 +31,11 @@ class Email
     {
         Email::configMailer();
         Mail::to($email)->send(new LoginUserMail($data));
+    }
+    // ENVIO DE LOGIN E SENHA PARA USUÁRIO DO APP
+    public static function TwoFactorCheck($data, $email)
+    {
+        Email::configMailer();
+        Mail::to($email)->send(new TwoFactorCheckMail($data));
     }
 }

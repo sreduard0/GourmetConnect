@@ -66,7 +66,6 @@ $app_settings = AppSettingsModel::all()->first();
         @endphp
         @endif
         <aside class="main-sidebar {{ $app_settings->theme_sidebar }} elevation-5">
-
             <div class="brand-link">
                 <img src="{{  asset($app_settings->logo_url) }}" alt="{{ $app_settings->establishment_name }}" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">{{ $app_settings->establishment_name }}</span>
@@ -83,7 +82,7 @@ $app_settings = AppSettingsModel::all()->first();
                 </div>
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        @if(session('user')['permissions']['dashboard'])
+                        @role('Dashboard')
                         <li class="nav-item ">
                             <a href="{{ route('control_panel') }}" class="rounded-pill nav-link @yield('control-panel')">
                                 <i class="nav-icon fa-duotone fa-chart-bar"></i>
@@ -92,8 +91,8 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                         </li>
-                        @endif
-                        @if(session('user')['permissions']['requests'] || session('user')['permissions']['delivery'])
+                        @endrole
+                        @role(['Requests','Delivery'])
                         <li class="nav-item @yield('menu-requests')">
                             <a href="#" class="rounded-pill nav-link @yield('requests') @yield('delivery')">
                                 <i class="nav-icon fa-duotone fa-burger-soda"></i>
@@ -103,26 +102,26 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                @if(session('user')['permissions']['requests'])
+                                @role('Requests')
                                 <li class="nav-item">
-                                    <a href="{{ route('requests') }}" class="rounded-pill nav-link  @yield('requests')">
+                                    <a href="{{ route('requests') }}" class="rounded-pill nav-link @yield('requests')">
                                         <i class="fa-duotone fa-home nav-icon"></i>
                                         <p>Local</p>
                                     </a>
                                 </li>
-                                @endif
-                                @if(session('user')['permissions']['delivery'])
+                                @endrole
+                                @role('Delivery')
                                 <li class="nav-item">
                                     <a href="{{ route('delivery') }}" class="rounded-pill nav-link  @yield('delivery')">
                                         <i class="fa-duotone fa-moped nav-icon"></i>
                                         <p>Delivery</p>
                                     </a>
                                 </li>
-                                @endif
+                                @endrole
                             </ul>
                         </li>
-                        @endif
-                        @if(session('user')['permissions']['tables'])
+                        @endrole
+                        @role('Tables')
                         <li class="nav-item ">
                             <a href="{{ route('tables') }}" class="rounded-pill nav-link @yield('tables')">
                                 <i class="nav-icon fa-duotone fa-table-picnic"></i>
@@ -131,8 +130,8 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                         </li>
-                        @endif
-                        @if(session('user')['permissions']['menu'])
+                        @endrole
+                        @role('Menu')
                         <li class="nav-item ">
                             <a href="{{ route('menu') }}" class="rounded-pill nav-link @yield('menu')">
                                 <i class="nav-icon fa-duotone fa-list-radio"></i>
@@ -141,10 +140,9 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                         </li>
-                        @endif
-                        @if(session('user')['permissions']['users'] || session('user')['permissions']['app'] || session('user')['permissions']['site'])
+                        @endrole
+                        @role(['Users','App','Site'])
                         <li class="nav-item @yield('config')">
-
                             <a href="#" class="rounded-pill nav-link @yield('users')@yield('app-settings')@yield('site-settings')">
                                 <i class="nav-icon fa-duotone fa-gears"></i>
                                 <p>
@@ -153,34 +151,33 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-
-                                @if(session('user')['permissions']['users'])
+                                @role('Users')
                                 <li class="nav-item">
                                     <a href="{{ route('users') }}" class="rounded-pill nav-link  @yield('users')">
                                         <i class="fa-duotone fa-users nav-icon"></i>
                                         <p>Usuários</p>
                                     </a>
                                 </li>
-                                @endif
-                                @if(session('user')['permissions']['app'])
+                                @endrole
+                                @role('App')
                                 <li class="nav-item">
                                     <a href="{{ route('app_settings') }}" class="rounded-pill nav-link @yield('app-settings')">
                                         <i class="fa-duotone fa-sliders nav-icon"></i>
                                         <p>Aplicativo</p>
                                     </a>
                                 </li>
-                                @endif
-                                @if(session('user')['permissions']['site'])
+                                @endrole
+                                @role('Site')
                                 <li class="nav-item">
                                     <a href="{{ route('site_settings') }}" class="rounded-pill nav-link @yield('site-settings')">
                                         <i class="fa-duotone fa-globe nav-icon"></i>
                                         <p>Site</p>
                                     </a>
                                 </li>
-                                @endif
+                                @endrole
                             </ul>
                         </li>
-                        @endif
+                        @endrole
                         <li class="nav-item ">
                             <a href="" class="rounded-pill nav-link">
                                 <i class="nav-icon fa-duotone fa-sign-out-alt"></i>

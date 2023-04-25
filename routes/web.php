@@ -1,6 +1,5 @@
 <?php
 
-use App\Classes\Email;
 use App\Http\Controllers\AdditionalItemsController;
 use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\AppViewsController;
@@ -20,6 +19,13 @@ use App\Models\LoginAppModel;
 use Illuminate\Support\Facades\Route;
 
 //-------------------------------
+// APP/ LOGIN
+//-------------------------------
+Route::get('/', [LoginController::class, 'login'])->name('login');
+Route::post('administrator/post/submit/login', [LoginController::class, 'submit_login_app']);
+Route::post('administrator/post/validate/login', [LoginController::class, 'validate_login_app']);
+
+//-------------------------------
 // ASSETS ADMINISTRATIVOS
 //-------------------------------
 Route::get('private/assets/{local?}/{file?}', AssetsController::class);
@@ -27,7 +33,7 @@ Route::get('private/assets/{local?}/{file?}', AssetsController::class);
 // ----------------------------
 // APP VIEWS
 // ----------------------------
-Route::get('administrator/login', [AppViewsController::class, 'form_login'])->name('form_login');
+Route::get('administrator/app/login', [AppViewsController::class, 'form_login'])->name('form_login');
 Route::get('administrator/control-panel', [AppViewsController::class, 'control_panel'])->name('control_panel');
 Route::get('administrator/requests', [AppViewsController::class, 'requests'])->name('requests');
 Route::get('administrator/requests/close-request/{id}', [AppViewsController::class, 'close_request'])->name('close-request');
@@ -37,11 +43,6 @@ Route::get('administrator/menu', [AppViewsController::class, 'menu'])->name('men
 Route::get('administrator/users', [AppViewsController::class, 'users'])->name('users');
 Route::get('administrator/app-settings', [AppViewsController::class, 'app_settings'])->name('app_settings');
 Route::get('administrator/site-settings', [AppViewsController::class, 'site_settings'])->name('site_settings');
-
-//-------------------------------
-// APP/ LOGIN
-//-------------------------------
-Route::get('/', [LoginController::class, 'login'])->name('login');
 
 // -----------------------------
 // APP SETTINGS
@@ -153,12 +154,15 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 // TESTES
 //-------------------------------
 Route::get('teste4', function () {
-    $data = [
-        'login' => 'Eduardo',
-        'password' => 'Teste',
-        'name' => 'Eduardo',
-    ];
-    Email::LoginUser($data, 'dudu.martins373@gmail.com');
+    LoginAppModel::where('login', 'dudu.martins373@gmail.com')
+        ->when(function ($query) {
+            $check = $query->pluck('verify_error');
+            if ($check[0] == 0) {
+                $query->update(['active' => 0]);
+            } else {
+                $query->decrement('verify_error');
+            }
+        });
 });
 Route::get('teste3', function () {
     // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);
@@ -181,10 +185,10 @@ Route::get('teste2', function () {
     // $editor = Role::create(['name' => 'Teste']);
     // $editor->givePermissionTo('Teste');
 
-    $login = LoginAppModel::find(1);
-    // $login->assignRole('Teste');
+    $login = LoginAppModel::find(25);
+    $login->assignRole('Dashboard');
     // $login->givePermissionTo('Teste');
-    $login->removeRole('Teste');
+    // $login->removeRole('Dashboard');
     // $login->revokePermissionTo('Teste');
 
     // if ($login->hasRole('Teste')) {
@@ -196,19 +200,22 @@ Route::get('teste2', function () {
 
 });
 Route::get('teste', function () {
-    // Permission::create(['name' => 'Teste']);
+    // Permission::create(['name' => 'Fazer pedidos']);
 
-    // $editor = Role::create(['name' => 'Teste']);
+    // $editor = Role::create(['name' => $role]);
     // $editor->givePermissionTo('Teste');
 
-    $login = LoginAppModel::find(1);
-    // $login->givePermissionTo('Teste');
+    // $login = LoginAppModel::find(1);
+    // // $login->givePermissionTo('Teste');
 
-    if ($login->hasRole('Teste')) {
-        echo 'Tem a Hole teste.';
-    }
-    if ($login->hasPermissionTo('Teste')) {
-        echo 'Tem a permissão teste.';
-    }
+    // if ($login->hasRole('Teste')) {
+    //     echo 'Tem a Hole teste.';
+    // }
+    // if ($login->hasPermissionTo('Teste')) {
+    //     echo 'Tem a permissão teste.';
+    // }
+
+    // $login = LoginAppModel::find(25);
+    // $login->assignRole($role);
 
 });

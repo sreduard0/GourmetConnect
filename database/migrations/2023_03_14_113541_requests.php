@@ -13,7 +13,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->integer('table')->nullable();
             $table->string('client_name', 255);
-            $table->integer('client_id')->nullable();
+            $table->bigInteger('client_id')->nullable();
             $table->integer('status');
             $table->integer('payment_method')->nullable();
             $table->integer('delivery')->default(0);

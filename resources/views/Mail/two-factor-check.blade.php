@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Credenciais de Login</title>
+    <title>Código de Verificação</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style type="text/css">
@@ -40,34 +40,14 @@
             margin-bottom: 20px;
         }
 
-        .label {
-            display: block;
-            font-size: 14px;
+        .code {
+            font-size: 32px;
             font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .field {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-
-        .button {
-            background-color: #000000;
-            color: #fff;
+            color: #333;
+            background-color: #f5f5f5;
             padding: 10px 20px;
             border-radius: 5px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            margin-bottom: 20px;
-            text-transform: none;
-
+            display: inline-block;
         }
 
         .footer {
@@ -82,21 +62,17 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">Credenciais de Login</h1>
+            <h1 class="title">Código de Verificação</h1>
         </div>
         <div class="content">
-            <p>Olá, {{ $data['name'] }}.</p>
-
-            <p>Aqui estão as suas credenciais de login:</p>
-            <label for="email" class="label">Endereço de Email:</label>
-            <input id="email" class="field" value=" {{ $data['login'] }}" readonly>
-            <label for="password" class="label">Senha:</label>
-            <input id="password" class="field" value=" {{ $data['password'] }}" readonly>
-            <p>Por motivos de segurança, recomendamos que você altere sua senha assim que fizer o login.</p>
-            <a href="{{ route('form_login') }}" class="button">Fazer Login</a>
+            <p>Aqui está o seu código de verificação:</p>
+            <p class="code">{{ $data }}</p>
+            <p>Este código é válido por 4 minutos.</p>
+            <p>Se você não solicitou este código, por favor, ignore este email.</p>
         </div>
         <div class="footer">
-            <p>Não responda a este email.</p>
+            <p>Não responda a este email. Se você tiver alguma dúvida, entre em contato com o administrador do sistema.</p>
         </div>
     </div>
 </body>
+</html>

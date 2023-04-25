@@ -14,5 +14,5 @@ class LoginAppModel extends Authenticatable
     protected $table = 'login_app';
     protected $primarykey = 'id';
     protected $guard = 'app';
-    protected $fillable = ['password'];
+    protected $fillable = ['password', 'verify_error'];
 }
