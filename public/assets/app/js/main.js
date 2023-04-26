@@ -44,7 +44,6 @@ $('#btn-submit-form').on('click', function () {
                 $('.modal-backdrop').remove();
                 switch (response) {
                     case 'verified':
-                        console.log('dcfvgbjhkml')
                         $('#form').addClass('d-none');
                         $('#verification').removeClass('d-none');
                         break;
@@ -133,7 +132,7 @@ $('#verify-code').on('click', function () {
                 switch (response.error) {
                     case 'code_expired':
                         bootbox.dialog({
-                            message: '<p class="text-center mb-0"><i class="fa-duotone fa-circle-xmark fa-shake" style="--fa-primary-color: #6f0003; --fa-secondary-color: #6f0003;"></i>  Este código expirou</p><div style="width:30%;height:35px;" class="wrap-login100-form-btn"><div class="login100-form-bgbtn"></div><button class="login100-form-btn" onclick="window.location.reload()"  style="height: 34px;">Fechar</button></div>',
+                            message: '<p class="text-center mb-0"><i class="fs-40 fa-duotone fa-circle-xmark fa-shake" style="--fa-primary-color: #6f0003; --fa-secondary-color: #6f0003;"></i></p><p class="text-center"> Este código expirou</p><div style="width:30%;height:35px;" class="wrap-login100-form-btn m-t-20"><div class="login100-form-bgbtn"></div><button class="login100-form-btn" onclick="window.location.reload()"  style="height: 34px;">Fechar</button></div>',
                             centerVertical: true,
                             closeButton: false
                         });

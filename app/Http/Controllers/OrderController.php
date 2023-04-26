@@ -8,6 +8,7 @@ use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -119,13 +120,23 @@ class OrderController extends Controller
         $filtered = count($requests);
         $dados = array();
         foreach ($requests as $request) {
+            $buttons = '';
+            if (Auth::user()->hasPermissionTo('view_orders')) {
+                $buttons .= '<button onclick="return requests_client_view_modal(\'' . Tools::hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-default" ><i class="fa-solid fa-eye"></i></button> ';
+            }
+            if (Auth::user()->hasPermissionTo('delete_order')) {
+                $buttons .= '<button onclick="return delete_order(\'' . Tools::hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button> ';
+            }
+            if (Auth::user()->hasPermissionTo('finalize_order')) {
+                $buttons .= '<a class="btn btn-sm btn-success" href="' . route('close-request', ['id' => Tools::hash($request->id, 'encrypt')]) . '"><i class="fa-solid fa-check"></i></a>';
+            }
             $dado = array();
             $dado[] = "#" . $request->id;
             $dado[] = $request->client_name;
             $dado[] = $request->table;
             $dado[] = $request->request_items ? 'SIM' : 'NÃO';
             $dado[] = Calculate::requestValue($request->id, [2, 3], false, true);
-            $dado[] = '<button onclick="return requests_client_view_modal(\'' . Tools::hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-default" ><i class="fa-solid fa-eye"></i></button> <button onclick="return delete_order(\'' . Tools::hash($request->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button> <a class="btn btn-sm btn-success" href="' . route('close-request', ['id' => Tools::hash($request->id, 'encrypt')]) . '"><i class="fa-solid fa-check"></i></a>';
+            $dado[] = $buttons;
             $dados[] = $dado;
         }
 

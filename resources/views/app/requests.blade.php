@@ -17,7 +17,9 @@
                         <option value="{{ $t }}">MESA #{{ $t }}</option>
                         @endfor
                 </select>
+                @can('create_order')
                 <button class="btn btn-accent rounded-pill btnres" onclick="modal_new_request()"><strong>NOVO PEDIDO</strong></button>
+                @endcan
             </div>
         </div>
         <div class="card-body">
@@ -35,16 +37,101 @@
                 </thead>
             </table>
         </div>
+        @can('print_requests')
         <div class="card-footer">
             <div class="d-flex justify-content-end row">
                 <button class="btn btn-accent rounded-pill btnres" onclick="print_request_notification('all')"><strong>IMPRIMIR PENDENTES</strong></button>
             </div>
         </div>
-
+        @endcan
     </div>
 </div>
 @endsection
 @section('modal')
+@can('view_orders')
+{{-- PEDIDOS DO CLIENTE --}}
+<div class="modal fade" id="requests-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reqClienttitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-pills">
+                    <li class="nav-item" onclick="requests_client_view_table(false)"><a class="requests nav-link rounded-pill" href="#requests" data-toggle="tab">Pedidos</a></li>
+                    <li class="nav-item" onclick="requests_client_view_table(true)"><a class="pending nav-link rounded-pill" href="#pending" data-toggle="tab">Pendentes</a></li>
+                </ul>
+                <table style="width:100%" id="client-requests-view-table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="25px">Foto</th>
+                            <th>Item</th>
+                            <th width="30px">Qtd.</th>
+                            <th width="80px">Valor</th>
+                            <th width="30px">Ver</th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="tab-content">
+                    <div class="requests tab-pane" id="requests">
+                        <div class="col-md-5 m-t-10">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th style="width:50%">TOTAL:</th>
+                                            <td class="value-total"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @can('print_requests')
+                    <div class="pending tab-pane" id="pending">
+                        <input type="hidden" id="print_id">
+                        <button type="button" onclick='print_request()' class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
+                    </div>
+                    @endcan
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{{-- LISTA DE ITEM DO MESMO TIPO DO PEDIDO --}}
+<div class="modal fade" id="list-items-equals-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="product_name"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table style="width:100%" id="list-items-equals-table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="25px">Foto</th>
+                            <th>Item</th>
+                            <th width="110px">Garçom</th>
+                            <th width="80px">Valor</th>
+                            <th width="60px">Ações</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@endcan
+@can('create_order')
 {{-- NOVO PEDIDO --}}
 <div class="modal fade" id="new-request-modal" role="dialog" tabindex="-1" aria-labelledby="newReqLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -128,84 +215,6 @@
         </div>
     </div>
 </div>
-{{-- PEDIDOS DO CLIENTE --}}
-<div class="modal fade" id="requests-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reqClienttitle"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <ul class="nav nav-pills">
-                    <li class="nav-item" onclick="requests_client_view_table(false)"><a class="requests nav-link rounded-pill" href="#requests" data-toggle="tab">Pedidos</a></li>
-                    <li class="nav-item" onclick="requests_client_view_table(true)"><a class="pending nav-link rounded-pill" href="#pending" data-toggle="tab">Pendentes</a></li>
-                </ul>
-                <table style="width:100%" id="client-requests-view-table" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th width="25px">Foto</th>
-                            <th>Item</th>
-                            <th width="30px">Qtd.</th>
-                            <th width="80px">Valor</th>
-                            <th width="30px">Ver</th>
-                        </tr>
-                    </thead>
-                </table>
-                <div class="tab-content">
-                    <div class="requests tab-pane" id="requests">
-                        <div class="col-md-5 m-t-10">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <th style="width:50%">TOTAL:</th>
-                                            <td class="value-total"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pending tab-pane" id="pending">
-                        <input type="hidden" id="print_id">
-                        <button type="button" onclick='print_request()' class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
-{{-- LISTA DE ITEM DO MESMO TIPO DO PEDIDO --}}
-<div class="modal fade" id="list-items-equals-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="product_name"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table style="width:100%" id="list-items-equals-table" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th width="25px">Foto</th>
-                            <th>Item</th>
-                            <th width="110px">Garçom</th>
-                            <th width="80px">Valor</th>
-                            <th width="60px">Ações</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
 {{-- ADICIONAIS E OBS --}}
 <div class="modal fade" id="observation-item-modal" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -244,6 +253,7 @@
         </div>
     </div>
 </div>
+@endcan
 @include('app.component.view-item')
 @endsection
 @section('plugins')

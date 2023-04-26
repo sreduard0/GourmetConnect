@@ -12,6 +12,7 @@ use App\Models\RequestAdditionalItemModal;
 use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RequestsController extends Controller
@@ -459,12 +460,23 @@ class RequestsController extends Controller
         $dados = array();
 
         foreach ($items as $item) {
+            $buttons = '';
+            if (Auth::user()->hasPermissionTo('view_orders')) {
+                $buttons .= '<button onclick="return  view_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary m-t-3"><i class="fa-solid fa-eye"></i></button> ';
+            }
+            if (Auth::user()->hasPermissionTo('delete_request')) {
+                $buttons .= '<button onclick="return  delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button> ';
+            }
+            if (Auth::user()->hasPermissionTo('create_order')) {
+                $buttons .= '<button onclick="return additional_item_request(\'' . Tools::hash($item->product_id, 'encrypt') . '\',\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> ';
+            }
+
             $dado = array();
             $dado[] = '<img class="img-circle" src="' . asset($item->product->photo_url) . '" alt="" width="35">';
             $dado[] = $item->product->name;
             $dado[] = $item->waiter;
             $dado[] = Calculate::itemValue($item->id, true);
-            $dado[] = $item->status != 2 ? '<button onclick="return  view_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary m-t-3"><i class="fa-solid fa-eye"></i></button> <button onclick="return delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>' : '<button onclick="return additional_item_request(\'' . Tools::hash($item->product_id, 'encrypt') . '\',\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return  delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button>';
+            $dado[] = $buttons;
             $dados[] = $dado;
         }
 

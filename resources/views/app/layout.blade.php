@@ -82,7 +82,7 @@ $app_settings = AppSettingsModel::all()->first();
                 </div>
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        @role('Dashboard')
+                        @can('dashboard')
                         <li class="nav-item ">
                             <a href="{{ route('control_panel') }}" class="rounded-pill nav-link @yield('control-panel')">
                                 <i class="nav-icon fa-duotone fa-chart-bar"></i>
@@ -91,8 +91,8 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                         </li>
-                        @endrole
-                        @role(['Requests','Delivery'])
+                        @endcan
+                        @can('view_orders','view_delivery')
                         <li class="nav-item @yield('menu-requests')">
                             <a href="#" class="rounded-pill nav-link @yield('requests') @yield('delivery')">
                                 <i class="nav-icon fa-duotone fa-burger-soda"></i>
@@ -102,26 +102,26 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                @role('Requests')
+                                @can('view_orders')
                                 <li class="nav-item">
                                     <a href="{{ route('requests') }}" class="rounded-pill nav-link @yield('requests')">
                                         <i class="fa-duotone fa-home nav-icon"></i>
                                         <p>Local</p>
                                     </a>
                                 </li>
-                                @endrole
-                                @role('Delivery')
+                                @endcan
+                                @can('view_delivery')
                                 <li class="nav-item">
                                     <a href="{{ route('delivery') }}" class="rounded-pill nav-link  @yield('delivery')">
                                         <i class="fa-duotone fa-moped nav-icon"></i>
                                         <p>Delivery</p>
                                     </a>
                                 </li>
-                                @endrole
+                                @endcan
                             </ul>
                         </li>
-                        @endrole
-                        @role('Tables')
+                        @endcan
+                        @can('view_tables')
                         <li class="nav-item ">
                             <a href="{{ route('tables') }}" class="rounded-pill nav-link @yield('tables')">
                                 <i class="nav-icon fa-duotone fa-table-picnic"></i>
@@ -130,8 +130,8 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                         </li>
-                        @endrole
-                        @role('Menu')
+                        @endcan
+                        @can('view_menu')
                         <li class="nav-item ">
                             <a href="{{ route('menu') }}" class="rounded-pill nav-link @yield('menu')">
                                 <i class="nav-icon fa-duotone fa-list-radio"></i>
@@ -140,8 +140,8 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                         </li>
-                        @endrole
-                        @role(['Users','App','Site'])
+                        @endcan
+                        @can('config_app','config_users','config_site')
                         <li class="nav-item @yield('config')">
                             <a href="#" class="rounded-pill nav-link @yield('users')@yield('app-settings')@yield('site-settings')">
                                 <i class="nav-icon fa-duotone fa-gears"></i>
@@ -151,35 +151,37 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                @role('Users')
+                                @can('config_users')
                                 <li class="nav-item">
                                     <a href="{{ route('users') }}" class="rounded-pill nav-link  @yield('users')">
                                         <i class="fa-duotone fa-users nav-icon"></i>
                                         <p>Usuários</p>
                                     </a>
                                 </li>
-                                @endrole
-                                @role('App')
+                                @endcan
+                                @can('config_app')
                                 <li class="nav-item">
                                     <a href="{{ route('app_settings') }}" class="rounded-pill nav-link @yield('app-settings')">
                                         <i class="fa-duotone fa-sliders nav-icon"></i>
                                         <p>Aplicativo</p>
                                     </a>
                                 </li>
-                                @endrole
-                                @role('Site')
+                                @endcan
+                                @can('config_site')
                                 <li class="nav-item">
                                     <a href="{{ route('site_settings') }}" class="rounded-pill nav-link @yield('site-settings')">
                                         <i class="fa-duotone fa-globe nav-icon"></i>
                                         <p>Site</p>
                                     </a>
                                 </li>
-                                @endrole
+                                @endcan
+
                             </ul>
                         </li>
-                        @endrole
+                        @endcan
+
                         <li class="nav-item ">
-                            <a href="" class="rounded-pill nav-link">
+                            <a href="{{ route('logout') }}" class="rounded-pill nav-link">
                                 <i class="nav-icon fa-duotone fa-sign-out-alt"></i>
                                 <p>
                                     Sair

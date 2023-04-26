@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Classes\Email;
+use App\Classes\TwoFactorCheck;
 use App\Models\LoginAppModel;
 use App\Models\UsersAppModel;
 use App\Models\VerifyCodeModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -45,27 +45,22 @@ class LoginController extends Controller
     // VALIDANDO LOGIN E ABRINDO SEÇÃO
     public function submit_login_app(Request $request)
     {
+        $login = LoginAppModel::where('login', $request->get('email'))->where('active', 1)->first();
+        if (!$login) {
+            return ['error' => 'block', 'url' => route('form_login')];
+        }
+
         $verify_code = VerifyCodeModel::where('code', $request->get('code'))->where('device', request()->ip())->first();
         if ($verify_code) {
-            $verify_time = Carbon::parse($verify_code->created_at);
-            if ($verify_time->diffInMinutes() >= 4) {
+            if (TwoFactorCheck::codeExpired($request->get('code'))) {
                 return ['error' => 'code_expired'];
             }
         } else {
-            LoginAppModel::where('login', 'dudu.martins373@gmail.com')
-                ->when(function ($query) {
-                    $check = $query->pluck('verify_error');
-                    if ($check[0] == 0) {
-                        $query->update(['active' => 0]);
-                    } else {
-                        $query->decrement('verify_error');
-                    }
-                });
+            TwoFactorCheck::codeError($request->get('email'));
             return ['error' => 'code_error'];
         }
 
-        $login = LoginAppModel::where('login', $request->get('email'))->where('active', 1)->first();
-        if ($login && $verify_code->user_id == $login->id && auth()->attempt(['login' => $request->get('email'), 'password' => $request->get('password')])) {
+        if (TwoFactorCheck::codeVerify($request->get('email'), $request->get('code')) && auth()->attempt(['login' => $request->get('email'), 'password' => $request->get('password')])) {
             $user = UsersAppModel::where('login_id', $login->id)->first();
             session()->put([
                 'user' => [
@@ -75,54 +70,18 @@ class LoginController extends Controller
                     'email' => $user->email,
                 ],
             ]);
-
-            LoginAppModel::where('id', $verify_code->user_id)->where('login', $request->get('email'))->update(['verify_error' => 3]);
-            return ['error' => 'logged', 'url' => route('requests')];
+            return ['error' => 'logged', 'url' => TwoFactorCheck::successLogin($request->get('email'))];
         }
-        if (!$login) {
-            return ['error' => 'block', 'url' => route('form_login')];
 
-        }
-        LoginAppModel::where('login', 'dudu.martins373@gmail.com')
-            ->when(function ($query) {
-                $check = $query->pluck('verify_error');
-                if ($check[0] == 0) {
-                    $query->update(['active' => 0]);
-                } else {
-                    $query->decrement('verify_error');
-                }
-            });
+        TwoFactorCheck::codeError($request->get('email'));
         return ['error' => 'code_error'];
     }
 
-    public function login()
+    // LOGOUT
+    public function logout()
     {
-        session()->put([
-            'user' => [
-                'id' => 1,
-                'name' => 'Eduardo',
-                'photo' => 'img/avatar.png',
-                'permissions' => [
-                    'dashboard' => true,
-                    'requests' => true,
-                    'delivery' => true,
-                    'tables' => true,
-                    'menu' => true,
-                    'users' => true,
-                    'site' => true,
-                    'app' => true,
-                ],
-                'email' => 'dudu.martins@gmail.com',
-            ],
-
-            'theme' => [
-                'background' => 'dark-mode',
-                'sidebar' => 'sidebar-dark-orange',
-                'accent-color' => 'accent-orange',
-
-            ],
-
-        ]);
-        return redirect()->route('control_panel');
+        session()->flush();
+        auth()->logout();
+        return redirect()->route('form_login');
     }
 }
