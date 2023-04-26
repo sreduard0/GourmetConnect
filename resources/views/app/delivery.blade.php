@@ -17,7 +17,9 @@
                     <option value='{{ $location->id }}'>{{ $location->neighborhood }} - {{ $location->reference }}</option>
                     @endforeach
                 </select>
+                @can('create_delivery')
                 <button class="btn btn-accent rounded-pill btnres" onclick="modal_new_delivery()"><strong>NOVO DELIVERY</strong></button>
+                @endcan
             </div>
         </div>
         <div class="card-body">
@@ -35,17 +37,93 @@
                 </thead>
             </table>
         </div>
+        @can('sts_delivery')
         <div class="card-footer">
             <div class="d-flex justify-content-end row">
                 <button class="btn btn-accent rounded-pill btnres" onclick="print_request('all')"><strong>IMPRIMIR PENDENTES</strong></button>
-
             </div>
         </div>
+        @endcan
+
 
     </div>
 </div>
 @endsection
 @section('modal')
+@can('view_delivery')
+{{-- PEDIDOS DO CLIENTE --}}
+<div class="modal fade" id="delivery-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="DeliveryViewtitle"></div>
+                <div class="row float-right">
+                    <div id="edit-delivery-btn"></div>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="btn"><i class="fs-18 fa-solid fa-times"></i></button>
+                </div>
+
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-end" id="edit_request_btn">
+                </div>
+                <table style="width:100%" id="client-delivery-view-table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="25px">Foto</th>
+                            <th>Item</th>
+                            <th width="30px">Qtd.</th>
+                            <th width="80px">Valor</th>
+                            <th>Ver</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer d-flex justify-content-between row">
+                <div class="col-md-3">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th style="width:50%">TOTAL:</th>
+                                <td class="value-total"> R$00,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <input type="hidden" id="print_id">
+                <div id="btn-act"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- LISTA DE ITEM DO MESMO TIPO DO PEDIDO --}}
+<div class="modal fade" id="list-items-equals-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="product_name"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table style="width:100%" id="list-items-equals-table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="25px">Foto</th>
+                            <th>Item</th>
+                            <th width="110px">Adic. por</th>
+                            <th width="80px">Valor</th>
+                            <th width="60px">Ações</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@endcan
+@can('create_delivery')
 {{-- NOVO PEDIDO / EDIDAR PEDIDO--}}
 <div class="modal fade" id="new-delivery-modal" role="dialog" tabindex="-1" aria-labelledby="newReqLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -210,77 +288,6 @@
         </div>
     </div>
 </div>
-{{-- PEDIDOS DO CLIENTE --}}
-<div class="modal fade" id="delivery-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title" id="DeliveryViewtitle"></div>
-                <div class="row float-right">
-                    <div id="edit-delivery-btn"></div>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="btn"><i class="fs-18 fa-solid fa-times"></i></button>
-                </div>
-
-            </div>
-            <div class="modal-body">
-                <div class="d-flex justify-content-end" id="edit_request_btn">
-                </div>
-                <table style="width:100%" id="client-delivery-view-table" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th width="25px">Foto</th>
-                            <th>Item</th>
-                            <th width="30px">Qtd.</th>
-                            <th width="80px">Valor</th>
-                            <th width="30px">Ver</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="modal-footer d-flex justify-content-between row">
-                <div class="col-md-3">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th style="width:50%">TOTAL:</th>
-                                <td class="value-total"> R$00,00</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <input type="hidden" id="print_id">
-                <div id="btn-act"></div>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- LISTA DE ITEM DO MESMO TIPO DO PEDIDO --}}
-<div class="modal fade" id="list-items-equals-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="product_name"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table style="width:100%" id="list-items-equals-table" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th width="25px">Foto</th>
-                            <th>Item</th>
-                            <th width="110px">Adic. por</th>
-                            <th width="80px">Valor</th>
-                            <th width="60px">Ações</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
 {{-- ADICIONAIS E OBS --}}
 <div class="modal fade" id="observation-item-modal" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -319,6 +326,7 @@
         </div>
     </div>
 </div>
+@endcan
 @include('app.component.view-item')
 @endsection
 @section('plugins')

@@ -461,14 +461,31 @@ class RequestsController extends Controller
 
         foreach ($items as $item) {
             $buttons = '';
-            if (Auth::user()->hasPermissionTo('view_orders')) {
-                $buttons .= '<button onclick="return  view_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary m-t-3"><i class="fa-solid fa-eye"></i></button> ';
-            }
-            if (Auth::user()->hasPermissionTo('delete_request')) {
-                $buttons .= '<button onclick="return  delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button> ';
-            }
-            if (Auth::user()->hasPermissionTo('create_order')) {
-                $buttons .= '<button onclick="return additional_item_request(\'' . Tools::hash($item->product_id, 'encrypt') . '\',\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> ';
+            if ($requestData['columns'][4]['search']['value']) {
+                if (Auth::user()->hasPermissionTo('view_delivery')) {
+                    $buttons .= '<button onclick="return  view_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary m-t-3"><i class="fa-solid fa-eye"></i></button> ';
+                }
+
+                if (Auth::user()->hasPermissionTo('delete_request_delivery')) {
+                    $buttons .= '<button onclick="return  delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button> ';
+                } else {
+                    $item->status == 2 ? $buttons .= '<button onclick="return  delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button> ' : '';
+                }
+                if (Auth::user()->hasPermissionTo('create_delivery')) {
+                    $buttons .= '<button onclick="return additional_item_request(\'' . Tools::hash($item->product_id, 'encrypt') . '\',\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> ';
+                }
+            } else {
+                if (Auth::user()->hasPermissionTo('view_orders')) {
+                    $buttons .= '<button onclick="return  view_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary m-t-3"><i class="fa-solid fa-eye"></i></button> ';
+                }
+                if (Auth::user()->hasPermissionTo('delete_request')) {
+                    $buttons .= '<button onclick="return  delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button> ';
+                } else {
+                    $item->status == 2 ? $buttons .= '<button onclick="return  delete_item_request(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger m-t-3"><i class="fa-solid fa-trash"></i></button> ' : '';
+                }
+                if (Auth::user()->hasPermissionTo('create_order')) {
+                    $buttons .= '<button onclick="return additional_item_request(\'' . Tools::hash($item->product_id, 'encrypt') . '\',\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> ';
+                }
             }
 
             $dado = array();

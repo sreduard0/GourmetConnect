@@ -226,8 +226,8 @@ Route::get('teste', function () {
         //     'view_delivery',
         //     'create_delivery',
         //     'delete_delivery',
+        // 'delete_request_delivery',
         //     'edit_delivery',
-        //     'edit_item_delivery',
         //     'sts_delivery',
         //     // MESAS
         //     'view_tables',
@@ -251,7 +251,7 @@ Route::get('teste', function () {
         //     'view_user',
         //     // CONFIG. APP
         //     'config_app',
-        'config_users',
+        // 'config_users',
         //     'config_app_data',
         //     'config_app_delivery',
         //     'config_app_email',
