@@ -20,15 +20,24 @@ use App\Classes\Tools;
     <div class="card">
         <div class="card-header p-2">
             <ul class="nav nav-pills">
-                <li class="nav-item"><a class="rounded-pill nav-link active" href="#establishment-settings" data-toggle="tab">Dados</a></li>
+                @can('config_app_data')
+                <li class="nav-item"><a class="rounded-pill nav-link" href="#establishment-settings" data-toggle="tab">Dados</a></li>
+                @endcan
+                @can('config_app_delivery')
                 <li class="nav-item"><a class="rounded-pill nav-link" href="#delivery-settings" data-toggle="tab">Delivery</a></li>
+                @endcan
+                @can('config_app_email')
                 <li class="nav-item"><a class="rounded-pill nav-link" href="#email-settings" data-toggle="tab">E-mail</a></li>
+                @endcan
+                @can('config_app_theme')
                 <li class="nav-item"><a class="rounded-pill nav-link" href="#theme-settings" data-toggle="tab">Cores</a></li>
+                @endcan
             </ul>
         </div>
         <div class="card-body">
             <div class="tab-content">
-                <div class="active tab-pane" id="establishment-settings">
+                @can('config_app_data')
+                <div class="tab-pane" id="establishment-settings">
                     <form id="form-establishment-settings">
                         <div class="border-bottom border-default m-b-20 col-md-3">
 
@@ -143,6 +152,8 @@ use App\Classes\Tools;
                         <button class="btn btn-accent rounded-pill" onclick="return save_establishment_settings()">SALVAR</button>
                     </div>
                 </div>
+                @endcan
+                @can('config_app_delivery')
                 <div class="tab-pane" id="delivery-settings">
                     <div class="row">
                         <div class="col-md-6 m-b-50">
@@ -193,6 +204,8 @@ use App\Classes\Tools;
                         </div>
                     </div>
                 </div>
+                @endcan
+                @can('config_app_email')
                 <div class="tab-pane" id="email-settings">
                     <form id="form-email-settings">
                         <div class="border-bottom border-default m-b-20 col-md-4">
@@ -234,6 +247,8 @@ use App\Classes\Tools;
                         <button class="btn btn-accent rounded-pill" onclick="return save_email_settings()">SALVAR</button>
                     </div>
                 </div>
+                @endcan
+                @can('config_app_theme')
                 <div class="tab-pane" id="theme-settings">
                     <form id="form-theme-settings">
                         <div class="row">
@@ -274,7 +289,6 @@ use App\Classes\Tools;
                             <div class="form-group col-md-2">
                                 <label for="theme-sidebar">Cor do menu lateral</label>
                                 <select class="form-control" name="theme-sidebar" id="theme-sidebar">
-
                                     <optgroup label="Lateral escura">
                                         <option @if($app_settings->theme_sidebar == 'sidebar-dark-primary') selected @endif value="sidebar-dark-primary" class="bg-primary">Escuro / Azul</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-dark-warning') selected @endif value="sidebar-dark-warning" class="bg-warning">Escuro / Amarelo</option>
@@ -321,6 +335,8 @@ use App\Classes\Tools;
 
                     </div>
                 </div>
+                @endcan
+
             </div>
         </div>
     </div>

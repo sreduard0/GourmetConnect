@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\Tools;
 use App\Models\AdditionalItemModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdditionalItemsController extends Controller
 {
@@ -84,13 +85,21 @@ class AdditionalItemsController extends Controller
         $dados = array();
 
         foreach ($items as $item) {
+            $buttons = '';
+            if (Auth::user()->hasPermissionTo('edit_additional_menu')) {
+                $buttons .= '<button onclick="return modal_additional_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> ';
+            }
+            if (Auth::user()->hasPermissionTo('delete_additional_menu')) {
+                $buttons .= '<button onclick="return delete_additional_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+            }
+
             $dado = array();
             $dado[] = "#" . $item->id;
             $dado[] = $item->name;
             $dado[] = $item->status ? 'Disp.' : 'Ind.';
             $dado[] = $item->item->name;
             $dado[] = 'R$' . number_format($item->value, 2, ',', '.');
-            $dado[] = '<button onclick="return modal_additional_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_additional_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+            $dado[] = $buttons ? $buttons : '-';
             $dados[] = $dado;
         }
 

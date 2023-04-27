@@ -7,6 +7,7 @@ use App\Classes\Tools;
 use App\Models\LoginAppModel;
 use App\Models\UsersAppModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -157,6 +158,27 @@ class UsersController extends Controller
             return ['error' => true, 'message' => 'Ouve algum erro, tente novamente.'];
         }
     }
+    // PERMISSÕES DE USUÁRIOS
+    public function permissions($user)
+    {
+        $login = LoginAppModel::find(Tools::hash($user, 'decrypt'));
+        return $login->permissions;
+    }
+    // SALVA PERMISSÕES DE USUÁRIOS
+    public function save_permissions(Request $request)
+    {
+        try {
+            $login = LoginAppModel::find(Tools::hash($request->get('id'), 'decrypt'));
+            foreach ($request->get('permissions') as $permission) {
+                $login->revokePermissionTo($permission);
+                $login->givePermissionTo($permission);
+            }
+            return true;
+        } catch (\Throwable$th) {
+            return false;
+        }
+    }
+    // CHECA EMAIL
     public function check_email($email)
     {
         return UsersAppModel::select('id', 'email')->where('email', $email)->first();
@@ -203,6 +225,21 @@ class UsersController extends Controller
         $filtered = count($users);
         $dados = array();
         foreach ($users as $user) {
+            // if ($user->login_id == auth()->id()) {
+            //     continue;
+            // }
+            $login = LoginAppModel::find($user->login_id);
+            $buttons = '';
+            if (Auth::user()->hasPermissionTo('permissions_user')) {
+                $buttons .= '<button onclick="return app_permissions(\'' . Tools::hash($user->login_id, 'encrypt') . '\')" class="btn btn-sm btn-warning"><i class="fa-solid fa-user-shield"></i></button> ';
+            }
+            if (Auth::user()->hasPermissionTo('edit_user')) {
+                $buttons .= '<button onclick="return user_modal(\'update\',\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button> ';
+            }
+            if (Auth::user()->hasPermissionTo('delete_user')) {
+                $buttons .= '<button onclick="return delete_user(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+            }
+
             $dado = array();
             $dado[] = '<img class="img-circle" src="' . asset($user->photo_url) . '" alt="' . $user->first_name . '" width="35">
                         <div class="popup">
@@ -213,8 +250,8 @@ class UsersController extends Controller
             $dado[] = $user->email;
             $dado[] = $user->job;
             $dado[] = $user->active == 1 ? 'Ativo' : 'Inativo';
-            $dado[] = 'admin';
-            $dado[] = '<button onclick="return modal_item(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-warning"><i class="fa-solid fa-user-shield"></i></button> <button onclick="return user_modal(\'update\',\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_user(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+            $dado[] = '<button class="btn btn-sm btn-accent rounded-pill" onclick="permissions(\'' . Tools::hash($user->login_id, 'encrypt') . '\')"><i class="fa-sharp fa-solid fa-shield-keyhole"></i> <strong>Permissões (' . count($login->permissions) . ') </strong></button>';
+            $dado[] = $buttons ? $buttons : '-';
             $dados[] = $dado;
         }
 

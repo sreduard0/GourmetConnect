@@ -6,6 +6,7 @@ use App\Classes\Tools;
 use App\Models\AdditionalItemModel;
 use App\Models\ItemModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 class ItemsController extends Controller
@@ -120,6 +121,17 @@ class ItemsController extends Controller
         $filtered = count($items);
         $dados = array();
         foreach ($items as $item) {
+            $buttons = '';
+            if (Auth::user()->hasPermissionTo('view_menu')) {
+                $buttons .= '<button onclick="return modal_view_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary" ><i class="fa-solid fa-eye"></i></button>  ';
+            }
+            if (Auth::user()->hasPermissionTo('edit_item_menu')) {
+                $buttons .= '<button onclick="return modal_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button> ';
+            }
+            if (Auth::user()->hasPermissionTo('delete_item_menu')) {
+                $buttons .= '<button onclick="return delete_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button> ';
+            }
+
             $dado = array();
             $dado[] = "#" . $item->id;
             $dado[] = '<img class="img-circle" src="' . asset($item->photo_url) . '" alt="' . $item->name . '" width="35">
@@ -130,8 +142,7 @@ class ItemsController extends Controller
             $dado[] = $item->status ? 'Disponível' : 'Indisponível';
             $dado[] = $item->type->name;
             $dado[] = 'R$' . number_format($item->value, 2, ',', '.');
-            $dado[] = '<button onclick="return modal_view_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-secondary" ><i class="fa-solid fa-eye"></i></button> <button onclick="return modal_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_item(\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
-            // $dado[] = $item->description;
+            $dado[] = $buttons;
             $dados[] = $dado;
         }
 

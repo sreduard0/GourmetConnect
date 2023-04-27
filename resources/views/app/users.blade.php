@@ -12,13 +12,16 @@
 @endsection
 @section('css')
 <link rel="stylesheet" href="{{ asset('assets/app/css/croppie.css') }}" />
+<link rel="stylesheet" href="{{asset('assets/app/plugins/select2/css/select2.css')}}">
 @endsection
 <div class="col-12">
     <div class="card">
         <div class="card-header">
             <div class="d-flex justify-content-between row">
                 <input class="text-center form-control col-md-3 select-rounded" id="filter-user" class="form-control" on placeholder="Busque por um nome">
+                @can('create_user')
                 <button class="btn btn-accent rounded-pill btnres" onclick="user_modal('create')"><strong>NOVO USUÁRIO</strong></button>
+                @endcan
             </div>
         </div>
         <div class="card-body">
@@ -41,6 +44,84 @@
 </div>
 @endsection
 @section('modal')
+@can('permissions_user')
+{{-- PERMISSÕES --}}
+<div class="modal fade" id="user-permission-modal" role="dialog" aria-labelledby="user-permission-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Definir permissões</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col">
+                    <div class="form-group">
+                        <select id="permission_list" name="permission_list" class="permission_list" multiple="multiple" data-placeholder="Permissões" style="width: 100%">
+                            <optgroup label="Painel de controle">
+                                @foreach ($permissions as $permission)
+                                @if ($permission->group_name == 'dashboard')
+                                <option id="{{ $permission->name }}" value="{{ $permission->name }}">{{ $permission->display_name }}</option>
+                                @endif
+                                @endforeach
+                            </optgroup>
+                            <optgroup label="Pedidos/ Local">
+                                @foreach ($permissions as $permission)
+                                @if ($permission->group_name == 'requests_local')
+                                <option id="{{ $permission->name }}" value="{{ $permission->name }}">{{ $permission->display_name }}</option>
+                                @endif
+                                @endforeach
+                            </optgroup>
+                            <optgroup label="Pedidos/ Delivery">
+                                @foreach ($permissions as $permission)
+                                @if ($permission->group_name == 'requests_delivery')
+                                <option id="{{ $permission->name }}" value="{{ $permission->name }}">{{ $permission->display_name }}</option>
+                                @endif
+                                @endforeach
+                            </optgroup>
+                            <optgroup label="Mesas">
+                                @foreach ($permissions as $permission)
+                                @if ($permission->group_name == 'tables')
+                                <option id="{{ $permission->name }}" value="{{ $permission->name }}">{{ $permission->display_name }}</option>
+                                @endif
+                                @endforeach
+                            </optgroup>
+                            <optgroup label="Cardápio">
+                                @foreach ($permissions as $permission)
+                                @if ($permission->group_name == 'menu')
+                                <option id="{{ $permission->name }}" value="{{ $permission->name }}">{{ $permission->display_name }}</option>
+                                @endif
+                                @endforeach
+                            </optgroup>
+                            <optgroup label="Usuários">
+                                @foreach ($permissions as $permission)
+                                @if ($permission->group_name == 'user')
+                                <option id="{{ $permission->name }}" value="{{ $permission->name }}">{{ $permission->display_name }}</option>
+                                @endif
+                                @endforeach
+                            </optgroup>
+                            <optgroup label="Configurações">
+                                @foreach ($permissions as $permission)
+                                @if ($permission->group_name == 'app')
+                                <option id="{{ $permission->name }}" value="{{ $permission->name }}">{{ $permission->display_name }}</option>
+                                @endif
+                                @endforeach
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="user_id">
+                <button onclick="save_permissions($('#user_id').val())" type="button" class="btn btn-accent rounded-pill" data-dismiss="modal"><strong>SALVAR</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+@endcan
+@canany(['create_user','edit_user'])
 {{-- CRIAR/EDITAR USUÁRIO --}}
 <div class="modal fade" id="user-modal" role="dialog" aria-labelledby="userLaber" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -140,8 +221,10 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
 @section('plugins')
 <script src="{{ asset('private/assets/js/users.js') }}"></script>
 <script src="{{ asset('private/assets/js/form-users.js') }}"></script>
+<script src="{{ asset('assets/app/plugins/select2/js/select2.full.min.js') }}"></script>
 @endsection

@@ -16,18 +16,24 @@ use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
 use App\Http\Controllers\UsersController;
 use App\Models\LoginAppModel;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
 
 //-------------------------------
 // APP/ LOGIN
 //-------------------------------
-Route::get('administrator/app/login', [AppViewsController::class, 'form_login'])->name('form_login');
-Route::post('administrator/post/submit/login', [LoginController::class, 'submit_login_app']);
-Route::post('administrator/post/validate/login', [LoginController::class, 'validate_login_app']);
-Route::get('logout', [LoginController::class, 'logout']);
+Route::get('administrator', function () {
+    return redirect()->route('form_login');
+});
+Route::middleware('ifAuth')->group(function () {
+    Route::get('administrator/app/login', [AppViewsController::class, 'form_login'])->name('form_login');
+    Route::post('administrator/post/submit/login', [LoginController::class, 'submit_login_app']);
+    Route::post('administrator/post/validate/login', [LoginController::class, 'validate_login_app']);
+});
 
 Route::middleware('auth')->group(function () {
+    Route::get('logout', [LoginController::class, 'logout']);
 //-------------------------------
 // ASSETS ADMINISTRATIVOS
 //-------------------------------
@@ -140,6 +146,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('administrator/delete/user/{id}', [UsersController::class, 'delete']);
     Route::post('administrator/post/table/users-app', [UsersController::class, 'table']);
     Route::get('administrator/get/check/email/{email}', [UsersController::class, 'check_email']);
+    Route::get('administrator/get/permissions/{user}', [UsersController::class, 'permissions']);
+    Route::put('administrator/put/permissions', [UsersController::class, 'save_permissions']);
 
 //-------------------------------
 // LOGIN
@@ -177,18 +185,19 @@ Route::get('teste4', function () {
 
 });
 Route::get('teste3', function () {
+    echo (Redirect::intended(route('requests'))->headers->get('Location'));
     // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);
 
-    if (auth()->attempt(['login' => 'Eduardo', 'password' => 'xivunk'])) {
-        // usuário autenticado com sucesso
-        // return redirect()->intended('/dashboard');
+    // if (auth()->attempt(['login' => 'Eduardo', 'password' => 'xivunk'])) {
+    //     // usuário autenticado com sucesso
+    //     // return redirect()->intended('/dashboard');
 
-        echo 'logado';
-    } else {
-        // credenciais inválidas
-        // return back()->withErrors(['email' => 'Credenciais inválidas']);
-        echo 'Erro';
-    }
+    //     echo 'logado';
+    // } else {
+    //     // credenciais inválidas
+    //     // return back()->withErrors(['email' => 'Credenciais inválidas']);
+    //     echo 'Erro';
+    // }
 
 });
 Route::get('teste2/{permission}', function ($permission) {
@@ -226,7 +235,7 @@ Route::get('teste', function () {
         //     'view_delivery',
         //     'create_delivery',
         //     'delete_delivery',
-        // 'delete_request_delivery',
+        //     'delete_request_delivery',
         //     'edit_delivery',
         //     'sts_delivery',
         //     // MESAS
@@ -243,19 +252,17 @@ Route::get('teste', function () {
         //     'create_additional_menu',
         //     'edit_additional_menu',
         //     'delete_additional_menu',
-        //     // USUARIOS
-        //     'edit_user',
-        //     'create_user',
-        //     'delete_user',
-        //     'permissions_user',
-        //     'view_user',
         //     // CONFIG. APP
-        //     'config_app',
-        // 'config_users',
         //     'config_app_data',
         //     'config_app_delivery',
         //     'config_app_email',
         //     'config_app_theme',
+        //     // USUARIOS
+        //     'edit_user',
+        //     'create_user',
+        //     'delete_user',
+        //     'config_users',
+        //     'permissions_user',
         //     // CONFIG. SITE
         //     'config_site',
 

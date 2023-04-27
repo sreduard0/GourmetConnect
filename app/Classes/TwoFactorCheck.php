@@ -6,6 +6,7 @@ use App\Models\LoginAppModel;
 use App\Models\VerifyCodeModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class TwoFactorCheck
 {
@@ -48,13 +49,13 @@ class TwoFactorCheck
     public static function successLogin($login)
     {
         $permissions = [
-            ['name' => 'dashboard', 'route' => route('control_panel')],
-            ['name' => 'view_delivery', 'route' => route('delivery')],
-            ['name' => 'view_orders', 'route' => route('requests')],
-            ['name' => 'view_tables', 'route' => route('tables')],
-            ['name' => 'config_users', 'route' => route('users')],
-            ['name' => 'config_app', 'route' => route('app_settings')],
-            ['name' => 'config_site', 'route' => route('site_settings')],
+            ['name' => 'dashboard', 'route' => Redirect::intended(route('control_panel'))->headers->get('Location')],
+            ['name' => 'view_delivery', 'route' => Redirect::intended(route('delivery'))->headers->get('Location')],
+            ['name' => 'view_orders', 'route' => Redirect::intended(route('requests'))->headers->get('Location')],
+            ['name' => 'view_tables', 'route' => Redirect::intended(route('tables'))->headers->get('Location')],
+            ['name' => 'config_users', 'route' => Redirect::intended(route('users'))->headers->get('Location')],
+            ['name' => 'config_app', 'route' => Redirect::intended(route('app_settings'))->headers->get('Location')],
+            ['name' => 'config_site', 'route' => Redirect::intended(route('site_settings'))->headers->get('Location')],
         ];
         LoginAppModel::where('login', $login)->update(['verify_error' => 3]);
         foreach ($permissions as $permission) {

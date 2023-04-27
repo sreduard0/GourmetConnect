@@ -28,7 +28,9 @@
                         <option value="{{ $type->id }}">{{ $type->name }}</option>
                         @endforeach
                     </select>
+                    @can('create_item_menu')
                     <button class=" btn  btn-accent rounded-pill btnres" onclick="modal_new_item()"><strong>NOVO ITEM</strong></button>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -41,7 +43,7 @@
                             <th width="130px">Status</th>
                             <th width="130px">Tipo</th>
                             <th width="100px">Valor</th>
-                            <th width="90px">Ações</th>
+                            <th>Ações</th>
 
                         </tr>
                     </thead>
@@ -55,7 +57,10 @@
                 <div class="d-flex justify-content-between">
 
                     <h3 class="card-title">TIPO</h3>
+                    @can('create_type_menu')
                     <button class="btn btn-accent btn-sm rounded-pill btnres" onclick="modal_new_type_item()"><strong>NOVO TIPO</strong></button>
+                    @endcan
+
                 </div>
             </div>
             <div class="card-body">
@@ -65,7 +70,7 @@
                             <th class="mx-auto" style="width: 30px">Foto</th>
                             <th>Tipo</th>
                             <th style="width: 40px">Itens</th>
-                            <th style="width:70px">Ações</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                 </table>
@@ -84,8 +89,9 @@
                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
                     </select>
+                    @can('create_additional_menu')
                     <button class="btn btn-accent btn-sm rounded-pill btnres" onclick="modal_new_additional_item()"><strong>NOVO ADICIONAL</strong></button>
-
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -107,6 +113,8 @@
 </div>
 @endsection
 @section('modal')
+@canany(['create_type_menu','edit_type_menu'])
+
 {{-- TIPO DE ITEM --}}
 <div class="modal fade" id="type-item-modal" tabindex="-1" role="dialog" aria-labelledby="TypeItemLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
@@ -158,6 +166,8 @@
         </div>
     </div>
 </div>
+@endcan
+@canany(['create_item_menu','edit_item_menu'])
 {{-- ITEM --}}
 <div class="modal fade" id="item-modal" role="dialog" aria-labelledby="newItemLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -237,6 +247,8 @@
         </div>
     </div>
 </div>
+@endcan
+@canany(['create_additional_menu','edit_additional_menu'])
 {{-- ITEM ADICIONAL --}}
 <div class="modal fade" id="additional-item-modal" role="dialog" aria-labelledby="additional-itemLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
@@ -304,8 +316,11 @@
         </div>
     </div>
 </div>
+@endcan
+@can('view_menu')
 {{-- VIEW ITEM --}}
 @include('app.component.view-item')
+@endcan
 {{-- ENVIO DE IMAGEM --}}
 <div id="uploadimage" class="modal" role="dialog">
     <div class="modal-dialog modal-lg">

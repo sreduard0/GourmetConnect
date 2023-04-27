@@ -10,6 +10,7 @@ use App\Models\PaymentMethodsModel;
 use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
 use App\Models\TypeItemModel;
+use Spatie\Permission\Models\Permission;
 
 class AppViewsController extends Controller
 {
@@ -81,7 +82,10 @@ class AppViewsController extends Controller
     }
     public function users()
     {
-        return view('app.users');
+        $data = [
+            'permissions' => Permission::all(),
+        ];
+        return view('app.users', $data);
     }
     public function app_settings()
     {

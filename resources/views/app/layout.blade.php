@@ -92,7 +92,7 @@ $app_settings = AppSettingsModel::all()->first();
                             </a>
                         </li>
                         @endcan
-                        @can('view_orders','view_delivery')
+                        @canany(['view_orders','view_delivery'])
                         <li class="nav-item @yield('menu-requests')">
                             <a href="#" class="rounded-pill nav-link @yield('requests') @yield('delivery')">
                                 <i class="nav-icon fa-duotone fa-burger-soda"></i>
@@ -141,7 +141,7 @@ $app_settings = AppSettingsModel::all()->first();
                             </a>
                         </li>
                         @endcan
-                        @can('config_app','config_users','config_site')
+                        @canany(['config_app_data','config_app_delivery','config_app_email','config_app_theme','config_users','config_site'])
                         <li class="nav-item @yield('config')">
                             <a href="#" class="rounded-pill nav-link @yield('users')@yield('app-settings')@yield('site-settings')">
                                 <i class="nav-icon fa-duotone fa-gears"></i>
@@ -159,7 +159,7 @@ $app_settings = AppSettingsModel::all()->first();
                                     </a>
                                 </li>
                                 @endcan
-                                @can('config_app')
+                                @canany(['config_app_data','config_app_delivery','config_app_email','config_app_theme'])
                                 <li class="nav-item">
                                     <a href="{{ route('app_settings') }}" class="rounded-pill nav-link @yield('app-settings')">
                                         <i class="fa-duotone fa-sliders nav-icon"></i>

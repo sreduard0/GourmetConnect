@@ -7,6 +7,7 @@ use App\Models\AdditionalItemModel;
 use App\Models\ItemModel;
 use App\Models\TypeItemModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TypeItemsController extends Controller
 {
@@ -97,6 +98,13 @@ class TypeItemsController extends Controller
         $dados = array();
 
         foreach ($types as $type) {
+            $buttons = '';
+            if (Auth::user()->hasPermissionTo('edit_type_menu')) {
+                $buttons .= '<button onclick="return modal_type_item(\'' . Tools::hash($type->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> ';
+            }
+            if (Auth::user()->hasPermissionTo('delete_type_menu')) {
+                $buttons .= '<button onclick="return delete_type_item(\'' . Tools::hash($type->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button> ';
+            }
             $dado = array();
             $dado[] = '<img class="img-circle" src="' . asset($type->photo_url) . '" alt="' . $type->name . '" width="35">
                         <div class="popup">
@@ -104,7 +112,7 @@ class TypeItemsController extends Controller
                         </div>';
             $dado[] = $type->name;
             $dado[] = count($type->items);
-            $dado[] = '<button onclick="return modal_type_item(\'' . Tools::hash($type->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> <button onclick="return delete_type_item(\'' . Tools::hash($type->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+            $dado[] = $buttons ? $buttons : '-';
             // $dado[] = $type->description;
             $dados[] = $dado;
         }
