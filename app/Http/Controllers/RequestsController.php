@@ -488,7 +488,7 @@ class RequestsController extends Controller
                     }
                 }
                 if (Auth::user()->hasPermissionTo('create_order')) {
-                    $buttons .= '<button onclick="return additional_item_request(\'' . Tools::hash($item->product_id, 'encrypt') . '\',\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> ';
+                    $item->status == 2 ? $buttons .= '<button onclick="return additional_item_request(\'' . Tools::hash($item->product_id, 'encrypt') . '\',\'' . Tools::hash($item->id, 'encrypt') . '\')" class="btn btn-sm btn-primary" ><i class="fa-solid fa-pen"></i></button> ' : '';
                 }
             }
 

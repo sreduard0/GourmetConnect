@@ -106,6 +106,9 @@
                                 @if ($permission->group_name == 'app')
                                 <option id="{{ $permission->name }}" value="{{ $permission->name }}">{{ $permission->display_name }}</option>
                                 @endif
+                                @if ($permission->group_name == 'site')
+                                <option id="{{ $permission->name }}" value="{{ $permission->name }}">{{ $permission->display_name }}</option>
+                                @endif
                                 @endforeach
                             </optgroup>
                         </select>

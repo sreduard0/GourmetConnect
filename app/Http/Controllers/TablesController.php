@@ -10,6 +10,7 @@ use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class TablesController extends Controller
 {
@@ -42,8 +43,10 @@ class TablesController extends Controller
                 $table['value'] = '-';
                 $table['request'] = '-';
                 $table['pendent'] = false;
-
             }
+
+            $table['permissions']['qr_code_actions'] = Auth::user()->hasPermissionTo('qr_code_actions');
+            $table['permissions']['view_orders'] = Auth::user()->hasPermissionTo('view_orders');
             $table['qr_value'] = Tools::hash($i, 'encrypt');
             $tables[$i] = $table;
         }

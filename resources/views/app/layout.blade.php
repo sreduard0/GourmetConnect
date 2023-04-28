@@ -141,7 +141,8 @@ $app_settings = AppSettingsModel::all()->first();
                             </a>
                         </li>
                         @endcan
-                        @canany(['config_app_data','config_app_delivery','config_app_email','config_app_theme','config_users','config_site'])
+                        @canany(['config_app_data','config_app_delivery','config_app_email','config_app_theme','create_user','edit_user','delete_user','permissions_user','config_site'])
+
                         <li class="nav-item @yield('config')">
                             <a href="#" class="rounded-pill nav-link @yield('users')@yield('app-settings')@yield('site-settings')">
                                 <i class="nav-icon fa-duotone fa-gears"></i>
@@ -151,7 +152,7 @@ $app_settings = AppSettingsModel::all()->first();
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                @can('config_users')
+                                @can(['create_user','edit_user','delete_user','permissions_user'])
                                 <li class="nav-item">
                                     <a href="{{ route('users') }}" class="rounded-pill nav-link  @yield('users')">
                                         <i class="fa-duotone fa-users nav-icon"></i>

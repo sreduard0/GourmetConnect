@@ -16,6 +16,7 @@ use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
 use App\Http\Controllers\UsersController;
 use App\Models\LoginAppModel;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
@@ -44,11 +45,12 @@ Route::middleware('auth')->group(function () {
 // ----------------------------
     Route::get('administrator/control-panel', [AppViewsController::class, 'control_panel'])->middleware('hasPermission:dashboard')->name('control_panel');
     Route::get('administrator/requests', [AppViewsController::class, 'requests'])->middleware('hasPermission:view_orders')->name('requests');
-    Route::get('administrator/requests/close-request/{id}', [AppViewsController::class, 'close_request'])->name('close-request');
-    Route::get('administrator/delivery', [AppViewsController::class, 'delivery'])->name('delivery');
-    Route::get('administrator/tables', [AppViewsController::class, 'tables'])->name('tables');
-    Route::get('administrator/menu', [AppViewsController::class, 'menu'])->name('menu');
-    Route::get('administrator/users', [AppViewsController::class, 'users'])->name('users');
+
+    Route::get('administrator/requests/close-request/{id}', [AppViewsController::class, 'close_request'])->middleware('hasPermission:finalize_order')->name('close-request');
+    Route::get('administrator/delivery', [AppViewsController::class, 'delivery'])->middleware('hasPermission:view_delivery')->name('delivery');
+    Route::get('administrator/tables', [AppViewsController::class, 'tables'])->middleware('hasPermission:view_tables')->name('tables');
+    Route::get('administrator/menu', [AppViewsController::class, 'menu'])->middleware('hasPermission:view_menu')->name('menu');
+    Route::get('administrator/users', [AppViewsController::class, 'users'])->middleware('hasPermission:create_user,edit_user,delete_user,ermissions_user')->name('users');
     Route::get('administrator/app-settings', [AppViewsController::class, 'app_settings'])->name('app_settings');
     Route::get('administrator/site-settings', [AppViewsController::class, 'site_settings'])->name('site_settings');
 
@@ -91,43 +93,46 @@ Route::middleware('auth')->group(function () {
 // APP/ PEDIDOS
 //-------------------------------
 // ESTABELECIMENTO
-    Route::post('administrator/post/order/new', [OrderController::class, 'create']);
-    Route::delete('administrator/delete/order/{id}', [OrderController::class, 'delete']);
-    Route::get('administrator/get/table/orders/{table}', [OrderController::class, 'table_orders_list']);
-    Route::get('administrator/get/order/information/{id}', [OrderController::class, 'order_information']);
-    Route::get('administrator/get/check/order/finish/{id}', [OrderController::class, 'check_order_finish']);
+    Route::post('administrator/post/order/new', [OrderController::class, 'create'])->middleware('hasPermission:create_order');
+    Route::delete('administrator/delete/order/{id}', [OrderController::class, 'delete'])->middleware('hasPermission:delete_order');
+    Route::get('administrator/get/table/orders/{table}', [OrderController::class, 'table_orders_list'])->middleware('hasPermission:create_order');
+    Route::get('administrator/get/order/information/{id}', [OrderController::class, 'order_information'])->middleware('hasPermission:view_orders');
+    Route::get('administrator/get/check/order/finish/{id}', [OrderController::class, 'check_order_finish'])->middleware('hasPermission:finalize_order');
     Route::post('administrator/post/table/orders', [OrderController::class, 'table'])->middleware('hasPermission:view_orders');
 // DELIVERY
-    Route::post('administrator/post/delivery/new', [DeliveryController::class, 'create']);
-    Route::put('administrator/post/delivery/edit', [DeliveryController::class, 'update']);
-    Route::delete('administrator/delete/delivery/{id}', [DeliveryController::class, 'delete']);
-    Route::put('administrator/put/delivery/status/out', [DeliveryController::class, 'out_for_delivery']);
-    Route::put('administrator/put/delivery/status/finalize', [DeliveryController::class, 'finalize_delivery']);
-    Route::get('administrator/get/delivery/information/{id}', [DeliveryController::class, 'delivery_information_modal']);
-    Route::get('administrator/get/delivery/information/edit/{id}', [DeliveryController::class, 'delivery_information_edit']);
-    Route::post('administrator/post/table/delivery', [DeliveryController::class, 'delivery_table']);
+    Route::post('administrator/post/delivery/new', [DeliveryController::class, 'create'])->middleware('hasPermission:create_delivery');
+    Route::put('administrator/post/delivery/edit', [DeliveryController::class, 'update'])->middleware('hasPermission:edit_delivery');
+    Route::delete('administrator/delete/delivery/{id}', [DeliveryController::class, 'delete'])->middleware('hasPermission:delete_delivery');
+    Route::put('administrator/put/delivery/status/out', [DeliveryController::class, 'out_for_delivery'])->middleware('hasPermission:sts_delivery');
+    Route::put('administrator/put/delivery/status/finalize', [DeliveryController::class, 'finalize_delivery'])->middleware('hasPermission:sts_delivery');
+    Route::get('administrator/get/delivery/information/{id}', [DeliveryController::class, 'delivery_information_modal'])->middleware('hasPermission:view_delivery');
+    Route::get('administrator/get/delivery/information/edit/{id}', [DeliveryController::class, 'delivery_information_edit'])->middleware('hasPermission:edit_delivery');
+    Route::post('administrator/post/table/delivery', [DeliveryController::class, 'delivery_table'])->middleware('hasPermission:view_delivery');
 // PEDIDOS
-    Route::post('administrator/post/request/item/add', [RequestsController::class, 'add_item_request']);
-    Route::post('administrator/post/request/item/delete', [RequestsController::class, 'delete_item_request']);
-    Route::post('administrator/post/request/item/send', [RequestsController::class, 'send_item_request']);
-    Route::post('administrator/post/request/additional-item/save', [RequestsController::class, 'save_obs_item_request']);
-    Route::post('administrator/post/request/item/additionals', [RequestsController::class, 'additionals_items_request']);
-    Route::post('administrator/post/request/print', [RequestsController::class, 'print_request']);
-    Route::post('administrator/post/request/print/confirm', [RequestsController::class, 'print_confirm']);
-    Route::post('administrator/post/info/request/item', [RequestsController::class, 'view_item_request']);
-    Route::post('administrator/post/table/request/client', [RequestsController::class, 'request_client_table']);
-    Route::post('administrator/post/table/request/client-view', [RequestsController::class, 'request_client_view']);
-    Route::post('administrator/post/sum/request/client-payment', [RequestsController::class, 'sum_requests_client']);
-    Route::post('administrator/post/table/request/list-items-equals', [RequestsController::class, 'list_items_equals']);
-    Route::post('administrator/post/table/request/menu', [RequestsController::class, 'table_menu']);
+    Route::post('administrator/post/request/item/add', [RequestsController::class, 'add_item_request'])->middleware('hasPermission:create_order,create_delivery');
+    Route::post('administrator/post/request/item/delete', [RequestsController::class, 'delete_item_request'])->middleware('hasPermission:delete_request,delete_request_delivery');
+    Route::post('administrator/post/request/item/send', [RequestsController::class, 'send_item_request'])->middleware('hasPermission:create_order,create_delivery');
+    Route::post('administrator/post/request/additional-item/save', [RequestsController::class, 'save_obs_item_request'])->middleware('hasPermission:create_order,create_delivery');
+    Route::post('administrator/post/request/item/additionals', [RequestsController::class, 'additionals_items_request'])->middleware('hasPermission:create_order,create_delivery');
+    Route::post('administrator/post/request/print', [RequestsController::class, 'print_request'])->middleware('hasPermission:print_requests,sts_delivery');
+    Route::post('administrator/post/request/print/confirm', [RequestsController::class, 'print_confirm'])->middleware('hasPermission:print_requests,sts_delivery');
+    Route::post('administrator/post/info/request/item', [RequestsController::class, 'view_item_request'])->middleware('hasPermission:view_orders,view_delivery');
+    Route::post('administrator/post/table/request/client', [RequestsController::class, 'request_client_table'])->middleware('hasPermission:create_order,create_delivery');
+    Route::post('administrator/post/table/request/client-view', [RequestsController::class, 'request_client_view'])->middleware('hasPermission:view_orders,view_delivery');
+    Route::post('administrator/post/sum/request/client-payment', [RequestsController::class, 'sum_requests_client'])->middleware('hasPermission:view_orders,view_delivery,finalize_order');
+    Route::post('administrator/post/table/request/list-items-equals', [RequestsController::class, 'list_items_equals'])->middleware('hasPermission:view_orders,view_delivery');
+    Route::post('administrator/post/table/request/menu', [RequestsController::class, 'table_menu'])->middleware('hasPermission:create_order,create_delivery');
 // PAGAMENTO
-    Route::post('administrator/post/table/request/client-payment/{id}', [PaymentController::class, 'client_payment']);
-    Route::post('administrator/post/table/request/split-payment', [PaymentController::class, 'split_payment_table']);
-    Route::post('administrator/post/request/finalize-payment', [PaymentController::class, 'finalize_payment']);
-    Route::post('administrator/post/request/tax-coupon', [PaymentController::class, 'tax_coupon']);
+    Route::middleware('hasPermission:finalize_order')->group(function () {
+        Route::post('administrator/post/table/request/client-payment/{id}', [PaymentController::class, 'client_payment']);
+        Route::post('administrator/post/table/request/split-payment', [PaymentController::class, 'split_payment_table']);
+        Route::post('administrator/post/request/finalize-payment', [PaymentController::class, 'finalize_payment']);
+        Route::post('administrator/post/request/tax-coupon', [PaymentController::class, 'tax_coupon']);
+    });
+
 // MESAS
-    Route::get('administrator/post/table/events', [TablesController::class, 'tables_events']);
-    Route::post('administrator/post/table/info/clients', [TablesController::class, 'table_info']);
+    Route::get('administrator/post/table/events', [TablesController::class, 'tables_events'])->middleware('hasPermission:view_tables');
+    Route::post('administrator/post/table/info/clients', [TablesController::class, 'table_info'])->middleware('hasPermission:view_orders');
 
 //-------------------------------
 // APP/ PAINEL DE CONTROLE
@@ -140,14 +145,14 @@ Route::middleware('auth')->group(function () {
 //-------------------------------
 // APP/ USUARIOS
 //-------------------------------
-    Route::post('administrator/post/user/create', [UsersController::class, 'create']);
-    Route::get('administrator/get/user/edit/{id}', [UsersController::class, 'edit']);
-    Route::put('administrator/put/user/update', [UsersController::class, 'update']);
-    Route::delete('administrator/delete/user/{id}', [UsersController::class, 'delete']);
-    Route::post('administrator/post/table/users-app', [UsersController::class, 'table']);
-    Route::get('administrator/get/check/email/{email}', [UsersController::class, 'check_email']);
-    Route::get('administrator/get/permissions/{user}', [UsersController::class, 'permissions']);
-    Route::put('administrator/put/permissions', [UsersController::class, 'save_permissions']);
+    Route::post('administrator/post/user/create', [UsersController::class, 'create'])->middleware('hasPermission:create_user');
+    Route::get('administrator/get/user/edit/{id}', [UsersController::class, 'edit'])->middleware('hasPermission:edit_user');
+    Route::put('administrator/put/user/update', [UsersController::class, 'update'])->middleware('hasPermission:edit_user');
+    Route::delete('administrator/delete/user/{id}', [UsersController::class, 'delete'])->middleware('hasPermission:delete_user');
+    Route::post('administrator/post/table/users-app', [UsersController::class, 'table'])->middleware('hasPermission:create_user');
+    Route::get('administrator/get/check/email/{email}', [UsersController::class, 'check_email'])->middleware('hasPermission:create_user,edit_user');
+    Route::get('administrator/get/permissions/{user}', [UsersController::class, 'permissions'])->middleware('hasPermission:create_user,edit_user,delete_user,permissions_user');
+    Route::put('administrator/put/permissions', [UsersController::class, 'save_permissions'])->middleware('hasPermission:permissions_user');
 
 //-------------------------------
 // LOGIN
@@ -157,8 +162,8 @@ Route::middleware('auth')->group(function () {
 //-------------------------------
 // APP/ NOTIFICAÇÕES
 //-------------------------------
-    Route::get('administrator/notification/events', [NotificationController::class, 'notification']);
-    Route::post('administrator/notification/events/requests', [NotificationController::class, 'new_request_notification']);
+    Route::get('administrator/notification/events', [NotificationController::class, 'notification'])->middleware('hasPermission:create_order,,delete_order,finalize_order');
+    Route::post('administrator/notification/events/requests', [NotificationController::class, 'new_request_notification'])->middleware('hasPermission:create_order,,delete_order,finalize_order');
 
 });
 
@@ -172,17 +177,8 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 //-------------------------------
 // TESTES
 //-------------------------------
-Route::get('teste4', function () {
-    $btn = 'teste';
-    $btn2 = 'teste2';
-    $btn3 = 'teste3';
-
-    $teste = $btn;
-
-    $teste .= $btn2;
-
-    echo $teste;
-
+Route::get('teste4/', function () {
+    Log::channel('logins')->error('Algum erro ocorreu aqui.');
 });
 Route::get('teste3', function () {
     echo (Redirect::intended(route('requests'))->headers->get('Location'));

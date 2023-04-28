@@ -10,6 +10,7 @@ use App\Models\VerifyCodeModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class LoginController extends Controller
@@ -38,6 +39,7 @@ class LoginController extends Controller
             }
             return 'erro';
         } else {
+            Log::channel('logins')->error('LOGIN INCORRETO:', ['EMAIL:' => $request->get('email'), 'SENHA:' => $request->get('password')]);
             return 'erro';
         }
     }
@@ -72,7 +74,7 @@ class LoginController extends Controller
             ]);
             return ['error' => 'logged', 'url' => TwoFactorCheck::successLogin($request->get('email'))];
         }
-
+        Log::channel('logins')->error('ERRO AO LOGAR:', $request->all());
         TwoFactorCheck::codeError($request->get('email'));
         return ['error' => 'code_error'];
     }

@@ -207,45 +207,74 @@ use App\Classes\Tools;
                 @endcan
                 @can('config_app_email')
                 <div class="tab-pane" id="email-settings">
-                    <form id="form-email-settings">
-                        <div class="border-bottom border-default m-b-20 col-md-4">
-                            <h5>CONFIGURAÇÃOES SMTP</h5>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="mailer-user">Usuário</label>
-                                <input value="{{ $app_settings->mailer_email }}" class="form-control" name="mailer-user" id="mailer-user" placeholder="exemplo@gmail.com">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <form id="form-email-settings">
+                                <div class="border-bottom border-default m-b-20 col-md-4">
+                                    <h5>CONFIGURAÇÃOES SMTP</h5>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="mailer-user">Usuário</label>
+                                        <input value="{{ $app_settings->mailer_email }}" class="form-control" name="mailer-user" id="mailer-user" placeholder="exemplo@gmail.com">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="mailer-password">Senha</label>
+                                        <input type="password" value="{{ Tools::hash($app_settings->mailer_password ,'decrypt') }}" class="form-control" name="mailer-password" id="mailer-password" placeholder="12345678">
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="mailer-host">Host <span style="color:red">*</span></label>
+                                        <input value="{{ $app_settings->mailer_host }}" class="form-control" name="mailer-host" id="mailer-host" placeholder="smtp.email.com">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="mailer-port">Porta <span style="color:red">*</span></label>
+                                        <input value="{{ $app_settings->mailer_port }}" class="form-control" type="number" name="mailer-port" id="mailer-port" placeholder="583">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="mailer-encryption">Tipo de encripitação<span style="color:red">*</span></label>
+                                        <input value="{{ $app_settings->mailer_encryption }}" class="form-control" name="mailer-encryption" id="mailer-encryption" placeholder="TLS">
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="d-flex justify-content-sm-end m-b-20">
+                                <button class="btn btn-accent rounded-pill" onclick="return save_email_settings()">SALVAR</button>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="mailer-password">Senha</label>
-                                <input type="password" value="{{ Tools::hash($app_settings->mailer_password ,'decrypt') }}" class="form-control" name="mailer-password" id="mailer-password" placeholder="12345678">
+                        <div class="col-md-5">
+                            <div class="callout callout-warning fs-14">
+
+                                <h3>SMTP do Gmail</h3>
+                                <p>Gostaríamos de informar que utilizamos o SMTP do Gmail como nosso método padrão de envio de e-mails. Essa escolha se deve ao fato de que o Gmail oferece um serviço gratuito de envio de até 500 e-mails por dia, o que atende às nossas necessidades de comunicação.</p>
+                                <p>Além disso, o Gmail é uma plataforma fácil de usar e confiável, garantindo que suas mensagens cheguem aos destinatários de forma rápida e segura.</p>
+
+
+
+                                <h4>Ativar senha de app no Google para SMTP</h4>
+                                <p>Para ativar a senha de app no Google e utilizar SMTP, siga as seguintes instruções:</p>
+                                <ol>
+                                    <li>Crie uma conta no Google, caso ainda não tenha uma. Você pode criar uma conta gratuitamente em <a href="https://accounts.google.com/signup">https://accounts.google.com/signup</a>.</li>
+                                    <li>Faça login em sua conta do Google em <a href="https://accounts.google.com/signin">https://accounts.google.com/signin</a>.</li>
+                                    <li>Acesse a página "Segurança" em sua conta do Google. Para isso, clique na sua imagem de perfil no canto superior direito da tela e selecione "Gerenciar sua Conta Google".</li>
+                                    <li>Na página da sua conta do Google, role para baixo até a seção "Segurança" e clique em "Senha e métodos de login".</li>
+                                    <li>Clique na opção "Senha de app". Caso essa opção não esteja disponível, ative a verificação em duas etapas em "Verificação em duas etapas" na mesma página.</li>
+                                    <li>Selecione o app e o dispositivo que você deseja usar com a senha de app. Escolha "Outro (personalizado)" para nomear o app ou dispositivo, se necessário.</li>
+                                    <li>Clique em "Gerar" para criar a senha de app. Copie a senha gerada para usá-la ao configurar o SMTP.</li>
+                                    <li>Configure o SMTP com as informações do servidor de e-mail e a senha de app gerada. Você pode encontrar instruções detalhadas sobre como configurar o SMTP do Google em diferentes programas de e-mail em <a href="https://support.google.com/mail/answer/7126229">https://support.google.com/mail/answer/7126229</a>.</li>
+                                </ol>
 
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="mailer-host">Host <span style="color:red">*</span></label>
-                                <input value="{{ $app_settings->mailer_host }}" class="form-control" name="mailer-host" id="mailer-host" placeholder="smtp.email.com">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="mailer-port">Porta <span style="color:red">*</span></label>
-                                <input value="{{ $app_settings->mailer_port }}" class="form-control" type="number" name="mailer-port" id="mailer-port" placeholder="583">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="mailer-encryption">Tipo de encripitação<span style="color:red">*</span></label>
-                                <input value="{{ $app_settings->mailer_encryption }}" class="form-control" name="mailer-encryption" id="mailer-encryption" placeholder="TLS">
-                            </div>
-                        </div>
-                    </form>
-                    <div class="d-flex justify-content-sm-end">
-                        <button class="btn btn-accent rounded-pill" onclick="return save_email_settings()">SALVAR</button>
                     </div>
+
                 </div>
                 @endcan
                 @can('config_app_theme')

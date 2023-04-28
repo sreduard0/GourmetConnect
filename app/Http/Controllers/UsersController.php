@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
 
 class UsersController extends Controller
 {
@@ -169,10 +170,17 @@ class UsersController extends Controller
     {
         try {
             $login = LoginAppModel::find(Tools::hash($request->get('id'), 'decrypt'));
-            foreach ($request->get('permissions') as $permission) {
-                $login->revokePermissionTo($permission);
-                $login->givePermissionTo($permission);
+
+            foreach (Permission::all() as $permission) {
+                $login->revokePermissionTo($permission->name);
             }
+
+            if ($request->get('permissions')) {
+                foreach ($request->get('permissions') as $permission) {
+                    $login->givePermissionTo($permission);
+                }
+            }
+
             return true;
         } catch (\Throwable$th) {
             return false;
@@ -250,7 +258,7 @@ class UsersController extends Controller
             $dado[] = $user->email;
             $dado[] = $user->job;
             $dado[] = $user->active == 1 ? 'Ativo' : 'Inativo';
-            $dado[] = '<button class="btn btn-sm btn-accent rounded-pill" onclick="permissions(\'' . Tools::hash($user->login_id, 'encrypt') . '\')"><i class="fa-sharp fa-solid fa-shield-keyhole"></i> <strong>Permissões (' . count($login->permissions) . ') </strong></button>';
+            $dado[] = '<button class="btn btn-sm btn-accent rounded-pill" onclick="permissions(\'' . Tools::hash($user->login_id, 'encrypt') . '\')"><i class="fa-sharp fa-solid fa-shield-keyhole"></i> <strong>Ver permissões (' . count($login->permissions) . ') </strong></button>';
             $dado[] = $buttons ? $buttons : '-';
             $dados[] = $dado;
         }

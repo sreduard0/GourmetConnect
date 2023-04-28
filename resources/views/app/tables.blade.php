@@ -40,7 +40,6 @@
                                 </div>
                             </div>
                             @canany(['view_orders','qr_code_actions'])
-
                             <div class="card-footer">
                                 <div class="text-right">
                                     @can('qr_code_actions')
@@ -65,6 +64,129 @@
 </div>
 @endsection
 @section('modal')
+@can('create_order')
+{{-- NOVO PEDIDO --}}
+<div class="modal fade" id="new-request-modal" role="dialog" tabindex="-1" aria-labelledby="newReqLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="type-itemLabel">COMANDA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="div-select-client" class="d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <select class="text-center col select-rounded m-b-10" id="table-select">
+                            <option disabled selected value="">SELECIONE UMA MESA</option>
+                            @for ($t = 1; $t <= $app_settings->number_tables; $t++)
+                                <option value="{{ $t }}">MESA #{{ $t }}</option>
+                                @endfor
+                        </select>
+                        <input minlength="2" maxlength="200" id="client-name" value="" type="text" class="form-control rounded-pill text-center col m-b-10" placeholder="Nome do Cliente ou Nº da comanda">
+                        <div class="d-flex justify-content-center">
+                            <button id="btn-select-order" style="width:100px" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-chevron-right fs-35"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+                <div style="display:none" id="div-add-request">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between row">
+                                <h3 class="card-title ">CARDÁPIO</h3>
+                                <select class=" text-center select-rounded res" id="filter-type-item" name="filter-type-item">
+                                    <option disabled selected>BUSQUE POR UM TIPO</option>
+                                    <option value="">TODOS</option>
+                                    @foreach ($types as $type)
+                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table style="width:100%" id="menu-table" class="table table-bordered table-striped">
+
+                                <thead>
+                                    <tr>
+                                        <th width='25px'>Foto</th>
+                                        <th>Item</th>
+                                        <th width='100px'>Valor</th>
+                                        <th width='70px'>Ações</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between row">
+                                <h3 id="title-requests" class="card-title "></h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table style="width:100%" id="order-requests-table" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th width="25px">Foto</th>
+                                        <th>Item</th>
+                                        <th width="60px">Valor</th>
+                                        <th width="70px">Ações</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer" id="modal-footer" style="display:none">
+                <button id="send-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>ENVIAR PEDIDO</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- ADICIONAIS E OBS --}}
+<div class="modal fade" id="observation-item-modal" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="observation-item-modalLabel">ADICIONAIS E OBSERVAÇÕES</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="request_id">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title "><strong>Adicionais</strong></h5>
+                    </div>
+                    <form id="form-add-additional">
+                        <div id="checkbox-container" class="card-body">
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title"> <strong>Observações</strong> </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <textarea name="obs-additional" id="obs-additional" rows="8" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-obs-item-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>SALVAR</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+@endcan
 @can('view_orders')
 {{-- PEDIDOS DO CLIENTE --}}
 <div class="modal fade" id="requests-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
@@ -140,129 +262,6 @@
                         </tr>
                     </thead>
                 </table>
-            </div>
-        </div>
-    </div>
-</div>
-@endcan
-@can('create_order')
-{{-- NOVO PEDIDO --}}
-<div class="modal fade" id="new-request-modal" role="dialog" tabindex="-1" aria-labelledby="newReqLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="type-itemLabel">COMANDA</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="div-select-client" class="d-flex justify-content-center">
-                    <div class="col-md-6">
-                        <select class="text-center col select-rounded m-b-10" id="table-select">
-                            <option disabled selected value="">SELECIONE UMA MESA</option>
-                            @for ($t = 1; $t <= $app_settings->number_tables; $t++)
-                                <option value="{{ $t }}">MESA #{{ $t }}</option>
-                                @endfor
-                        </select>
-                        <input minlength="2" maxlength="200" id="client-name" value="" type="text" class="form-control rounded-pill text-center col m-b-10" placeholder="Nome do Cliente ou Nº da comanda">
-                        <div class="d-flex justify-content-center">
-                            <button id="btn-select-request" style="width:100px" class="btn btn-accent rounded-pill"><i class="fa-solid fa-circle-chevron-right fs-35"></i></button>
-                        </div>
-                    </div>
-
-                </div>
-                <div style="display:none" id="div-add-request">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="d-flex justify-content-between row">
-                                <h3 class="card-title ">CARDÁPIO</h3>
-                                <select class=" text-center select-rounded res" id="filter-type-item" name="filter-type-item">
-                                    <option disabled selected>BUSQUE POR UM TIPO</option>
-                                    <option value="">TODOS</option>
-                                    @foreach ($types as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                    @endforeach
-                                </select>
-
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <table style="width:100%" id="menu-table" class="table table-bordered table-striped">
-
-                                <thead>
-                                    <tr>
-                                        <th width='25px'>Foto</th>
-                                        <th>Item</th>
-                                        <th width='100px'>Valor</th>
-                                        <th width='70px'>Ações</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="d-flex justify-content-between row">
-                                <h3 id="title-requests" class="card-title "></h3>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <table style="width:100%" id="client-requests-table" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th width="25px">Foto</th>
-                                        <th>Item</th>
-                                        <th width="60px">Valor</th>
-                                        <th width="70px">Ações</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="modal-footer" id="modal-footer" style="display:none">
-                <button id="send-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>ENVIAR PEDIDO</strong></button>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- ADICIONAIS E OBS --}}
-<div class="modal fade" id="observation-item-modal" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="observation-item-modalLabel">ADICIONAIS E OBSERVAÇÕES</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="request_id">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title "><strong>Adicionais</strong></h5>
-                    </div>
-                    <form id="form-add-additional">
-                        <div id="checkbox-container" class="card-body">
-                        </div>
-                    </form>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title"> <strong>Observações</strong> </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <textarea name="obs-additional" id="obs-additional" rows="8" class="form-control"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="save-obs-item-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>SALVAR</strong></button>
             </div>
         </div>
     </div>
