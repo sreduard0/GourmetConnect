@@ -15,6 +15,8 @@ class ControlPanelController extends Controller
 {
     public function monthly_sales_chart()
     {
+        $statistics = [];
+
         $items_menu = ItemModel::select('id', 'name')->get();
         foreach ($items_menu as $item) {
             $color = Tools::colorGenerate($item->id);
@@ -56,7 +58,12 @@ class ControlPanelController extends Controller
             ->where('delivered', 1)
             ->groupBy('location_id')
             ->get()->toArray();
+        if (count($deliverys) == 0) {
+            $statistics['labels'][] = 'Sem deliverys este mês';
+            $statistics['colors'][] = '#212529';
+            $statistics['data'][] = '10000000';
 
+        }
         foreach ($deliverys as $location) {
             $statistics['labels'][] = $location['location']['neighborhood'] . ' - ' . $location['location']['reference'];
             $statistics['colors'][] = Tools::colorGenerate($location['location']['neighborhood']);

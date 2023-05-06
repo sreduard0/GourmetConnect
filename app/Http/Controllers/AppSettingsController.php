@@ -17,8 +17,24 @@ class AppSettingsController extends Controller
     public function save_establishment_settings(Request $request)
     {
         $data = $request->all();
+
+// VERIFICANDO SE A FOTO DE PERFIL FOI ALTERADA E SALVANDO NO CAMPO
+        if ($data['establishment_logo']) {
+            $image_array_1 = explode(";", $data['establishment_logo']);
+            $image_array_2 = explode(",", $image_array_1[1]);
+            $img = base64_decode($image_array_2[1]);
+            $imageName = $data['establishment_name'] . '_' . date('d-m-Y') . '.png';
+            $fileDir = 'img/' . $data['establishment_name'] . '/';
+            if (!is_dir($fileDir)) {
+                mkdir($fileDir, 0444, true); //444
+            }
+            file_put_contents($fileDir . $imageName, $img);
+        }
+
         $save_data = AppSettingsModel::all()->first();
         $save_data->establishment_name = $data['establishment_name'];
+        $save_data->logo_url = $fileDir . $imageName;
+        $save_data->establishment_legal_name = $data['establishment_legal_name'];
         $save_data->cnpj = str_replace(['/', '.', '-', '_'], '', $data['establishment_cnpj']);
         $save_data->address = $data['establishment_address'];
         $save_data->number = str_replace(['/', '.', '-', '_'], '', $data['establishment_number']);
@@ -64,7 +80,7 @@ class AppSettingsController extends Controller
     }
 
     //--------------------------------
-    // ESTABELECIMENTO
+    // DELIVERY
     //--------------------------------
     public function save_delivery_local_settings(Request $request)
     {
@@ -84,7 +100,7 @@ class AppSettingsController extends Controller
             return 'success';
         }
     }
-
+    // LOCAIS DE ENTREGA
     public function delivery_locations(Request $request)
     {
         $locationData = $request->all();

@@ -33,14 +33,14 @@ class LoginController extends Controller
                     VerifyCodeModel::create(['code' => $code, 'user_id' => $check_login->id, 'device' => request()->ip()]);
                     Email::TwoFactorCheck($code, $check_login->login);
                     return 'verified';
-                } catch (\Throwable$th) {
+                } catch (\Throwable $th) {
                     return 'failed';
                 }
             }
             Log::channel('logins')->error('SENHA INCORRETA:', ['EMAIL:' => $request->get('email'), 'SENHA:' => $request->get('password'), 'IP:' => request()->ip()]);
             return 'erro';
         } else {
-            Log::channel('logins')->error('LOGIN INCORRETO:', ['EMAIL:' => $request->get('email'), 'SENHA:' => $request->get('password'),'IP:' => request()->ip()]);
+            Log::channel('logins')->error('LOGIN INCORRETO:', ['EMAIL:' => $request->get('email'), 'SENHA:' => $request->get('password'), 'IP:' => request()->ip()]);
             return 'erro';
         }
     }

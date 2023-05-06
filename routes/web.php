@@ -16,7 +16,7 @@ use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
 use App\Http\Controllers\UsersController;
 use App\Models\LoginAppModel;
-use Illuminate\Support\Facades\Log;
+use App\Models\VerifyCodeModel;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
@@ -45,7 +45,6 @@ Route::middleware('auth')->group(function () {
 // ----------------------------
     Route::get('administrator/control-panel', [AppViewsController::class, 'control_panel'])->middleware('hasPermission:dashboard')->name('control_panel');
     Route::get('administrator/requests', [AppViewsController::class, 'requests'])->middleware('hasPermission:view_orders')->name('requests');
-
     Route::get('administrator/requests/close-request/{id}', [AppViewsController::class, 'close_request'])->middleware('hasPermission:finalize_order')->name('close-request');
     Route::get('administrator/delivery', [AppViewsController::class, 'delivery'])->middleware('hasPermission:view_delivery')->name('delivery');
     Route::get('administrator/tables', [AppViewsController::class, 'tables'])->middleware('hasPermission:view_tables')->name('tables');
@@ -178,7 +177,13 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 // TESTES
 //-------------------------------
 Route::get('teste4/', function () {
-    Log::channel('logins')->error('Algum erro ocorreu aqui.');
+    // Log::channel('logins')->error('Algum erro ocorreu aqui.');
+
+    $verify_code = VerifyCodeModel::where('code', 'LKF7W')->where('device', '10.0.0.120')->first();
+    if ($verify_code) {
+        dd($verify_code);
+    }
+
 });
 Route::get('teste3', function () {
     echo (Redirect::intended(route('requests'))->headers->get('Location'));

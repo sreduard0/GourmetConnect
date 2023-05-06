@@ -81,7 +81,6 @@ use App\Classes\Tools;
                                             <input type="file" class="input-img-profile" id="chenge-establishment-logo" accept="image/png,image/jpg,image/jpeg" onchange="checkExt(this)" />
                                         </div>
                                         <input type="hidden" name="establishment-logo-adjusted" id="establishment-logo-adjusted">
-
                                     </div>
                                 </div>
                             </div>
@@ -412,6 +411,20 @@ use App\Classes\Tools;
             </div>
             <div class="modal-body">
                 <div id="image_demo"></div>
+                <div class="callout callout-success fs-12 m-t-20">
+                    <h5>Para um bom logo lembre:</h5>
+                    <p>Ao escolher um logotipo para um estabelecimento, é importante seguir algumas boas práticas para garantir que o logotipo represente adequadamente a empresa e atraia o público-alvo. Aqui estão algumas dicas:</p>
+                    <ol>
+                        <li><strong>Simplicidade:</strong> um logotipo simples e fácil de entender é mais fácil de lembrar e reconhecer. Evite designs complicados e excessivamente detalhados.</li>
+                        <li><strong>Originalidade:</strong> crie um logotipo único que seja facilmente reconhecível e diferencie a empresa dos concorrentes.</li>
+                        <li><strong>Cores:</strong> use cores que reflitam a personalidade e os valores da empresa. As cores devem ser atraentes e harmoniosas.</li>
+                        <li><strong>Escalabilidade:</strong> o logotipo deve ser facilmente legível e reconhecível em qualquer tamanho, desde pequenos ícones em mídias sociais até grandes outdoors.</li>
+                        <li><strong>Consistência:</strong> o logotipo deve ser consistente em todas as plataformas de marketing e comunicação da empresa, desde o website até as redes sociais.</li>
+                        <li><strong>Legibilidade:</strong> certifique-se de que o texto e as imagens no logotipo sejam legíveis em todos os tamanhos e em diferentes fundos.</li>
+                    </ol>
+                    <p>Ao seguir essas boas práticas, você poderá criar um logotipo eficaz que ajude a empresa a se destacar e atrair clientes. Lembre-se de que um logotipo bem projetado pode ser uma poderosa ferramenta de marketing e comunicação para a empresa.</p>
+                </div>
+
             </div>
             <div id="crop_image" class="modal-footer">
                 <button onclick="return adjust_image()" class="btn btn-accent rounded-pill ">CORTAR</button>
