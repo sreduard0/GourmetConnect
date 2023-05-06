@@ -37,9 +37,10 @@ class LoginController extends Controller
                     return 'failed';
                 }
             }
+            Log::channel('logins')->error('SENHA INCORRETA:', ['EMAIL:' => $request->get('email'), 'SENHA:' => $request->get('password'), 'IP:' => request()->ip()]);
             return 'erro';
         } else {
-            Log::channel('logins')->error('LOGIN INCORRETO:', ['EMAIL:' => $request->get('email'), 'SENHA:' => $request->get('password')]);
+            Log::channel('logins')->error('LOGIN INCORRETO:', ['EMAIL:' => $request->get('email'), 'SENHA:' => $request->get('password'),'IP:' => request()->ip()]);
             return 'erro';
         }
     }

@@ -20,7 +20,6 @@ $app_settings = AppSettingsModel::all()->first();
     <link rel="stylesheet" href="{{ asset('assets/app/plugins/fontawesome/css/all.min.css') }}">
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet" href="{{ asset('assets/app/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css') }}">
-
     {{-- CSS ESPECIFICO --}}
     @yield('css')
     {{-- CSS ESPECIFICO --}}
@@ -43,8 +42,10 @@ $app_settings = AppSettingsModel::all()->first();
     <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    @canany(['create_order','delete_order','finalize_order'])
     {{-- NOTIFICAÇÕES --}}
     <script type="module" src="{{ asset('private/assets/js/notification.js') }}"></script>
+    @endcan
 
     @yield('script')
 

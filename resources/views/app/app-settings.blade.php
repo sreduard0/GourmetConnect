@@ -10,11 +10,15 @@ use App\Classes\Tools;
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('css')
+<link rel="stylesheet" href="{{ asset('assets/app/css/croppie.css') }}" />
 <link rel="stylesheet" href="{{asset('assets/app/plugins/select2/css/select2.css')}}">
 @endsection
 @section('script')
+<script src="{{ asset('private/assets/js/app-settings.js') }}"></script>
 <script src="{{ asset('private/assets/js/forms-app-settings.js') }}"></script>
+<script src="{{ asset('assets/app/js/croppie.js') }}"></script>
 @endsection
+
 @section('content')
 <div class="col-12">
     <div class="card">
@@ -39,26 +43,50 @@ use App\Classes\Tools;
                 @can('config_app_data')
                 <div class="tab-pane" id="establishment-settings">
                     <form id="form-establishment-settings">
-                        <div class="border-bottom border-default m-b-20 col-md-3">
-
-                            <h5>ESTABELECIMENTO</h5>
-                        </div>
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="establishment-name">Nome do estabelecimento <span style="color:red">*</span></label>
-                                <input value="{{ $app_settings->establishment_name }}" class="form-control" name="establishment-name" id="establishment-name" placeholder="EX: XIS DO PEDRO">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label for="establishment-cnpj">CNPJ <span style="color:red">*</span></label>
-                                <div class="input-group">
-                                    <input value="{{ $app_settings->cnpj }}" type="text" class="form-control" id="establishment-cnpj" name="establishment-cnpj" data-inputmask="'mask':'99.999.999/9999-99'" data-mask="" inputmode="text" placeholder="EX: 12.345.678/0003-00">
-
+                            <div class="col-md-6">
+                                <div class="border-bottom border-default m-b-20 col-md-3">
+                                    <h5>ESTABELECIMENTO</h5>
                                 </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="establishment-name">Nome do estabelecimento <span style="color:red">*</span></label>
+                                        <input value="{{ $app_settings->establishment_name }}" class="form-control" name="establishment-name" id="establishment-name" placeholder="EX: XIS DO PEDRO">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="establishment-legal-name">Razão social <span style="color:red">*</span></label>
+                                        <input value="{{ $app_settings->establishment_legal_name }}" class="form-control" name="establishment-legal-name" id="establishment-legal-name" placeholder="EX: XIS-DO-PEDRO ltda">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="establishment-cnpj">CNPJ <span style="color:red">*</span></label>
+                                        <div class="input-group">
+                                            <input value="{{ $app_settings->cnpj }}" type="text" class="form-control" id="establishment-cnpj" name="establishment-cnpj" data-inputmask="'mask':'99.999.999/9999-99'" data-mask="" inputmode="text" placeholder="EX: 12.345.678/0003-00">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-center">
+                                    <label for="establishment-logo">Logo</label>
+                                    <div class="row">
+                                        <div class="col">
+                                            <img id="establishment-logo" width="200" class="img-circle" src="{{ $app_settings->logo_url? asset($app_settings->logo_url)  : asset('img/gourmetconnect-logo/gourmetconnect.png') }} " alt="Imagem do logotipo">
+                                        </div>
+                                        <div class="col">
+                                            <label style="left: -56px; position:absolute;bottom:0" for="chenge-establishment-logo" class="btn btn-accent rounded-pill position-absolute"><i class="fs-30 fa-solid fa-folder-image"></i></label>
+                                            <input type="file" class="input-img-profile" id="chenge-establishment-logo" accept="image/png,image/jpg,image/jpeg" onchange="checkExt(this)" />
+                                        </div>
+                                        <input type="hidden" name="establishment-logo-adjusted" id="establishment-logo-adjusted">
 
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                         <hr>
                         <div class="border-bottom border-default m-b-20 col-md-3">
                             <h5>ENDEREÇO</h5>
@@ -369,11 +397,29 @@ use App\Classes\Tools;
             </div>
         </div>
     </div>
-
+</div>
+@endsection
+@section('modal')
+{{-- AJUSTE DE IMAGEM --}}
+<div id="changeimage" class="modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Ajustar imagem</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="image_demo"></div>
+            </div>
+            <div id="crop_image" class="modal-footer">
+                <button onclick="return adjust_image()" class="btn btn-accent rounded-pill ">CORTAR</button>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 @section('plugins')
-<script src="{{ asset('private/assets/js/app-settings.js') }}"></script>
 <script src="{{ asset('assets/app/plugins/select2/js/select2.full.min.js') }}"></script>
-
 @endsection

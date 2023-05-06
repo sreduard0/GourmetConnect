@@ -114,7 +114,6 @@
 @endsection
 @section('modal')
 @canany(['create_type_menu','edit_type_menu'])
-
 {{-- TIPO DE ITEM --}}
 <div class="modal fade" id="type-item-modal" tabindex="-1" role="dialog" aria-labelledby="TypeItemLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
