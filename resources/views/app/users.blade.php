@@ -7,11 +7,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
-@section('script')
-<script src="{{ asset('assets/app/js/croppie.js') }}"></script>
-@endsection
 @section('css')
-<link rel="stylesheet" href="{{ asset('assets/app/css/croppie.css') }}" />
 <link rel="stylesheet" href="{{asset('assets/app/plugins/select2/css/select2.css')}}">
 @endsection
 <div class="col-12">
@@ -206,7 +202,7 @@
 </div>
 {{-- AJUSTE DE IMAGEM --}}
 <div id="changeimage" class="modal" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Ajustar imagem</h4>
@@ -218,8 +214,7 @@
                 <div id="image_demo"></div>
             </div>
             <div id="crop_image" class="modal-footer">
-                <button onclick="return adjust_image()" class="btn btn-accent rounded-pill ">CORTAR</button>
-
+                <button onclick="return adjust_image()" class="btn btn-accent rounded-pill "><strong>CORTAR</strong></button>
             </div>
         </div>
     </div>
@@ -227,7 +222,7 @@
 @endcan
 @endsection
 @section('plugins')
-<script src="{{ asset('private/assets/js/users.js') }}"></script>
 <script src="{{ asset('private/assets/js/form-users.js') }}"></script>
 <script src="{{ asset('assets/app/plugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('private/assets/js/users.js') }}"></script>
 @endsection

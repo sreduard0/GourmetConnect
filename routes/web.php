@@ -151,14 +151,14 @@ Route::middleware('auth')->group(function () {
     Route::put('administrator/put/user/update', [UsersController::class, 'update'])->middleware('hasPermission:edit_user');
     Route::delete('administrator/delete/user/{id}', [UsersController::class, 'delete'])->middleware('hasPermission:delete_user');
     Route::post('administrator/post/table/users-app', [UsersController::class, 'table'])->middleware('hasPermission:create_user');
-    Route::get('administrator/get/check/email/{email}', [UsersController::class, 'check_email'])->middleware('hasPermission:create_user,edit_user');
+    Route::get('administrator/get/check/email/{email}', [UsersController::class, 'check_email']);
     Route::get('administrator/get/permissions/{user}', [UsersController::class, 'permissions'])->middleware('hasPermission:create_user,edit_user,delete_user,permissions_user');
     Route::put('administrator/put/permissions', [UsersController::class, 'save_permissions'])->middleware('hasPermission:permissions_user');
     Route::get('administrator/get/reset/password/{id}', [UsersController::class, 'reset_password'])->middleware('hasPermission:reset_password');
 
 // PERFIL DO USUÁRIO
     Route::get('administrator/get/user/profile', [UserProfileController::class, 'show']);
-    Route::get('administrator/get/user/profile', [UserProfileController::class, 'show']);
+    Route::put('administrator/put/profile/update', [UserProfileController::class, 'update']);
     Route::put('administrator/put/password/update', [UserProfileController::class, 'update_password']);
 
 //-------------------------------

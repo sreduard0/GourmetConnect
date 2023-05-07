@@ -10,13 +10,11 @@ use App\Classes\Tools;
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('css')
-<link rel="stylesheet" href="{{ asset('assets/app/css/croppie.css') }}" />
 <link rel="stylesheet" href="{{asset('assets/app/plugins/select2/css/select2.css')}}">
 @endsection
 @section('script')
 <script src="{{ asset('private/assets/js/app-settings.js') }}"></script>
 <script src="{{ asset('private/assets/js/forms-app-settings.js') }}"></script>
-<script src="{{ asset('assets/app/js/croppie.js') }}"></script>
 @endsection
 
 @section('content')
@@ -45,7 +43,7 @@ use App\Classes\Tools;
                     <form id="form-establishment-settings">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="border-bottom border-default m-b-20 col-md-3">
+                                <div class="border-bottom border-default m-b-20 col-md-5">
                                     <h5>ESTABELECIMENTO</h5>
                                 </div>
                                 <div class="row">

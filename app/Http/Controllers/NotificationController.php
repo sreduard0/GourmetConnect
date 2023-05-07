@@ -22,7 +22,7 @@ class NotificationController extends Controller
         $response->headers->set('Cache-Control', 'no-cache');
         $notification = NotificationModel::where('notify', 1)->first();
         if ($notification) {
-            if ($notification->user_destination == null || $notification->user_destination !== session('user')['id']) {
+            if ($notification->user_destination == null || $notification->user_destination !== auth()->id()) {
                 $notification['icon'] = $app_config->logo_url;
                 $response->setContent('data: ' . json_encode($notification) . "\n\n");
                 $response->send();
@@ -75,7 +75,7 @@ class NotificationController extends Controller
 
         $data = [
             'items' => $items,
-            'command' => RequestsModel::find($this->Tools->hash($request->get('id'), 'decrypt')),
+            'command' => RequestsModel::find(Tools::hash($request->get('id'), 'decrypt')),
 
         ];
         return json_encode($data);

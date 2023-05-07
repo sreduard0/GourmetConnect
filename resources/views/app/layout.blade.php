@@ -13,7 +13,6 @@ $app_settings = AppSettingsModel::all()->first();
 
     <link rel="shortcut icon" href="{{ asset($app_settings->logo_url) }}" type="image/x-icon">
     {{-- ==================================== CSS/JS ===================================== --}}
-
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@200..900&display=swap">
     <!-- Font Awesome -->
@@ -38,6 +37,8 @@ $app_settings = AppSettingsModel::all()->first();
     <script src="{{ asset('assets/app/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/app/js/mask-jquery.js') }}"></script>
     <script src="{{ asset('assets/app/js/bootbox.min.js') }}"></script>
+
+
     {{-- datatables --}}
     <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -46,8 +47,13 @@ $app_settings = AppSettingsModel::all()->first();
     {{-- NOTIFICAÇÕES --}}
     <script type="module" src="{{ asset('private/assets/js/notification.js') }}"></script>
     @endcan
+    {{-- CORTE DE IMAGEM --}}
+    <link rel="stylesheet" href="{{ asset('assets/app/css/croppie.css') }}" />
+    <script src="{{ asset('assets/app/js/croppie.js') }}"></script>
 
     @yield('script')
+
+
 
     {{-- ====================================/ CSS/JS ===================================== --}}
 
@@ -74,11 +80,11 @@ $app_settings = AppSettingsModel::all()->first();
             <div class="sidebar">
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="{{ asset(session('user')['photo']) }}" class="img-circle elevation-2" alt="User Image">
+                        <img id="profile-image" src="{{ asset(session('user')['photo']) }}" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info col">
-                        <span class="user-name bold">{{ session('user')['name'] }}</span>
-                        <button class="float-right btn btn-sm" onclick="profile_show()">
+                        <span id="username" class="user-name bold">{{ session('user')['name'] }}</span>
+                        <button class="float-right btn btn-sm user-name bold" onclick="profile_show()">
                             <i class="fs-16 fa-duotone fa-user-gear"></i>
                         </button>
                     </div>
@@ -284,8 +290,8 @@ $app_settings = AppSettingsModel::all()->first();
                             <div class="mx-auto">
                                 <img id="profile-adjusted-image" width="200" class="img-circle" src="{{ asset('img/avatar/user.png') }} " alt="Imagem do usuário">
                                 <div class="d-flex justify-content-sm-end">
-                                    <label for="chenge-user-image" class="btn btn-accent rounded-pill"><i class="fa-solid fa-folder-image"></i></label>
-                                    <input type="file" class="input-img-profile" name="chenge-user-image" id="chenge-user-image" accept="image/png,image/jpg,image/jpeg" onchange="checkExt(this)" />
+                                    <label for="chenge-profile-user-image" class="btn btn-accent rounded-pill"><i class="fa-solid fa-folder-image"></i></label>
+                                    <input type="file" class="input-img-profile" name="chenge-profile-user-image" id="chenge-profile-user-image" accept="image/png,image/jpg,image/jpeg" onchange="checkExt(this)" />
                                 </div>
                             </div>
                         </div>
@@ -328,9 +334,10 @@ $app_settings = AppSettingsModel::all()->first();
             </div>
         </div>
     </div>
+
     {{-- AJUSTE DE IMAGEM --}}
-    <div id="changeimage" class="modal" role="dialog">
-        <div class="modal-dialog modal-lg">
+    <div id="changeprofileimage" class="modal" role="dialog">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Ajustar imagem</h4>
@@ -339,16 +346,14 @@ $app_settings = AppSettingsModel::all()->first();
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="image_demo"></div>
+                    <div class="square" id="profile_image_demo"></div>
                 </div>
                 <div id="crop_image" class="modal-footer">
-                    <button onclick="return adjust_image()" class="btn btn-accent rounded-pill ">CORTAR</button>
-
+                    <button onclick="return adjust_image_profile()" class="btn btn-accent rounded-pill "><strong>CORTAR</strong></button>
                 </div>
             </div>
         </div>
     </div>
-
     {{-- ==================================== PLUGINS ===================================== --}}
 
     <!-- jQuery UI 1.11.4 -->
@@ -391,9 +396,8 @@ $app_settings = AppSettingsModel::all()->first();
     <script src="{{ asset('assets/app/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/app/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('assets/app/js/inputmask.js') }}"></script>
-
-    @yield('plugins')
     <script src="{{ asset('/private/assets/js/user_profile.js') }}"></script>
+    @yield('plugins')
     {{-- ====================================/ PLUGINS ===================================== --}}
 </body>
 </html>

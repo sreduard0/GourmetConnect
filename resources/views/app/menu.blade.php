@@ -7,12 +7,10 @@
 @endsection
 @section('script')
 <script src="{{ asset('private/assets/js/forms-menu.js') }}"></script>
-<script src="{{ asset('assets/app/js/croppie.js') }}"></script>
 @endsection
 @section('css')
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ asset('assets/app/plugins/select2/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/app/css/croppie.css') }}" />
 @endsection
 @section('content')
 <div class="row">
@@ -322,7 +320,7 @@
 @endcan
 {{-- ENVIO DE IMAGEM --}}
 <div id="uploadimage" class="modal" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Ajustar imagem</h4>

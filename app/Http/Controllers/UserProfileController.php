@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UserProfileController extends Controller
 {
+    // APRESENTA O PERFIL
     public function show()
     {
         $login = LoginAppModel::find(auth()->id());
@@ -23,7 +24,7 @@ class UserProfileController extends Controller
         return $user;
     }
 
-    // EDITAR USUÁRIOS
+    // EDITA O PERFIL
     public function update(Request $request)
     {
         $profileRequest = $request->all();
@@ -69,7 +70,7 @@ class UserProfileController extends Controller
                     ],
                 ]);
 
-                return ['error' => false, 'message' => $edit_user->photo_url];
+                return ['error' => false, 'message' => asset($edit_user->photo_url)];
             }
         } else {
             return ['error' => true, 'message' => 'ERRO AO EDITAR PERFIL'];
