@@ -71,7 +71,7 @@ class RequestsController extends Controller
                     'messege' => 'Há um novo pedido na MESA #' . $data['table'] . ' para ' . strtoupper($data['client']),
                     'size' => 'large',
                     'centervertical' => 1,
-                    'user_destination' => session('user')['id'],
+                    'user_destination' => auth()->id(),
                 ]));
             }
 

@@ -14,6 +14,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RequestsController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
+use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UsersController;
 use App\Models\LoginAppModel;
 use App\Models\VerifyCodeModel;
@@ -144,6 +145,7 @@ Route::middleware('auth')->group(function () {
 //-------------------------------
 // APP/ USUARIOS
 //-------------------------------
+// USUÁRIOS
     Route::post('administrator/post/user/create', [UsersController::class, 'create'])->middleware('hasPermission:create_user');
     Route::get('administrator/get/user/edit/{id}', [UsersController::class, 'edit'])->middleware('hasPermission:edit_user');
     Route::put('administrator/put/user/update', [UsersController::class, 'update'])->middleware('hasPermission:edit_user');
@@ -152,6 +154,12 @@ Route::middleware('auth')->group(function () {
     Route::get('administrator/get/check/email/{email}', [UsersController::class, 'check_email'])->middleware('hasPermission:create_user,edit_user');
     Route::get('administrator/get/permissions/{user}', [UsersController::class, 'permissions'])->middleware('hasPermission:create_user,edit_user,delete_user,permissions_user');
     Route::put('administrator/put/permissions', [UsersController::class, 'save_permissions'])->middleware('hasPermission:permissions_user');
+    Route::get('administrator/get/reset/password/{id}', [UsersController::class, 'reset_password'])->middleware('hasPermission:reset_password');
+
+// PERFIL DO USUÁRIO
+    Route::get('administrator/get/user/profile', [UserProfileController::class, 'show']);
+    Route::get('administrator/get/user/profile', [UserProfileController::class, 'show']);
+    Route::put('administrator/put/password/update', [UserProfileController::class, 'update_password']);
 
 //-------------------------------
 // LOGIN
@@ -264,13 +272,16 @@ Route::get('teste', function () {
         //     'delete_user',
         //     'config_users',
         //     'permissions_user',
+        // 'reset_password',
         //     // CONFIG. SITE
         //     'config_site',
 
     ];
-    foreach ($permissions as $permission) {
-        Permission::create(['name' => $permission]);
-    }
+    Permission::create(['name' => 'reset_password', 'display_name' => 'Resetar senha', 'group_name' => 'user']);
+
+    // foreach ($permissions as $permission) {
+    //     Permission::create(['name' => $permission]);
+    // }
 
     // $editor = Role::create(['name' => $role]);
     // $editor->givePermissionTo('Teste');

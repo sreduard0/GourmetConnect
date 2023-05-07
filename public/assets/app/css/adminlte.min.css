@@ -33355,6 +33355,7 @@ html.maximized-card {
     color: #fff
 }
 
+
 .dark-mode .card {
     background-color: #343a40;
     color: #fff
@@ -53987,8 +53988,7 @@ a.text-muted:hover {
     color: #74c8a3
 }
 
-.dark-mode .accent-olive .page-item.active .
-page-link,
+.dark-mode .accent-olive .page-item.active . page-link,
 .dark-mode .accent-olive .page-item.active a {
     background-color: #74c8a3;
     border-color: #74c8a3;

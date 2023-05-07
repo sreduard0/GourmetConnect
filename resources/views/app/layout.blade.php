@@ -76,9 +76,11 @@ $app_settings = AppSettingsModel::all()->first();
                     <div class="image">
                         <img src="{{ asset(session('user')['photo']) }}" class="img-circle elevation-2" alt="User Image">
                     </div>
-                    <div class="info">
-                        <span class="user-name bold">{{ session('user')['name'] }}</span><br>
-
+                    <div class="info col">
+                        <span class="user-name bold">{{ session('user')['name'] }}</span>
+                        <button class="float-right btn btn-sm" onclick="profile_show()">
+                            <i class="fs-16 fa-duotone fa-user-gear"></i>
+                        </button>
                     </div>
                 </div>
                 <nav class="mt-2">
@@ -230,6 +232,123 @@ $app_settings = AppSettingsModel::all()->first();
     </div>
     {{-- ========================== MODAL ========================== --}}
     @yield('modal')
+    {{-- PERFIL USUÁRIO --}}
+    <div class="modal fade" id="user-profile-modal" role="dialog" aria-labelledby="userProfileLaber" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userProfileTitleLabel">MEU PERFIL</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="profile-user-view">
+                        <div class="card card-success card-outline">
+                            <div style="margin: 10px 10px 0px 0px;" class="d-flex justify-content-end">
+                                <button onclick="profile_edit()" class="btn btn-sm btn-accent rounded-pill"><strong>EDITAR</strong></button>
+                            </div>
+                            <div class="card-body box-profile">
+                                <div class="text-center">
+                                    <img width="200" id="profile-user-img" class="profile-user-img img-fluid img-circle" src="" alt="Imagem de perfil">
+                                </div>
+                                <h2 id="profile-username" class="profile-username text-center"></h2>
+                                <p id="profile-user-job" class="text-muted text-center"></p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Informações</h3>
+                            </div>
+                            <div class="card-body">
+                                <strong><i class="fa-duotone fa-phone mr-1"></i> Telefone</strong>
+                                <p id="profile-user-phone" class="text-muted"></p>
+                                <hr>
+                                <strong><i class="fa-duotone fa-envelope mr-1"></i></i> Email</strong>
+                                <p id="profile-user-email" class="text-muted"></p>
+                                <hr>
+                                <strong><i class="fa-duotone fa-user-shield mr-1 m-b-15"></i> Permissões</strong>
+                                <p id="profile-user-permissions" class="text-muted"></p>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-primary rounded-pill" onclick="profile_reset_password()"><strong>Alterar senha</strong></button>
+                    </div>
+                    <div id="profile-user-edit" style="display:none">
+                        <div class="col">
+                            <div class="d-flex justify-content-sm-end">
+                                <p class="f-s-13">(Os campos com <span style="color:red">*</span>
+                                    são obrigatórios)</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mx-auto">
+                                <img id="profile-adjusted-image" width="200" class="img-circle" src="{{ asset('img/avatar/user.png') }} " alt="Imagem do usuário">
+                                <div class="d-flex justify-content-sm-end">
+                                    <label for="chenge-user-image" class="btn btn-accent rounded-pill"><i class="fa-solid fa-folder-image"></i></label>
+                                    <input type="file" class="input-img-profile" name="chenge-user-image" id="chenge-user-image" accept="image/png,image/jpg,image/jpeg" onchange="checkExt(this)" />
+                                </div>
+                            </div>
+                        </div>
+                        <form id="form-profile-user">
+                            <input type="hidden" name="profile-user-id" id="profile-user-id">
+                            <input type="hidden" name="profile-img-user" id="profile-img-adjusted-user">
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="profile-first-name">Nome <span style="color:red">*</span></label>
+                                    <input minlength="2" maxlength="200" id="profile-first-name" name="profile-first-name" type="text" class="form-control" placeholder="Nome">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="profile-last-name">Sobrenome <span style="color:red">*</span></label>
+                                    <input minlength="2" maxlength="200" id="profile-last-name" name="profile-last-name" type="text" class="form-control" placeholder="Sobrenome">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="profile-phone">Telefone <span style="color:red">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="profile-phone" name="profile-phone" data-inputmask="'mask':'(99) 9 9999-9999'" data-mask="" inputmode="text" placeholder="Telefone">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="profile-email">Email <span style="color:red">*</span></label>
+                                    <input minlength="2" maxlength="200" id="profile-email" name="profile-email" type="email" class="form-control" placeholder="exemplo@exemple.com">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div id="btn-profile-save" class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal"><strong>FECHAR</strong></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- AJUSTE DE IMAGEM --}}
+    <div id="changeimage" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Ajustar imagem</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="image_demo"></div>
+                </div>
+                <div id="crop_image" class="modal-footer">
+                    <button onclick="return adjust_image()" class="btn btn-accent rounded-pill ">CORTAR</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- ==================================== PLUGINS ===================================== --}}
 
     <!-- jQuery UI 1.11.4 -->
@@ -240,8 +359,6 @@ $app_settings = AppSettingsModel::all()->first();
     </script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('assets/app/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-
     <!-- Tempusdominus Bootstrap 4 -->
     <script src="{{ asset('assets/app/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('assets/app/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
@@ -276,6 +393,7 @@ $app_settings = AppSettingsModel::all()->first();
     <script src="{{ asset('assets/app/js/inputmask.js') }}"></script>
 
     @yield('plugins')
+    <script src="{{ asset('/private/assets/js/user_profile.js') }}"></script>
     {{-- ====================================/ PLUGINS ===================================== --}}
 </body>
 </html>

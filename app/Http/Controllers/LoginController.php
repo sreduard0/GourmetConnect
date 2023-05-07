@@ -18,9 +18,9 @@ class LoginController extends Controller
     // VERIFICANDO LOGIN E SENHA E ENVIANDO AUTENTICAÇÃO
     public function validate_login_app(Request $request)
     {
-        $check_login = LoginAppModel::where('login', $request->get('email'))->first();
+        $check_login = LoginAppModel::where('login', trim($request->get('email')))->first();
         if ($check_login) {
-            if (Hash::check($request->get('password'), $check_login->password)) {
+            if (Hash::check(trim($request->get('password')), $check_login->password)) {
                 if ($check_login->active == 0) {
                     return 'block';
                 }
@@ -37,10 +37,10 @@ class LoginController extends Controller
                     return 'failed';
                 }
             }
-            Log::channel('logins')->error('SENHA INCORRETA:', ['EMAIL:' => $request->get('email'), 'SENHA:' => $request->get('password'), 'IP:' => request()->ip()]);
+            Log::channel('logins')->error('SENHA INCORRETA:', ['EMAIL:' => trim($request->get('email')), 'SENHA:' => trim($request->get('password')), 'IP:' => request()->ip()]);
             return 'erro';
         } else {
-            Log::channel('logins')->error('LOGIN INCORRETO:', ['EMAIL:' => $request->get('email'), 'SENHA:' => $request->get('password'), 'IP:' => request()->ip()]);
+            Log::channel('logins')->error('LOGIN INCORRETO:', ['EMAIL:' => trim($request->get('email')), 'SENHA:' => trim($request->get('password')), 'IP:' => request()->ip()]);
             return 'erro';
         }
     }
@@ -48,7 +48,7 @@ class LoginController extends Controller
     // VALIDANDO LOGIN E ABRINDO SEÇÃO
     public function submit_login_app(Request $request)
     {
-        $login = LoginAppModel::where('login', $request->get('email'))->where('active', 1)->first();
+        $login = LoginAppModel::where('login', trim($request->get('email')))->where('active', 1)->first();
         if (!$login) {
             return ['error' => 'block', 'url' => route('form_login')];
         }
@@ -63,11 +63,10 @@ class LoginController extends Controller
             return ['error' => 'code_error'];
         }
 
-        if (TwoFactorCheck::codeVerify($request->get('email'), $request->get('code')) && auth()->attempt(['login' => $request->get('email'), 'password' => $request->get('password')])) {
+        if (TwoFactorCheck::codeVerify($request->get('email'), $request->get('code')) && auth()->attempt(['login' => trim($request->get('email')), 'password' => trim($request->get('password'))])) {
             $user = UsersAppModel::where('login_id', $login->id)->first();
             session()->put([
                 'user' => [
-                    'id' => 1,
                     'name' => $user->first_name,
                     'photo' => $user->photo_url,
                     'email' => $user->email,

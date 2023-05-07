@@ -56,7 +56,7 @@ class UsersController extends Controller
                     ],
                     strtolower($userRequest['user_email'])
                 );
-            } catch (\Throwable$th) {
+            } catch (\Throwable $th) {
                 return ['error' => true, 'message' => 'ERRO AO ENVIAR E-MAIL COM LOGIN E SENHA.'];
             }
 
@@ -73,11 +73,11 @@ class UsersController extends Controller
     //PREENCHE FORM EDITAR USUARIO
     public function edit($id)
     {
-        $query = UsersAppModel::where('users_app.id', Tools::hash($id, 'decrypt'))
+        $user = UsersAppModel::where('users_app.id', Tools::hash($id, 'decrypt'))
             ->join('login_app', 'users_app.login_id', 'login_app.id')
             ->select(['login_app.active', 'users_app.*'])
             ->first();
-        return $query;
+        return $user;
     }
     // EDITAR USUÁRIOS
     public function update(Request $request)
@@ -130,7 +130,7 @@ class UsersController extends Controller
                     ],
                     strtolower($userRequest['user_email'])
                 );
-            } catch (\Throwable$th) {
+            } catch (\Throwable $th) {
                 return ['error' => true, 'message' => 'ERRO AO ENVIAR E-MAIL COM LOGIN E SENHA PARA ' . $userRequest['user_email']];
             }
 
@@ -155,7 +155,7 @@ class UsersController extends Controller
                 return ['error' => false, 'message' => 'Usuário excluído com sucesso'];
             }
 
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             return ['error' => true, 'message' => 'Ouve algum erro, tente novamente.'];
         }
     }
@@ -182,9 +182,35 @@ class UsersController extends Controller
             }
 
             return true;
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             return false;
         }
+    }
+    // RESETA A SENHA
+    public function reset_password($id)
+    {
+        $user = UsersAppModel::select('first_name')->where('login_id', Tools::hash($id, 'decrypt'))->first();
+        $create_login = LoginAppModel::find(Tools::hash($id, 'decrypt'));
+        $pass = Str::random(8);
+        $create_login->password = Hash::make($pass);
+
+        if ($create_login->save()) {
+            try {
+                Email::LoginUser(
+                    [
+                        'login' => strtolower($create_login->login),
+                        'password' => $pass,
+                        'name' => ucfirst(strtolower($user->first_name)),
+                    ],
+                    strtolower($create_login->login)
+                );
+            } catch (\Throwable $th) {
+                return ['error' => true, 'message' => 'OUVE PROBLEMAS AO ENVIAR O EMAIL COM A NOVA SENHA.'];
+            }
+        }
+
+        return ['error' => false, 'message' => 'SENHA RESETADA'];
+
     }
     // CHECA EMAIL
     public function check_email($email)
@@ -238,14 +264,14 @@ class UsersController extends Controller
             // }
             $login = LoginAppModel::find($user->login_id);
             $buttons = '';
-            if (Auth::user()->hasPermissionTo('permissions_user')) {
-                $buttons .= '<button onclick="return app_permissions(\'' . Tools::hash($user->login_id, 'encrypt') . '\')" class="btn btn-sm btn-warning"><i class="fa-solid fa-user-shield"></i></button> ';
+            if (Auth::user()->hasPermissionTo('reset_password')) {
+                $buttons .= '<button onclick="return reset_pass(\'' . Tools::hash($user->login_id, 'encrypt') . '\')" class="btn btn-sm btn-accent"  title="Resetar senha"><i class="fa-sharp fa-solid fa-rotate"></i></button> ';
             }
             if (Auth::user()->hasPermissionTo('edit_user')) {
-                $buttons .= '<button onclick="return user_modal(\'update\',\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button> ';
+                $buttons .= '<button onclick="return user_modal(\'update\',\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"  title="Editar usuário"><i class="fa-solid fa-pen"></i></button> ';
             }
             if (Auth::user()->hasPermissionTo('delete_user')) {
-                $buttons .= '<button onclick="return delete_user(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+                $buttons .= '<button onclick="return delete_user(\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"  title="Excluir usuário"><i class="fa-solid fa-trash"></i></button>';
             }
 
             $dado = array();
