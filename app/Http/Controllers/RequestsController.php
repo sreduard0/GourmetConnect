@@ -339,7 +339,7 @@ class RequestsController extends Controller
             } else {
                 $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
                     ->where('request_id', Tools::hash($requestData['columns'][1]['search']['value'], 'decrypt'))
-                    ->where('status', '>', 2)
+                    ->whereIn('status', [2, 3])
                     ->groupBy('product_id')
                     ->orderBy('count', $requestData['order'][0]['dir'])
                     ->get();

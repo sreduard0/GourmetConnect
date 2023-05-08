@@ -9,9 +9,8 @@ $app_settings = AppSettingsModel::all()->first();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @yield('meta')
-    <title>{{ $app_settings->establishment_name }} - @yield('title')</title>
-
     <link rel="shortcut icon" href="{{ asset($app_settings->logo_url) }}" type="image/x-icon">
+    <title>{{ $app_settings->establishment_name }} - @yield('title')</title>
     {{-- ==================================== CSS/JS ===================================== --}}
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@200..900&display=swap">

@@ -265,7 +265,7 @@ class UsersController extends Controller
             $login = LoginAppModel::find($user->login_id);
             $buttons = '';
             if (Auth::user()->hasPermissionTo('reset_password')) {
-                $buttons .= '<button onclick="return reset_pass(\'' . Tools::hash($user->login_id, 'encrypt') . '\')" class="btn btn-sm btn-accent"  title="Resetar senha"><i class="fa-sharp fa-solid fa-rotate"></i></button> ';
+                $buttons .= '<button onclick="return reset_pass(\'' . Tools::hash($user->login_id, 'encrypt') . '\')" class="btn btn-sm btn-warning"  title="Resetar senha"><i class="fa-sharp fa-solid fa-rotate"></i></button> ';
             }
             if (Auth::user()->hasPermissionTo('edit_user')) {
                 $buttons .= '<button onclick="return user_modal(\'update\',\'' . Tools::hash($user->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"  title="Editar usuário"><i class="fa-solid fa-pen"></i></button> ';
