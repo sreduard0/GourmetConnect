@@ -12,6 +12,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RequestsController;
+use App\Http\Controllers\SiteViewsController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
 use App\Http\Controllers\UserProfileController;
@@ -21,6 +22,10 @@ use App\Models\VerifyCodeModel;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
+
+//----------------------------------------------
+//  ROTAS ADMINISTRATIVAS
+//----------------------------------------------
 
 //-------------------------------
 // APP/ LOGIN
@@ -42,7 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('private/assets/{local?}/{file?}', AssetsController::class);
 
 // ----------------------------
-// APP VIEWS
+// APP/ VIEWS
 // ----------------------------
     Route::get('administrator/control-panel', [AppViewsController::class, 'control_panel'])->middleware('hasPermission:dashboard')->name('control_panel');
     Route::get('administrator/requests', [AppViewsController::class, 'requests'])->middleware('hasPermission:view_orders')->name('requests');
@@ -55,7 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('administrator/site-settings', [AppViewsController::class, 'site_settings'])->name('site_settings');
 
 // -----------------------------
-// APP SETTINGS
+// APP/ SETTINGS
 // -----------------------------
     Route::post('administrator/post/save/establishment-settings', [AppSettingsController::class, 'save_establishment_settings']);
     Route::post('administrator/post/save/theme-settings', [AppSettingsController::class, 'save_theme_settings']);
@@ -174,6 +179,14 @@ Route::middleware('auth')->group(function () {
 
 });
 
+//----------------------------------------------
+//  ROTAS CLIENTE
+//----------------------------------------------
+
+//-------------------------------
+// SITE/ VIEWS
+//-------------------------------
+Route::get('/', [SiteViewsController::class, 'home_page'])->name('home_page');
 //-------------------------------
 // SITE/ PEDIDOS
 //-------------------------------
