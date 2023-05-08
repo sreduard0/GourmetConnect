@@ -42,7 +42,7 @@ $app_settings = AppSettingsModel::all()->first();
     <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/app/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-    @canany(['create_order','delete_order','finalize_order'])
+    @can('print_requests')
     {{-- NOTIFICAÇÕES --}}
     <script type="module" src="{{ asset('private/assets/js/notification.js') }}"></script>
     @endcan

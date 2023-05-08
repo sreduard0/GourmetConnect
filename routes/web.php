@@ -169,8 +169,8 @@ Route::middleware('auth')->group(function () {
 //-------------------------------
 // APP/ NOTIFICAÇÕES
 //-------------------------------
-    Route::get('administrator/notification/events', [NotificationController::class, 'notification'])->middleware('hasPermission:create_order,delete_order,finalize_order');
-    Route::post('administrator/notification/events/requests', [NotificationController::class, 'new_request_notification'])->middleware('hasPermission:create_order,delete_order,finalize_order');
+    Route::get('administrator/notification/events', [NotificationController::class, 'notification'])->middleware('hasPermission:print_requests');
+    Route::post('administrator/notification/events/requests', [NotificationController::class, 'new_request_notification'])->middleware('hasPermission:print_requests');
 
 });
 

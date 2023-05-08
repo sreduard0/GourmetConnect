@@ -350,7 +350,7 @@ use App\Classes\Tools;
                                         <option @if($app_settings->theme_sidebar == 'sidebar-dark-danger') selected @endif value="sidebar-dark-danger" class="bg-danger"> Escuro / Vermelho</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-dark-success') selected @endif value="sidebar-dark-success" class="bg-success"> Escuro / Verde</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-dark-indigo') selected @endif value="sidebar-dark-indigo" class="bg-indigo"> Escuro / Indigo</option>
-                                        <option @if($app_settings->theme_sidebar == 'sidebar-dark-lightblue') selected @endif value="sidebar-dark-ligthblue" class="bg-lightblue"> Escuro / Azul claro</option>
+                                        <option @if($app_settings->theme_sidebar == 'sidebar-dark-lightblue') selected @endif value="sidebar-dark-lightblue" class="bg-lightblue"> Escuro / Azul claro</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-dark-navy') selected @endif value="sidebar-dark-navy" class="bg-navy"> Escuro / Azul-marinho</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-dark-purple') selected @endif value="sidebar-dark-purple" class="bg-purple"> Escuro / Lilás</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-dark-fuchsia') selected @endif value="sidebar-dark-fuchsia" class="bg-fuchsia"> Escuro / Magenta</option>
@@ -368,7 +368,7 @@ use App\Classes\Tools;
                                         <option @if($app_settings->theme_sidebar == 'sidebar-light-danger') selected @endif value="sidebar-light-danger" class="bg-danger"> Claro / Vermelho</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-light-success') selected @endif value="sidebar-light-success" class="bg-success"> Claro / Verde</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-light-indigo') selected @endif value="sidebar-light-indigo" class="bg-indigo"> Claro / Indigo</option>
-                                        <option @if($app_settings->theme_sidebar == 'sidebar-light-lightblue') selected @endif value="sidebar-light-ligthblue" class="bg-lightblue"> Claro / Azul-claro</option>
+                                        <option @if($app_settings->theme_sidebar == 'sidebar-light-lightblue') selected @endif value="sidebar-light-lightblue" class="bg-lightblue"> Claro / Azul-claro</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-light-navy') selected @endif value="sidebar-light-navy" class="bg-navy"> Claro / Axul-marinho</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-light-purple') selected @endif value="sidebar-light-purple" class="bg-purple"> Claro / Lilás</option>
                                         <option @if($app_settings->theme_sidebar == 'sidebar-light-fuchsia') selected @endif value="sidebar-light-fuchsia" class="bg-fuchsia"> Claro / Magenta</option>

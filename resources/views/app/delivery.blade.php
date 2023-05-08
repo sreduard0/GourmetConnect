@@ -28,11 +28,11 @@
                     <tr>
                         <th width="30px">Ord.</th>
                         <th>Cliente</th>
-                        <th width="30px">Bairro</th>
+                        <th width='200px'>Contato</th>
+                        <th width="150px">Bairro</th>
                         <th width='130px'>Status</th>
                         <th width="130px">Valor</th>
                         <th width="110px">Ações</th>
-
                     </tr>
                 </thead>
             </table>

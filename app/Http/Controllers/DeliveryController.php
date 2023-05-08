@@ -159,6 +159,7 @@ class DeliveryController extends Controller
             'status' => $status,
             'address' => $delivery_address->street_address . ", " . $delivery_address->number . " - " . $delivery_address->neighborhood,
             'payment' => $requestData->payment->name,
+            'phone' => Tools::mask('(##) # ####-####', $delivery_address->phone) . ' | <a class="btn btn-sm btn-success" target="blank_" href="https://api.whatsapp.com/send?phone=55' . $delivery_address->phone . '"><i class="fa-brands fa-whatsapp"></i></a>',
             'btn' => $btn,
             'btn_request' => $btn_request,
             'btn_delivery' => $btn_delivery,
@@ -225,6 +226,7 @@ class DeliveryController extends Controller
             $dado = array();
             $dado[] = "#" . $delivery->id;
             $dado[] = $delivery->client_name;
+            $dado[] = Tools::mask('(##) # ####-####', $delivery->address->phone) . ' <a class="float-right btn btn-sm btn-success" target="blank_" href="https://api.whatsapp.com/send?phone=55' . $delivery->address->phone . '"><i class="fa-brands fa-whatsapp"></i></a>';
             $dado[] = $delivery->address->neighborhood;
             $dado[] = $status;
             $dado[] = Calculate::requestValue($delivery->id, [2, 3], true, true);
