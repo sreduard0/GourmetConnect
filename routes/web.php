@@ -187,6 +187,9 @@ Route::middleware('auth')->group(function () {
 // SITE/ VIEWS
 //-------------------------------
 Route::get('/', [SiteViewsController::class, 'home_page'])->name('home_page');
+Route::get('about', [SiteViewsController::class, 'about'])->name('about');
+Route::get('agenda', [SiteViewsController::class, 'agenda'])->name('agenda');
+Route::get('contact', [SiteViewsController::class, 'contact'])->name('contact');
 //-------------------------------
 // SITE/ PEDIDOS
 //-------------------------------

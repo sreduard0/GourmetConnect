@@ -8,4 +8,16 @@ class SiteViewsController extends Controller
     {
         return view('site.home-page');
     }
+    public function about()
+    {
+        return view('site.about');
+    }
+    public function agenda()
+    {
+        return view('site.agenda');
+    }
+    public function contact()
+    {
+        return view('site.contact');
+    }
 }

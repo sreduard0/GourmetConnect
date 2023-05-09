@@ -62,6 +62,7 @@ class ItemsController extends Controller
         $item->type_id = $data_save['type_product'];
         $item->status = $data_save['status_product'];
         $item->name = $data_save['name_product'];
+        $item->old_value = $item->value;
         $item->value = str_replace(',', '.', str_replace('.', '', $data_save['value_product']));
         $item->description = $data_save['obs_product'];
         if ($item->save()) {

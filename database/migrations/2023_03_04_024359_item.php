@@ -14,6 +14,7 @@ return new class extends Migration
             $table->integer('status');
             $table->string('photo_url', 255);
             $table->string('name', 255);
+            $table->decimal('old_value', 10, 2);
             $table->decimal('value', 10, 2);
             $table->text('description')->nullable();
             $table->timestamps();
