@@ -5,213 +5,35 @@
     <div class="slider-area-full owl-carousel owl-theme owl-loaded owl-drag">
         <div class="owl-stage-outer">
             <div class="owl-stage" style="transition: all 0.25s ease 0s; width: 13440px; transform: translate3d(-5760px, 0px, 0px);">
-
                 {{-- BANNER --}}
+                @foreach ($banners as $banner)
                 <div class="owl-item" style="width: 1920px;">
-                    <div class="silder-single silder-single-img" style="background:url('/img/banner/sl2.jpg')">
+                    <div class="silder-single silder-single-img" style="background:url('{{ asset($banner['url_banner']) }}')">
                         <div class="container">
                             <div class="row">
                                 <div class="col-lg-7 col-md-12 col-sm-12">
                                     <div class="slider-single-full">
-                                        <h4>Organic products for your</h4>
-                                        <h2>Mouthwatering Pizza And Barcon <span>Burger</span></h2>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                                        <div class="button-bar pt-20">
-                                            <a href="#" class="btn btn-lg btn-1">
-                                                <span>Shop Now</span>
-                                            </a>
+                                        <h2>{{ $banner['title'] }}</h2>
+                                        <p>{{ $banner['description'] }}</p>
+                                        <div class="button-bar pt-20 rounded-pill">
                                             <a href="#" class="btn btn-lg">
-                                                <span>Shop Now</span>
+                                                <span>Ver</span>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-5 col-md-12">
                                     <div class="hero-slider-img">
-                                        <img class="image-1" src="img/hr1.jpg" alt="hr">
-                                        <img class="image-2" src="img/hr3.jpg" alt="htr">
+                                        <img class="image-1" src="{{ asset($banner['url_img1']) }}">
+                                        <img class="image-2" src="{{ asset($banner['url_img2']) }}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="owl-item" style="width: 1920px;">
-                    <div class="silder-single silder-single-img" style="background:url('assets/img/banner/sr4.jpg')">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-7 col-md-12 col-sm-12">
-                                    <div class="slider-single-full">
-                                        <h4>Organic products for your</h4>
-                                        <h2>Pasta Italian cuisine <span>Franche Fries</span></h2>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                                        <div class="button-bar pt-20">
-                                            <a href="#" class="btn btn-lg btn-1">
-                                                <span>Shop Now</span>
-                                            </a>
-                                            <a href="#" class="btn btn-lg">
-                                                <span>Shop Now</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 col-md-12">
-                                    <div class="hero-slider-img">
-                                        <img class="image-1" src="img/hr2.jpg" alt="hr">
-                                        <img class="image-2" src="img/hr3.jpg" alt="htr">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="owl-item" style="width: 1920px;">
-                    <div class="silder-single silder-single-img" style="background:url('assets/img/banner/sl3.jpg')">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-7 col-md-12 col-sm-12">
-                                    <div class="slider-single-full">
-                                        <h4>Organic products for your</h4>
-                                        <h2>Hamburger Pasta &amp; Italian cuisine <span>Pizza</span></h2>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                                        <div class="button-bar pt-20">
-                                            <a href="#" class="btn btn-lg btn-1">
-                                                <span>Shop Now</span>
-                                            </a>
-                                            <a href="#" class="btn btn-lg">
-                                                <span>Shop Now</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 col-md-12">
-                                    <div class="hero-slider-img">
-                                        <img class="image-1" src="img/hr1.jpg" alt="hr">
-                                        <img class="image-2" src="img/hr5.jpg" alt="htr">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="owl-item " style="width: 1920px;">
-                    <div class="silder-single silder-single-img" style="background:url('assets/img/banner/sl2.jpg')">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-7 col-md-12 col-sm-12">
-                                    <div class="slider-single-full">
-                                        <h4>Organic products for your</h4>
-                                        <h2>Mouthwatering Pizza And Barcon <span>Burger</span></h2>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                                        <div class="button-bar pt-20">
-                                            <a href="#" class="btn btn-lg btn-1">
-                                                <span>Shop Now</span>
-                                            </a>
-                                            <a href="#" class="btn btn-lg">
-                                                <span>Shop Now</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 col-md-12">
-                                    <div class="hero-slider-img">
-                                        <img class="image-1" src="img/hr1.jpg" alt="hr">
-                                        <img class="image-2" src="img/hr3.jpg" alt="htr">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="owl-item" style="width: 1920px;">
-                    <div class="silder-single silder-single-img" style="background:url('assets/img/banner/sr4.jpg')">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-7 col-md-12 col-sm-12">
-                                    <div class="slider-single-full">
-                                        <h4>Organic products for your</h4>
-                                        <h2>Pasta Italian cuisine <span>Franche Fries</span></h2>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                                        <div class="button-bar pt-20">
-                                            <a href="#" class="btn btn-lg btn-1">
-                                                <span>Shop Now</span>
-                                            </a>
-                                            <a href="#" class="btn btn-lg">
-                                                <span>Shop Now</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 col-md-12">
-                                    <div class="hero-slider-img">
-                                        <img class="image-1" src="img/hr2.jpg" alt="hr">
-                                        <img class="image-2" src="img/hr3.jpg" alt="htr">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="owl-item" style="width: 1920px;">
-                    <div class="silder-single silder-single-img" style="background:url('assets/img/banner/sl3.jpg')">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-7 col-md-12 col-sm-12">
-                                    <div class="slider-single-full">
-                                        <h4>Organic products for your</h4>
-                                        <h2>Hamburger Pasta &amp; Italian cuisine <span>Pizza</span></h2>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                                        <div class="button-bar pt-20">
-                                            <a href="#" class="btn btn-lg btn-1">
-                                                <span>Shop Now</span>
-                                            </a>
-                                            <a href="#" class="btn btn-lg">
-                                                <span>Shop Now</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 col-md-12">
-                                    <div class="hero-slider-img">
-                                        <img class="image-1" src="img/hr1.jpg" alt="hr">
-                                        <img class="image-2" src="img/hr5.jpg" alt="htr">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="owl-item" style="width: 1920px;">
-                    <div class="silder-single silder-single-img" style="background:url('assets/img/banner/sl2.jpg')">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-7 col-md-12 col-sm-12">
-                                    <div class="slider-single-full">
-                                        <h4>Organic products for your</h4>
-                                        <h2>Mouthwatering Pizza And Barcon <span>Burger</span></h2>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                                        <div class="button-bar pt-20">
-                                            <a href="#" class="btn btn-lg btn-1">
-                                                <span>Shop Now</span>
-                                            </a>
-                                            <a href="#" class="btn btn-lg">
-                                                <span>Shop Now</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 col-md-12">
-                                    <div class="hero-slider-img">
-                                        <img class="image-1" src="img/hr1.jpg" alt="hr">
-                                        <img class="image-2" src="img/hr3.jpg" alt="htr">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
                 {{-- BANNER --}}
-
             </div>
         </div>
     </div>
@@ -255,12 +77,6 @@
         </div>
         <div class="row pt-40">
             <div class="product-slider owl-carousel owl-theme owl-loaded owl-drag">
-
-
-
-
-
-
                 <div class="owl-stage-outer">
                     <div class="owl-stage" style="transform: translate3d(-2612px, 0px, 0px); transition: all 0.25s ease 0s; width: 4571px;">
                         <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
@@ -657,8 +473,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i class="fas fa-long-arrow-alt-left"></i></button><button type="button" role="presentation" class="owl-next"><i class="fas fa-long-arrow-alt-right"></i></button></div>
-                <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot active"><span></span></button></div>
             </div>
         </div>
     </div>
@@ -675,11 +489,6 @@
         </div>
         <div class="row pt-40">
             <div class="category-slider owl-carousel owl-theme owl-loaded owl-drag">
-
-
-
-
-
                 <div class="owl-stage-outer">
                     <div class="owl-stage" style="transform: translate3d(-1306px, 0px, 0px); transition: all 0s ease 0s; width: 4245px;">
                         <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
@@ -814,8 +623,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i class="fas fa-long-arrow-alt-left"></i></button><button type="button" role="presentation" class="owl-next"><i class="fas fa-long-arrow-alt-right"></i></button></div>
-                <div class="owl-dots"><button role="button" class="owl-dot active"><span></span></button><button role="button" class="owl-dot"><span></span></button></div>
             </div>
         </div>
     </div>
@@ -1233,8 +1040,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i class="fas fa-long-arrow-alt-left"></i></button><button type="button" role="presentation" class="owl-next"><i class="fas fa-long-arrow-alt-right"></i></button></div>
-                <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot active"><span></span></button></div>
+
             </div>
         </div>
     </div>
@@ -1755,14 +1561,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i class="fas fa-long-arrow-alt-left"></i></button><button type="button" role="presentation" class="owl-next"><i class="fas fa-long-arrow-alt-right"></i></button></div>
-                    <div class="owl-dots"><button role="button" class="owl-dot active"><span></span></button><button role="button" class="owl-dot"><span></span></button></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 <!-- ///blog-area -->
 <section class="blog-area section-padding">
     <div class="container">
@@ -1917,8 +1720,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev disabled"><i class="fas fa-long-arrow-alt-left"></i></button><button type="button" role="presentation" class="owl-next"><i class="fas fa-long-arrow-alt-right"></i></button></div>
-                    <div class="owl-dots"><button role="button" class="owl-dot active"><span></span></button><button role="button" class="owl-dot"><span></span></button></div>
                 </div>
             </div>
         </div>

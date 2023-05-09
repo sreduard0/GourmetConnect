@@ -6,7 +6,10 @@ class SiteViewsController extends Controller
 {
     public function home_page()
     {
-        return view('site.home-page');
+        $data = [
+            'banners' => AgendaController::show_banner(),
+        ];
+        return view('site.home-page', $data);
     }
     public function about()
     {

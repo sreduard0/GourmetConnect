@@ -96,7 +96,7 @@
                 items: 1,
                 autoplay: true,
                 nav: true,
-                navText: ["<i class='fas fa-long-arrow-alt-left'></i>", "<i class='fas fa-long-arrow-alt-right'></i>"],
+                navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
             });
         });
     }
@@ -112,7 +112,7 @@
                 items: 4,
                 autoplay: true,
                 nav: true,
-                navText: ["<i class='fas fa-long-arrow-alt-left'></i>", "<i class='fas fa-long-arrow-alt-right'></i>"],
+                navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
                 responsive: {
                     0: {
                         items: 1,
@@ -142,7 +142,7 @@
                 items: 4,
                 autoplay: false,
                 nav: true,
-                navText: ["<i class='fas fa-long-arrow-alt-left'></i>", "<i class='fas fa-long-arrow-alt-right'></i>"],
+                navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
                 responsive: {
                     0: {
                         items: 1,
@@ -171,7 +171,7 @@
                 autoplayTimeout: 9000,
                 items: 2,
                 nav: true,
-                navText: ["<i class='fas fa-long-arrow-alt-left'></i>", "<i class='fas fa-long-arrow-alt-right'></i>"],
+                navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
                 responsive: {
                     // breakpoint from 0 up
                     0: {
@@ -206,7 +206,8 @@
                 pagination: false,
                 navigation: true,
                 nav: true,
-                navText: ["<i class='fas fa-long-arrow-alt-left'></i>", "<i class='fas fa-long-arrow-alt-right'></i>"],
+                navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
+
                 responsive: {
                     // breakpoint from 0 up
                     0: {
@@ -368,7 +369,7 @@
         // Format the money
         asMoney(value) {
             return '$' + parseFloat(value)
-                .toLocaleString('en-US', { maximumFractionDigits: 2 })
+                .toLocaleString('pt-BR', { maximumFractionDigits: 2 })
         }
 
         generateBackground(rangeElement) {

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('group_payment', 255);
             $table->integer('active');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

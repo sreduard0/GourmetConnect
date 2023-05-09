@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AdditionalItemModel extends Model
 {
@@ -14,4 +15,5 @@ class AdditionalItemModel extends Model
     protected $table = 'additional_items';
     protected $primarykey = 'id';
     use HasFactory;
+    use SoftDeletes;
 }
