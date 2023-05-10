@@ -12,7 +12,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('photo_url', 255);
             $table->string('name', 255);
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

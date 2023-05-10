@@ -18,7 +18,8 @@ use App\Http\Controllers\TypeItemsController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UsersController;
 use App\Models\LoginAppModel;
-use App\Models\VerifyCodeModel;
+use App\Models\RequestsItemsModel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
@@ -203,10 +204,11 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 Route::get('teste4/', function () {
     // Log::channel('logins')->error('Algum erro ocorreu aqui.');
 
-    $verify_code = VerifyCodeModel::where('code', 'LKF7W')->where('device', '10.0.0.120')->first();
-    if ($verify_code) {
-        dd($verify_code);
-    }
+    dd(RequestsItemsModel::select('updated_at', DB::raw('COUNT(id) as product_id'))
+            ->whereMonth('updated_at', date('m'))
+            ->where('status', 4)
+            ->groupBy('updated_at')
+            ->get());
 
 });
 Route::get('teste3', function () {

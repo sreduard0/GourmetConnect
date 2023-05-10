@@ -135,6 +135,17 @@
         text-align: center;
     }
 
+    .slider-single-full p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 250px;
+    }
+
+    .silder-height {
+        height: 200px;
+    }
+
     .single-itm-pr {
         display: none;
     }
@@ -230,6 +241,18 @@
 
     .slider-single-full h2 {
         font-size: 35px;
+    }
+
+    .slider-single-full p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+    }
+
+    .silder-single-img {
+        background-position: 100% !important;
+        height: 460px;
     }
 
     .shop-box {
@@ -425,6 +448,7 @@
 
     .silder-single-img {
         background-position: 100% !important;
+        height: 370px;
     }
 
     .shop-box {

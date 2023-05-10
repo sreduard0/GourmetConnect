@@ -1,20 +1,23 @@
+@php
+use App\Classes\Calculate;
+@endphp
 @extends('site.layout')
 @section('title', 'Início')
 @section('content')
 <section class="banner-slider-area">
     <div class="slider-area-full owl-carousel owl-theme owl-loaded owl-drag">
         <div class="owl-stage-outer">
-            <div class="owl-stage" style="transition: all 0.25s ease 0s; width: 13440px; transform: translate3d(-5760px, 0px, 0px);">
+            <div class="owl-stage">
                 {{-- BANNER --}}
                 @foreach ($banners as $banner)
-                <div class="owl-item" style="width: 1920px;">
+                <div class="owl-item">
                     <div class="silder-single silder-single-img" style="background:url('{{ asset($banner['url_banner']) }}')">
                         <div class="container">
                             <div class="row">
                                 <div class="col-lg-7 col-md-12 col-sm-12">
                                     <div class="slider-single-full">
                                         <h2>{{ $banner['title'] }}</h2>
-                                        <p>{{ $banner['description'] }}</p>
+                                        <p>{!! $banner['description'] !!}</p>
                                         <div class="button-bar pt-20 rounded-pill">
                                             <a href="#" class="btn btn-lg">
                                                 <span>Ver</span>
@@ -38,7 +41,7 @@
         </div>
     </div>
 </section>
-<!-- shop -->
+{{-- <!-- shop -->
 <div class="shop-now section-padding">
     <div class="container">
         <div class="row">
@@ -64,40 +67,37 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 <!-- product -->
 <section class="product-area section-padding">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-heading">
-                    <h2>Featured products</h2>
+                    <h2>CARDÁPIO</h2>
                 </div>
             </div>
         </div>
         <div class="row pt-40">
             <div class="product-slider owl-carousel owl-theme owl-loaded owl-drag">
                 <div class="owl-stage-outer">
-                    <div class="owl-stage" style="transform: translate3d(-2612px, 0px, 0px); transition: all 0.25s ease 0s; width: 4571px;">
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
+                    <div class="owl-stage">
+                        {{-- ITEMS --}}
+                        @foreach ($items as $item)
+                        <div class="owl-item">
                             <div class="product-grid">
                                 <div class="product-image">
                                     <a href="#" class="image">
-                                        <img class="pic-1" src="img/6_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/5.jpg" alt="product">
+                                        <img class="pic-1" src="{{ $item->photo_url }}" alt="product">
                                     </a>
-                                    <span class="product-discount-label">Sale</span>
+                                    @if ($item->old_value > $item->value)
+                                    <span class="product-discount-label">-{{ Calculate::discountPercentage($item->old_value,$item->value,true) }}</span>
+                                    @endif
                                 </div>
                                 <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Burger With Vegetable</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
+                                    <span class="text-danger fs-10">{{ $item->type->name }}</span>
+                                    <h3 class="title"><a href="">{{ $item->name }}</a></h3>
+                                    <div class="price">R${{ number_format($item->value, 2, ',', '.') }}@if($item->old_value > $item->value) <span>R${{ number_format($item->old_value, 2, ',', '.') }}</span>@endif</div>
                                     <ul class="social">
                                         <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                                         <li><a href="#"><i class="fas fa-heart"></i></a></li>
@@ -107,25 +107,43 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
+
+                        @endforeach
+                        {{-- ITEMS --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- promoções -->
+<section class="promo-area section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h2>PROMOÇÕES</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-40">
+            <div class="promo-slider owl-carousel owl-theme owl-loaded owl-drag">
+                <div class="owl-stage-outer">
+                    <div class="owl-stage">
+                        {{-- ITEMS NA PROMO--}}
+                        @foreach ($promo as $item)
+                        <div class="owl-item">
                             <div class="product-grid">
                                 <div class="product-image">
                                     <a href="#" class="image">
-                                        <img class="pic-1" src="img/7.jpg" alt="product">
-                                        <img class="pic-2" src="img/15.jpg" alt="product">
+                                        <img class="pic-1" src="{{ $item->photo_url }}" alt="product">
                                     </a>
-                                    <span class="product-discount-label">sale</span>
+                                    <span class="product-discount-label">-{{ Calculate::discountPercentage($item->old_value,$item->value,true) }}</span>
                                 </div>
                                 <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">BPerson Holding a Burger</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
+                                    <span class="text-danger fs-10">{{ $item->type->name }}</span>
+                                    <h3 class="title"><a href="">{{ $item->name }}</a></h3>
+                                    <div class="price">R${{ number_format($item->value, 2, ',', '.') }}<span>R${{ number_format($item->old_value, 2, ',', '.') }}</span></div>
                                     <ul class="social">
                                         <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                                         <li><a href="#"><i class="fas fa-heart"></i></a></li>
@@ -135,342 +153,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/8_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/9.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">-23%</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Pasta With Red Sauce</a></h3>
-                                    <div class="price">$15.00<span>$20.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/10.jpg" alt="product">
-                                        <img class="pic-2" src="img/11.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">Sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Person Holding Pizza</a></h3>
-                                    <div class="price">$25.00<span>$35.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/1_002.jpg" alt="shop">
-                                        <img class="pic-2" src="img/2_004.jpg" alt="shop">
-                                    </a>
-                                    <span class="product-discount-label">sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Burger With Lettuce</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/17.jpg" alt="product">
-                                        <img class="pic-2" src="img/18.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">-20%</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Pasta on Brown Surface</a></h3>
-                                    <div class="price">$24.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/6_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/5.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">Sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Burger With Vegetable</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/7.jpg" alt="product">
-                                        <img class="pic-2" src="img/15.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">BPerson Holding a Burger</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/8_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/9.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">-23%</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Pasta With Red Sauce</a></h3>
-                                    <div class="price">$15.00<span>$20.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/10.jpg" alt="product">
-                                        <img class="pic-2" src="img/11.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">Sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Person Holding Pizza</a></h3>
-                                    <div class="price">$25.00<span>$35.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/1_002.jpg" alt="shop">
-                                        <img class="pic-2" src="img/2_004.jpg" alt="shop">
-                                    </a>
-                                    <span class="product-discount-label">sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Burger With Lettuce</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/17.jpg" alt="product">
-                                        <img class="pic-2" src="img/18.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">-20%</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Pasta on Brown Surface</a></h3>
-                                    <div class="price">$24.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/6_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/5.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">Sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Burger With Vegetable</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/7.jpg" alt="product">
-                                        <img class="pic-2" src="img/15.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">BPerson Holding a Burger</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
+                        {{-- ITEMS NA PROMO --}}
                     </div>
                 </div>
             </div>
@@ -483,170 +167,55 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-heading section-heading2">
-                    <h2>Shop By Category</h2>
+                    <h2>CATEGORIAS</h2>
                 </div>
             </div>
         </div>
         <div class="row pt-40">
             <div class="category-slider owl-carousel owl-theme owl-loaded owl-drag">
                 <div class="owl-stage-outer">
-                    <div class="owl-stage" style="transform: translate3d(-1306px, 0px, 0px); transition: all 0s ease 0s; width: 4245px;">
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
+                    <div class="owl-stage">
+
+                        {{-- CATEGORIA --}}
+                        @foreach ($types as $type)
+                        <div class="owl-item">
                             <div class="shop-box category-box">
-                                <img src="img/2_003.jpg" alt="prd">
+                                <img src="{{ asset($type->photo_url) }}">
                                 <div class="box-content">
                                     <ul class="icon">
-                                        <li><a href="#">French Fries</a></li>
+                                        <li><a href="#">{{ $type->name }}</a></li>
                                     </ul>
+                                </div>
+                                <div class="cat-title-content">
+                                    <span class="cat-title">{{ $type->name }}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/3_003.jpg" alt="product">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">Pizza</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/4_004.jpg" alt="product">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">Pasta</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/3_003.jpg" alt="product">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">Pizza</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/1_004.jpg" alt="cate">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">Burgers</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/2_003.jpg" alt="prd">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">French Fries</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/3_003.jpg" alt="product">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">Pizza</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/4_004.jpg" alt="product">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">Pasta</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/3_003.jpg" alt="product">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">Pizza</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/1_004.jpg" alt="cate">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">Burgers</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/2_003.jpg" alt="prd">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">French Fries</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/3_003.jpg" alt="product">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">Pizza</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="shop-box category-box">
-                                <img src="img/4_004.jpg" alt="product">
-                                <div class="box-content">
-                                    <ul class="icon">
-                                        <li><a href="#">Pasta</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
+                        {{-- CATEGORIA --}}
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<!-- mais pedidos -->
 <section class="product-area section-padding">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-heading">
-                    <h2>Our Products</h2>
+                    <h2>MAIS PEDIDOS</h2>
                 </div>
             </div>
         </div>
         <div class="row pt-40">
             <div class="product-slider owl-carousel owl-theme owl-loaded owl-drag">
-
-
-
-
-
-
                 <div class="owl-stage-outer">
                     <div class="owl-stage" style="transform: translate3d(-2612px, 0px, 0px); transition: all 0.25s ease 0s; width: 4571px;">
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
+                        {{-- MAIS PEDIDOS --}}
+                        <div class="owl-item">
                             <div class="product-grid">
                                 <div class="product-image">
                                     <a href="#" class="image">
@@ -674,370 +243,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/7.jpg" alt="product">
-                                        <img class="pic-2" src="img/15.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">BPerson Holding a Burger</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/8_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/9.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">-23%</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Pasta With Red Sauce</a></h3>
-                                    <div class="price">$15.00<span>$20.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/10.jpg" alt="product">
-                                        <img class="pic-2" src="img/11.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">Sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Person Holding Pizza</a></h3>
-                                    <div class="price">$25.00<span>$35.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/1_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/2_004.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Burger With Tomatoes</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/17.jpg" alt="product">
-                                        <img class="pic-2" src="img/18.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">-20%</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Pasta on Brown Surface</a></h3>
-                                    <div class="price">$24.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/6_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/5.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">Sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Burger With Leafy</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/7.jpg" alt="product">
-                                        <img class="pic-2" src="img/15.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">BPerson Holding a Burger</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/8_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/9.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">-23%</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Pasta With Red Sauce</a></h3>
-                                    <div class="price">$15.00<span>$20.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/10.jpg" alt="product">
-                                        <img class="pic-2" src="img/11.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">Sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Person Holding Pizza</a></h3>
-                                    <div class="price">$25.00<span>$35.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/1_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/2_004.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Burger With Tomatoes</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned active" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/17.jpg" alt="product">
-                                        <img class="pic-2" src="img/18.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">-20%</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Pasta on Brown Surface</a></h3>
-                                    <div class="price">$24.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/6_002.jpg" alt="product">
-                                        <img class="pic-2" src="img/5.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">Sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">Burger With Leafy</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item cloned" style="width: 316.5px; margin-right: 10px;">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="img/7.jpg" alt="product">
-                                        <img class="pic-2" src="img/15.jpg" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">sale</span>
-                                </div>
-                                <div class="product-content">
-                                    <ul class="rating">
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star"></li>
-                                        <li class="fas fa-star disable"></li>
-                                    </ul>
-                                    <h3 class="title"><a href="https://preetheme.com/liton/foodbar/product-details.html">BPerson Holding a Burger</a></h3>
-                                    <div class="price">$20.00<span>$30.00</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        {{-- MAIS PEDIDOS --}}
                     </div>
                 </div>
 

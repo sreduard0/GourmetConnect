@@ -147,9 +147,24 @@ class Calculate
         }
 
         if ($simbol) {
-            return '%' . number_format($percentage, 2);
+            return number_format($percentage, 2) . '%';
         } else {
             return number_format($percentage, 2);
+        }
+    }
+    public static function discountPercentage($old_value, $current_value, $simbol = false)
+    {
+
+        if ($old_value == 0 || $current_value == 0) {
+            $percentage = 0;
+        } else {
+            $percentage = ((($old_value - $current_value) / $old_value) * 100);
+        }
+
+        if ($simbol) {
+            return round($percentage) . '%';
+        } else {
+            return round($percentage);
         }
     }
 }

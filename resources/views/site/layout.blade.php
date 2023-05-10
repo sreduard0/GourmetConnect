@@ -11,6 +11,7 @@ $app_settings = AppSettingsModel::all()->first();
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="{{ asset($app_settings->logo_url) }}" type="image/x-icon">
     <title>{{ $app_settings->establishment_name }} - @yield('title')</title>
+    <script src="{{ asset('assets/site/js/jquery-3.5.1.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/site/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/fontawesome/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/owl.carousel.min.css') }}">
@@ -30,12 +31,10 @@ $app_settings = AppSettingsModel::all()->first();
 
 </head>
 <body>
-    <div id="preloader" style="display: none;">
+    <div id="preloader">
         <div class="loader">
-            <span class="loader-inner-1"></span>
-            <span class="loader-inner-2"></span>
-            <span class="loader-inner-3"></span>
-            <span class="loader-inner-4"></span>
+            <i class="fa-duotone fa-burger-soda fa-beat-fade"></i>
+
         </div>
     </div>
     <header class="header">
@@ -156,11 +155,6 @@ $app_settings = AppSettingsModel::all()->first();
 
                             </ul>
                         </div>
-
-                        <form action="#" class="search-form">
-                            <input type="search" class="form-control" id="search-box" placeholder="search here...">
-                            <button class="fas fa-search"></button>
-                        </form>
 
                         <div class="mini-cart-side">
                             <div class="cart-header">
@@ -343,7 +337,6 @@ $app_settings = AppSettingsModel::all()->first();
     <!-- scroll -->
     <!-- Js File -->
     <script src="{{ asset('assets/site/js/modernizr.min.js') }}"></script>
-    <script src="{{ asset('assets/site/js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/bootstrap.bundle.js') }}"></script>
     <script src="{{ asset('assets/site/js/owl.carousel.min.js') }}"></script>

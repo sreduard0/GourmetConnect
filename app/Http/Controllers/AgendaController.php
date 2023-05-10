@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\AgendaModel;
 use App\Models\AppSettingsModel;
+use App\Models\RequestsItemsModel;
 use App\Models\TypeItemModel;
+use Illuminate\Support\Facades\DB;
 
 class AgendaController extends Controller
 {
@@ -28,5 +30,15 @@ class AgendaController extends Controller
             return $content;
 
         }
+    }
+
+    public static function more_requests()
+    {
+        $items_request = RequestsItemsModel::select('updated_at', DB::raw('COUNT(id) as product_id'))
+            ->whereMonth('updated_at', date('m'))
+            ->where('status', 4)
+            ->groupBy('updated_at')
+            ->get();
+
     }
 }

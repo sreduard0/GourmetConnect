@@ -1,7 +1,5 @@
 (function ($) {
     'use script';
-
-
     var $loader = $('#preloader');
     if ($loader.length > 0) {
         $(window).on('load', function (event) {
@@ -55,7 +53,6 @@
 
     document.querySelector('#cart-btn').onclick = () => {
         shoppingCart.classList.toggle('active');
-        searchForm.classList.remove('active');
         loginForm.classList.remove('active');
     }
 
@@ -63,13 +60,11 @@
 
     document.querySelector('#login-btn').onclick = () => {
         loginForm.classList.toggle('active');
-        searchForm.classList.remove('active');
         shoppingCart.classList.remove('active');
 
     }
 
     window.onscroll = () => {
-        searchForm.classList.remove('active');
         shoppingCart.classList.remove('active');
         loginForm.classList.remove('active');
 
@@ -106,6 +101,35 @@
     if ($product.length > 0) {
         $(document).ready(function () {
             $(".product-slider").owlCarousel({
+                loop: true,
+                center: false,
+                margin: 10,
+                items: 4,
+                autoplay: true,
+                nav: true,
+                navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    430: {
+                        items: 2,
+                    },
+                    767: {
+                        items: 3,
+                    },
+                    991: {
+                        items: 4,
+                    },
+                }
+            });
+        });
+    }
+
+    var $product = $('.promo-slider');
+    if ($product.length > 0) {
+        $(document).ready(function () {
+            $(".promo-slider").owlCarousel({
                 loop: true,
                 center: false,
                 margin: 10,
