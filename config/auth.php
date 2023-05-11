@@ -38,6 +38,10 @@ return [
     'guards' => [
         'app' => [
             'driver' => 'session',
+            'provider' => 'app',
+        ],
+        'client' => [
+            'driver' => 'session',
             'provider' => 'users',
         ],
     ],
@@ -60,9 +64,13 @@ return [
      */
 
     'providers' => [
-        'users' => [
+        'app' => [
             'driver' => 'eloquent',
             'model' => App\Models\LoginAppModel::class,
+        ],
+        'client' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\LoginClientModel::class,
         ],
 
         // 'users' => [

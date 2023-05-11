@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('url_banner', 255);
             $table->string('url_img1', 255);
             $table->string('url_img2', 255);
-            $table->bigInteger('likes');
+            $table->integer('likes')->default(0);
             $table->timestamps();
         });
     }

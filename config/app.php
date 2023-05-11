@@ -16,6 +16,7 @@ return [
 
     'name' => 'GourmetConnect',
     'version' => 'V1.0',
+    'prefix_admin' => 'administrator',
 
     /*
     |--------------------------------------------------------------------------

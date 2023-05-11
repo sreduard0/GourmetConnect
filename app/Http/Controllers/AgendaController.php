@@ -34,10 +34,14 @@ class AgendaController extends Controller
 
     public static function more_requests()
     {
-        $items_request = RequestsItemsModel::select('updated_at', DB::raw('COUNT(id) as product_id'))
+        $items_request = RequestsItemsModel::select('product_id', DB::raw('COUNT(product_id) as total_quantity'))
+            ->with('product')
             ->whereMonth('updated_at', date('m'))
+            ->whereYear('updated_at', date('Y'))
             ->where('status', 4)
-            ->groupBy('updated_at')
+            ->groupBy('product_id')
+            ->orderBy('total_quantity', 'desc')
+            ->take(10)
             ->get();
 
     }

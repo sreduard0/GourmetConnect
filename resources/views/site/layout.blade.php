@@ -8,6 +8,7 @@ $app_settings = AppSettingsModel::all()->first();
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @yield('meta')
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="{{ asset($app_settings->logo_url) }}" type="image/x-icon">
     <title>{{ $app_settings->establishment_name }} - @yield('title')</title>
@@ -147,7 +148,6 @@ $app_settings = AppSettingsModel::all()->first();
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-10  align-self-center">
                         <div class="list-area-cart-user">
                             <ul>
-                                <li><button class="btn"><i class="far fa-heart"></i></button></li>{{-- ou fas depois de coutido para preencher --}}
                                 <li><a href="javascript:void(0)" class="btn" id="cart-btn"><i class="fas fa-basket-shopping-simple"></i></i>
                                         <span>5</span></a>
                                 </li>
@@ -343,7 +343,6 @@ $app_settings = AppSettingsModel::all()->first();
     <script src="{{ asset('assets/site/js/mixitup.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/jquery.waypoints.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/jquery.nav.min.js') }}"></script>
-    <script src="{{ asset('assets/site/js/timer.js') }}"></script>
     <script src="{{ asset('assets/site/js/script.js') }}"></script>
 
     {{-- JS  --}}

@@ -1325,9 +1325,31 @@ h4 {
     transition: all 250ms ease-out;
 }
 
+.product-grid .social li button {
+    color: #fff;
+    background: #E60A30;
+    font-size: 14px;
+    text-align: center;
+    line-height: 35px;
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    display: block;
+    position: relative;
+    transition: all 250ms ease-out;
+    border: 1px solid #E60A30;
+    padding: 0
+}
+
 .product-grid .social li a:hover {
     color: #fff;
     background-color: #b01212;
+}
+
+.product-grid .social li button:hover {
+    color: #fff;
+    background-color: #b01212;
+    border: 1px solid #b01212;
 }
 
 .product-slider .owl-dots {
@@ -2352,7 +2374,6 @@ h4 {
 .detail-rating {
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 1px solid gray;
 }
 
 .detail-rating ul {
@@ -2367,8 +2388,8 @@ h4 {
 }
 
 .detail-rating ul li i {
-    font-size: 12px;
-    color: #E6B90A;
+    font-size: 20px;
+    color: #e60a0a;
 }
 
 .detail-stock h4 {
@@ -2378,7 +2399,7 @@ h4 {
 
 .product-price {
     color: #fff;
-    font-size: 16px;
+    font-size: 25px;
     font-weight: 500;
 }
 
@@ -2437,6 +2458,11 @@ h4 {
 }
 
 .share-social ul li a {
+    padding: 0px 15px;
+    display: inline-block;
+}
+
+.share-social ul li button {
     padding: 0px 15px;
     display: inline-block;
 }
@@ -3037,7 +3063,25 @@ display .tabs-table table tbody tr td {
     transition: all 0.3s ease 0s;
 }
 
+.our-team .social li button {
+    display: block;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 20px;
+    color: #ff3232;
+    transition: all 0.3s ease 0s;
+}
+
 .our-team .social li a:hover {
+    background: linear-gradient(to bottom, #ff3232, darkred);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.our-team .social li button:hover {
     background: linear-gradient(to bottom, #ff3232, darkred);
     box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.3);
     color: #fff;
