@@ -1227,6 +1227,21 @@ h4 {
     padding: 3px 8px;
     border-radius: 4px;
     position: absolute;
+    right: 10px;
+    top: 10px;
+    transition: all 0.3s;
+}
+
+.product-grid .product-likes-label {
+    color: #fff;
+    background-color: #00000055;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    line-height: 20px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    position: absolute;
     left: 10px;
     top: 10px;
     transition: all 0.3s;

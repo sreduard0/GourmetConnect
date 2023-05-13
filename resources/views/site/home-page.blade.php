@@ -76,97 +76,6 @@ use App\Classes\Tools;
         </div>
     </div>
 </div> --}}
-<!-- product -->
-<section class="product-area section-padding">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="section-heading">
-                    <h2>CARDÁPIO</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row pt-40">
-            <div class="product-slider owl-carousel owl-theme owl-loaded owl-drag">
-                <div class="owl-stage-outer">
-                    <div class="owl-stage">
-                        {{-- ITEMS --}}
-                        @foreach ($items as $item)
-                        <div class="owl-item">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="{{ $item->photo_url }}" alt="product">
-                                    </a>
-                                    @if ($item->old_value > $item->value)
-                                    <span class="product-discount-label">-{{ Calculate::discountPercentage($item->old_value,$item->value,true) }}</span>
-                                    @endif
-                                </div>
-                                <div class="product-content">
-                                    <span class="text-danger fs-10">{{ $item->type->name }}</span>
-                                    <h3 class="title"><a href="">{{ $item->name }}</a></h3>
-                                    <div class="price">R${{ number_format($item->value, 2, ',', '.') }}@if($item->old_value > $item->value) <span>R${{ number_format($item->old_value, 2, ',', '.') }}</span>@endif</div>
-                                    <ul class="social">
-                                        <li><button onclick="return new_order('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fas fa-basket-shopping-simple"></i></button></li>
-                                        <li><button onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fas fa-heart"></i></button></li>
-                                        <li><button onclick="return view_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa fa-eye"></i></button></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                        {{-- ITEMS --}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- promoções -->
-<section class="promo-area section-padding">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="section-heading">
-                    <h2>PROMOÇÕES</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row pt-40">
-            <div class="promo-slider owl-carousel owl-theme owl-loaded owl-drag">
-                <div class="owl-stage-outer">
-                    <div class="owl-stage">
-                        {{-- ITEMS NA PROMO--}}
-                        @foreach ($promo as $item)
-                        <div class="owl-item">
-                            <div class="product-grid">
-                                <div class="product-image">
-                                    <a href="#" class="image">
-                                        <img class="pic-1" src="{{ $item->photo_url }}" alt="product">
-                                    </a>
-                                    <span class="product-discount-label">-{{ Calculate::discountPercentage($item->old_value,$item->value,true) }}</span>
-                                </div>
-                                <div class="product-content">
-                                    <span class="text-danger fs-10">{{ $item->type->name }}</span>
-                                    <h3 class="title"><a href="">{{ $item->name }}</a></h3>
-                                    <div class="price">R${{ number_format($item->value, 2, ',', '.') }}<span>R${{ number_format($item->old_value, 2, ',', '.') }}</span></div>
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                        {{-- ITEMS NA PROMO --}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 <!-- categorys -->
 <section class="category-area section-padding">
     <div class="container">
@@ -206,6 +115,118 @@ use App\Classes\Tools;
         </div>
     </div>
 </section>
+<!-- product -->
+<section class="product-area section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h2>CARDÁPIO</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-40">
+            <div class="product-slider owl-carousel owl-theme owl-loaded owl-drag">
+                <div class="owl-stage-outer">
+                    <div class="owl-stage">
+                        {{-- ITEMS --}}
+                        @foreach ($items as $item)
+                        <div class="owl-item {{ Tools::hash($item->id,'encrypt') }}">
+                            <div class="product-grid">
+                                <div class="product-image">
+                                    <a href="#" class="image">
+                                        <img class="pic-1" src="{{ $item->photo_url }}" alt="product">
+                                    </a>
+                                    @if ($item->old_value > $item->value)
+                                    <span class="product-discount-label">-{{ Calculate::discountPercentage($item->old_value,$item->value,true) }}</span>
+                                    @endif
+                                    @if ($item->like)
+                                    <span class="product-likes-label"><i class="fas fa-heart text-danger"></i> <strong>{{$item->likes}}</strong></span>
+                                    @else
+                                    <span class="product-likes-label"><i class="far fa-heart text-danger"></i> <strong>{{$item->likes}}</strong></span>
+                                    @endif
+                                </div>
+                                <div class="product-content">
+                                    <span class="text-danger fs-10">{{ $item->type->name }}</span>
+                                    <h3 class="title"><a href="">{{ $item->name }}</a></h3>
+                                    <div class="price">R${{ number_format($item->value, 2, ',', '.') }}@if($item->old_value > $item->value) <span>R${{ number_format($item->old_value, 2, ',', '.') }}</span>@endif</div>
+                                    <ul class="social">
+                                        <li><button onclick="return add_cart('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa-solid fa-cart-circle-plus"></i></button></li>
+                                        @auth('client')
+                                        @if ($item->like)
+                                        <li><button onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fas fa-heart"></i></button></li>
+                                        @else
+                                        <li><button onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="far fa-heart"></i></button></li>
+                                        @endif
+                                        @endauth
+                                        <li><button onclick="return view_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa fa-eye"></i></button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                        {{-- ITEMS --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- promoções -->
+<section class="promo-area section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h2>PROMOÇÕES</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-40">
+            <div class="promo-slider owl-carousel owl-theme owl-loaded owl-drag">
+                <div class="owl-stage-outer">
+                    <div class="owl-stage">
+                        {{-- ITEMS NA PROMO--}}
+                        @foreach ($promo as $item)
+                        <div class="owl-item {{ Tools::hash($item->id,'encrypt') }}">
+                            <div class="product-grid">
+                                <div class="product-image">
+                                    <a href="#" class="image">
+                                        <img class="pic-1" src="{{ $item->photo_url }}" alt="product">
+                                    </a>
+                                    <span class="product-discount-label">-{{ Calculate::discountPercentage($item->old_value,$item->value,true) }}</span>
+                                    @if ($item->like)
+                                    <span class="product-likes-label"><i class="fas fa-heart text-danger"></i> <strong>{{$item->likes}}</strong></span>
+                                    @else
+                                    <span class="product-likes-label"><i class="far fa-heart text-danger"></i> <strong>{{$item->likes}}</strong></span>
+                                    @endif
+                                </div>
+                                <div class="product-content">
+                                    <span class="text-danger fs-10">{{ $item->type->name }}</span>
+                                    <h3 class="title"><a href="">{{ $item->name }}</a></h3>
+                                    <div class="price">R${{ number_format($item->value, 2, ',', '.') }}<span>R${{ number_format($item->old_value, 2, ',', '.') }}</span></div>
+                                    <ul class="social">
+                                        <li><button onclick="return new_order('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa-solid fa-cart-circle-plus"></i></button></li>
+                                        @auth('client')
+                                        @if ($item->like)
+                                        <li><button onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fas fa-heart"></i></button></li>
+                                        @else
+                                        <li><button onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="far fa-heart"></i></button></li>
+                                        @endif
+                                        @endauth
+                                        <li><button onclick="return view_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa fa-eye"></i></button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                        {{-- ITEMS NA PROMO --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <!-- mais pedidos -->
 <section class="product-area section-padding">
     <div class="container">
@@ -222,7 +243,7 @@ use App\Classes\Tools;
                     <div class="owl-stage" style="transform: translate3d(-2612px, 0px, 0px); transition: all 0.25s ease 0s; width: 4571px;">
                         {{-- MAIS PEDIDOS --}}
                         @foreach ($more_requests as $item)
-                        <div class="owl-item">
+                        <div class="owl-item {{ Tools::hash($item->product->id,'encrypt') }}">
                             <div class="product-grid">
                                 <div class="product-image">
                                     <a href="#" class="image">
@@ -231,21 +252,30 @@ use App\Classes\Tools;
                                     @if ($item->product->old_value > $item->product->value)
                                     <span class="product-discount-label">-{{ Calculate::discountPercentage($item->product->old_value,$item->product->value,true) }}</span>
                                     @endif
+                                    @if ($item->product->like)
+                                    <span class="product-likes-label"><i class="fas fa-heart text-danger"></i> <strong>{{$item->product->likes}}</strong></span>
+                                    @else
+                                    <span class="product-likes-label"><i class="far fa-heart text-danger"></i> <strong>{{$item->product->likes}}</strong></span>
+                                    @endif
                                 </div>
                                 <div class="product-content">
                                     <span class="text-danger fs-10">{{ $item->product->type->name }}</span>
                                     <h3 class="title"><a href="">{{ $item->product->name }}</a></h3>
                                     <div class="price">R${{ number_format($item->product->value, 2, ',', '.') }}@if($item->product->old_value > $item->product->value) <span>R${{ number_format($item->product->old_value, 2, ',', '.') }}</span>@endif</div>
                                     <ul class="social">
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-random"></i></a></li>
+                                        <li><button onclick="return new_order('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="fa-solid fa-cart-circle-plus"></i></button></li>
+                                        @auth('client')
+                                        @if ($item->product->like)
+                                        <li><button onclick="return like_item('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="fas fa-heart"></i></button></li>
+                                        @else
+                                        <li><button onclick="return like_item('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="far fa-heart"></i></button></li>
+                                        @endif
+                                        @endauth
+                                        <li><button onclick="return view_item('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="fa fa-eye"></i></button></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-
                         @endforeach
                         {{-- MAIS PEDIDOS --}}
                     </div>
@@ -302,6 +332,7 @@ use App\Classes\Tools;
     </div>
 </section>
 <!-- ///blog-area -->
+@auth('client')
 <section class="blog-area section-padding">
     <div class="container">
         <div class="row">
@@ -340,6 +371,7 @@ use App\Classes\Tools;
         </div>
     </div>
 </section>
+@endauth
 
 @endsection
 @section('modal')
@@ -383,7 +415,7 @@ use App\Classes\Tools;
                                 <div class="pro-detail-button">
                                     <ul>
                                         <li><a href="#" title="wish list"><i class="far fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-basket-shopping-simple"></i> Adicionar</a></li>
+                                        <li><a href="#"><i class="fa-solid fa-cart-circle-plus"></i> Adicionar</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -435,9 +467,9 @@ use App\Classes\Tools;
 <div class="modal fade" id="observation-item" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="observation-item-modalLabel">ADICIONAIS E OBSERVAÇÕES</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <div class="modal-header d-flex justify-content-between">
+                <h5 class="modal-title text-light">ADICIONAIS E OBSERVAÇÕES</h5>
+                <button type="button" class="btn btn-sm btn-danger close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -452,7 +484,7 @@ use App\Classes\Tools;
                         </div>
                     </form>
                 </div>
-                <div class="card">
+                <div class="card m-t-20">
                     <div class="card-header">
                         <h5 class="card-title"> <strong>Observações</strong> </h5>
                     </div>
@@ -463,11 +495,15 @@ use App\Classes\Tools;
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="save-obs-item-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>SALVAR</strong></button>
+            <div class="modal-footer  d-flex justify-content-between">
+                <div class="counter-qty">
+                    <span class="down" onclick="decreaseCount(event, this)">-</span>
+                    <input id="qty-item-request" type="text" value="1">
+                    <span class="up" onclick="increaseCount(event, this)">+</span>
+                </div>
+                <button id="save-obs-item-request" type="button" class="btn btn-danger rounded-pill float-right"><strong>ADICIONAR</strong></button>
             </div>
         </div>
     </div>
 </div>
-
 @endsection

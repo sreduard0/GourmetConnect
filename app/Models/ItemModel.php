@@ -16,6 +16,10 @@ class ItemModel extends Model
     {
         return $this->hasMany('App\Models\AdditionalItemModel', 'item_id', 'id');
     }
+    public function like()
+    {
+        return $this->hasOne('App\Models\LikesModel', 'event_id', 'id')->where('item', 1)->where('client_id', auth()->guard('client')->id());
+    }
     use HasFactory;
     use SoftDeletes;
 

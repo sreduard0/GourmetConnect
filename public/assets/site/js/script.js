@@ -49,35 +49,35 @@
     //      loginForm.classList.remove('active');
     //     }
 
-    let shoppingCart = document.querySelector('.mini-cart-side');
+    // let shoppingCart = document.querySelector('.mini-cart-side');
 
-    document.querySelector('#cart-btn').onclick = () => {
-        shoppingCart.classList.toggle('active');
-        loginForm.classList.remove('active');
-    }
+    // document.querySelector('#cart-btn').onclick = () => {
+    //     shoppingCart.classList.toggle('active');
+    //     loginForm.classList.remove('active');
+    // }
 
-    let loginForm = document.querySelector('.login-form');
+    // let loginForm = document.querySelector('.login-form');
 
-    document.querySelector('#login-btn').onclick = () => {
-        loginForm.classList.toggle('active');
-        shoppingCart.classList.remove('active');
+    // document.querySelector('#login-btn').onclick = () => {
+    //     loginForm.classList.toggle('active');
+    //     shoppingCart.classList.remove('active');
 
-    }
+    // }
 
-    window.onscroll = () => {
-        shoppingCart.classList.remove('active');
-        loginForm.classList.remove('active');
+    // window.onscroll = () => {
+    //     shoppingCart.classList.remove('active');
+    //     loginForm.classList.remove('active');
 
-    }
+    // }
 
 
-    // close
-    document.querySelector('#close-btn').onclick = () => {
-        shoppingCart.classList.remove('active');
-    }
-    document.querySelector('#close-login').onclick = () => {
-        loginForm.classList.remove('active');
-    }
+    // // close
+    // document.querySelector('#close-btn').onclick = () => {
+    //     shoppingCart.classList.remove('active');
+    // }
+    // document.querySelector('#close-login').onclick = () => {
+    //     loginForm.classList.remove('active');
+    // }
 
 
 
@@ -106,6 +106,7 @@
                 margin: 10,
                 items: 4,
                 autoplay: true,
+                autoplayTimeout: 9000,
                 nav: true,
                 navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
                 responsive: {
@@ -195,7 +196,7 @@
                 autoplayTimeout: 9000,
                 items: 2,
                 nav: true,
-                navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
+                navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
                 responsive: {
                     // breakpoint from 0 up
                     0: {
@@ -426,4 +427,19 @@
         slider.init()
     }
 
+    $('.text').summernote({
+        height: 150,
+        toolbar: [
+            // [groupName, [list of button]]
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font'],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table'],
+        ]
+    });
+
 }(jQuery));
+
+

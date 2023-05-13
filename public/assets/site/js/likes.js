@@ -3,18 +3,24 @@ function like_item(item) {
         url: window.location.origin + '/get/items/like/' + item,
         type: 'GET',
         success: function (response) {
-            alert(response)
+            switch (response.event) {
+                case 'like':
+                    $('.' + item + ' .fa-heart').removeClass('far')
+                    $('.' + item + ' .fa-heart').addClass('fas')
+                    $('.' + item + ' strong').text(response.likes)
+                    break;
+                case 'unlike':
+                    $('.' + item + ' .fa-heart').removeClass('fas')
+                    $('.' + item + ' .fa-heart').addClass('far')
+                    $('.' + item + ' strong').text(response.likes)
+                    break
+            }
         },
         error: function () {
-            Toast.fire({
-                icon: 'error',
-                title: '&nbsp&nbsp Erro na rede.'
-            });
+
         }
     });
 }
-
-
 
 
 

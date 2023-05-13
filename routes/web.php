@@ -20,8 +20,7 @@ use App\Http\Controllers\TypeItemsController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UsersController;
 use App\Models\LoginAppModel;
-use App\Models\RequestsItemsModel;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
@@ -38,15 +37,16 @@ Route::get(config('app.prefix_admin'), function () {
 });
 Route::prefix(config('app.prefix_admin'))->group(function () {
     Route::middleware('ifAuth')->group(function () {
-
         Route::get('app/login', [AppViewsController::class, 'form_login'])->name('form_login');
         Route::post('post/submit/login', [LoginController::class, 'submit_login_app']);
         Route::post('post/validate/login', [LoginController::class, 'validate_login_app']);
     });
+
 });
 
+Route::get('logout', [LoginController::class, 'logout']);
+
 Route::middleware('auth')->group(function () {
-    Route::get('logout', [LoginController::class, 'logout']);
 //-------------------------------
 // ASSETS ADMINISTRATIVOS
 //-------------------------------
@@ -204,6 +204,7 @@ Route::get('contact', [SiteViewsController::class, 'contact'])->name('contact');
 // SITE/ ITEM
 //-------------------------------
 Route::get('get/item/show/{id}', [SaleItemsController::class, 'show']);
+Route::get('get/request/item/additionals/{id}', [SaleItemsController::class, 'additionals']);
 
 //-------------------------------
 // SITE/ LIKES
@@ -221,8 +222,9 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 // TESTES
 //-------------------------------
 Route::get('teste4/', function () {
-    
-
+    // auth()->guard('client')->attempt(['login' => trim('dudu.martins373@gmail.com'), 'password' => trim('Eduardo3386')]);
+    // echo auth()->guard('client')->check();
+    auth()->guard('client')->logout();
 });
 Route::get('teste3', function () {
     echo (Redirect::intended(route('requests'))->headers->get('Location'));

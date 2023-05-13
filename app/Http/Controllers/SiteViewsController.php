@@ -13,8 +13,8 @@ class SiteViewsController extends Controller
     {
         $data = [
             'banners' => AgendaController::show_banner(),
-            'items' => ItemModel::latest()->take(15)->orderBy('type_id', 'asc')->get(),
-            'promo' => ItemModel::whereColumn('old_value', '>', 'value')->latest()->take(15)->orderBy('type_id', 'asc')->get(),
+            'items' => ItemModel::with('like')->latest()->orderBy('type_id', 'asc')->get(),
+            'promo' => ItemModel::with('like')->whereColumn('old_value', '>', 'value')->latest()->take(15)->orderBy('type_id', 'asc')->get(),
             'types' => TypeItemModel::latest()->take(15)->get(),
             'more_requests' => RequestsItemsModel::select('product_id', DB::raw('COUNT(product_id) as total_quantity'))->with('product')->whereMonth('updated_at', date('m'))->whereYear('updated_at', date('Y'))->where('status', 4)
                 ->groupBy('product_id')->orderBy('total_quantity', 'desc')->take(10)->get(),

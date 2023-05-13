@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('likes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('agenda');
-            $table->integer('item');
+            $table->integer('agenda')->nullable();
+            $table->integer('item')->nullable();
             $table->bigInteger('client_id');
             $table->bigInteger('event_id');
             $table->timestamps();

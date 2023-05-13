@@ -13,6 +13,7 @@ $app_settings = AppSettingsModel::all()->first();
     <link rel="shortcut icon" href="{{ asset($app_settings->logo_url) }}" type="image/x-icon">
     <title>{{ $app_settings->establishment_name }} - @yield('title')</title>
     <script src="{{ asset('assets/site/js/jquery-3.5.1.min.js') }}"></script>
+    <script src="{{ asset('assets/site/js/bootbox.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/site/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/fontawesome/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/owl.carousel.min.css') }}">
@@ -24,6 +25,8 @@ $app_settings = AppSettingsModel::all()->first();
     <link rel="stylesheet" href="{{ asset('assets/site/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/util.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/site/js/summernote/summernote-bs4.min.css') }}">
+
 
     {{-- JS/CSS --}}
     @yield('script')
@@ -146,16 +149,18 @@ $app_settings = AppSettingsModel::all()->first();
                         {{-- BARRA MOBILE --}}
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-10  align-self-center">
-                        <div class="list-area-cart-user">
+                        <div class="list-area-cart-user d-flex justify-content-end">
+                            @auth('client')
                             <ul>
-                                <li><a href="javascript:void(0)" class="btn" id="cart-btn"><i class="fas fa-basket-shopping-simple"></i></i>
-                                        <span>5</span></a>
+                                <li><button class="btn"><i class="fas fa-heart"></i></button></li>{{-- ou fas depois de coutido para preencher --}}
+                                <li><a href="javascript:void(0)" class="btn" id="cart-btn"><i class="fa-solid fa-cart-shopping"></i> <span>5</span></a>
                                 </li>
                                 <li><a href="javascript:void(0)" class="btn" id="login-btn"><i class="fas fa-user"></i></a></li>
-
                             </ul>
+                            @else
+                            <a href="" class="btn btn-danger"><i class="fas fa-user"></i> FAZER LOGIN</a>
+                            @endauth
                         </div>
-
                         <div class="mini-cart-side">
                             <div class="cart-header">
                                 <h4>Shopping Cart</h4>
@@ -242,7 +247,6 @@ $app_settings = AppSettingsModel::all()->first();
                         <div class="ft-head">
                             <div class="logo">
                                 <a href="{{ route('home_page') }}"><img src="{{ asset($app_settings->logo_url) }}" width="100" alt="{{ $app_settings->establishment_name }}"></a>
-
                             </div>
                         </div>
                         <div class="ft-description">
@@ -339,6 +343,7 @@ $app_settings = AppSettingsModel::all()->first();
     <script src="{{ asset('assets/site/js/modernizr.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/bootstrap.bundle.js') }}"></script>
+    <script src="{{ asset('assets/site/js/summernote/summernote-bs4.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/mixitup.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/jquery.waypoints.min.js') }}"></script>
