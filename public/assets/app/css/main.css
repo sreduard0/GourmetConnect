@@ -22,7 +22,57 @@
 }
 
 
+/* BOTAO GOOGLE */
+.btn-google {
+    color: #555;
+}
 
+.btn-google {
+    font-family: Raleway-Bold;
+    font-size: 16px;
+    line-height: 1.2;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc((100% - 10px)/2);
+    height: 40px;
+    border-radius: 3px;
+    border: 1px solid #dddada;
+    background-color: #fff;
+    -webkit-transition: all .4s;
+    -o-transition: all .4s;
+    -moz-transition: all .4s;
+    transition: all .4s;
+    text-decoration: none;
+}
+
+.btn-google:hover {
+    color: #000;
+    font-family: Raleway-Bold;
+    font-size: 16px;
+    line-height: 1.2;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc((100% - 10px)/2);
+    height: 40px;
+    border-radius: 3px;
+    border: 1px solid #e6e6e6;
+    background-color: #d4d1d1;
+    -webkit-transition: all .4s;
+    -o-transition: all .4s;
+    -moz-transition: all .4s;
+    transition: all .4s;
+    text-decoration: none;
+}
 
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
@@ -202,7 +252,7 @@ iframe {
     margin: 0 auto;
 }
 
-body::before {
+body {
     content: "";
     display: block;
     position: fixed;
@@ -212,7 +262,6 @@ body::before {
     height: 100%;
     background-image: url('../../../img/gourmetconnect-logo/background-login.png');
     background-size: 100%;
-    opacity: 0.4;
     z-index: -1;
 }
 

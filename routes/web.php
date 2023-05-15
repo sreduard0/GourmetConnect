@@ -6,6 +6,7 @@ use App\Http\Controllers\AppViewsController;
 use App\Http\Controllers\AssetsController;
 use App\Http\Controllers\ControlPanelController;
 use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\LikesController;
 use App\Http\Controllers\LoginController;
@@ -19,11 +20,8 @@ use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UsersController;
-use App\Models\LoginAppModel;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
-use Spatie\Permission\Models\Permission;
 
 //----------------------------------------------
 //  ROTAS ADMINISTRATIVAS
@@ -41,10 +39,9 @@ Route::prefix(config('app.prefix_admin'))->group(function () {
         Route::post('post/submit/login', [LoginController::class, 'submit_login_app']);
         Route::post('post/validate/login', [LoginController::class, 'validate_login_app']);
     });
-
+// LOGOUT
+    Route::get('logout', [LoginController::class, 'logout_app'])->name('logout');
 });
-
-Route::get('logout', [LoginController::class, 'logout']);
 
 Route::middleware('auth')->group(function () {
 //-------------------------------
@@ -56,7 +53,6 @@ Route::middleware('auth')->group(function () {
 // ----------------------------
 // APP/ VIEWS
 // ----------------------------
-
         Route::get('control-panel', [AppViewsController::class, 'control_panel'])->middleware('hasPermission:dashboard')->name('control_panel');
         Route::get('requests', [AppViewsController::class, 'requests'])->middleware('hasPermission:view_orders')->name('requests');
         Route::get('requests/close-request/{id}', [AppViewsController::class, 'close_request'])->middleware('hasPermission:finalize_order')->name('close-request');
@@ -175,11 +171,6 @@ Route::middleware('auth')->group(function () {
         Route::put('put/password/update', [UserProfileController::class, 'update_password']);
 
 //-------------------------------
-// LOGIN
-//-------------------------------
-        Route::get('logout', [LoginController::class, 'logout'])->name('logout');
-
-//-------------------------------
 // APP/ NOTIFICAÇÕES
 //-------------------------------
         Route::get('notification/events', [NotificationController::class, 'notification'])->middleware('hasPermission:print_requests');
@@ -188,9 +179,22 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+//==============================================================================================================================================================================
+
 //----------------------------------------------
 //  ROTAS CLIENTE
 //----------------------------------------------
+
+//----------------------------------------------
+//  SITE/ LOGIN
+//----------------------------------------------
+// FORM LOGIN
+Route::get('login', [SiteViewsController::class, 'form_login'])->name('site_login_form');
+Route::get('logout', [LoginController::class, 'logout_client'])->name('logout_client');
+
+// LOGIN COM GOOGLE
+Route::get('auth/google/redirect', [GoogleLoginController::class, 'redirect'])->name('auth_google');
+Route::get('auth/google/callback', [GoogleLoginController::class, 'callback']);
 
 //-------------------------------
 // SITE/ VIEWS
@@ -204,12 +208,13 @@ Route::get('contact', [SiteViewsController::class, 'contact'])->name('contact');
 // SITE/ ITEM
 //-------------------------------
 Route::get('get/item/show/{id}', [SaleItemsController::class, 'show']);
-Route::get('get/request/item/additionals/{id}', [SaleItemsController::class, 'additionals']);
+Route::get('get/item/additionals/{id}', [SaleItemsController::class, 'additionals'])->middleware('auth:client');
+Route::put('put/add/item/cart', [SaleItemsController::class, 'create'])->middleware('auth:client');
 
 //-------------------------------
 // SITE/ LIKES
 //-------------------------------
-Route::get('get/items/like/{item}', [LikesController::class, 'like_item']);
+Route::get('get/items/like/{item}', [LikesController::class, 'like_item'])->middleware('auth:client');
 
 //-------------------------------
 // SITE/ PEDIDOS
@@ -218,115 +223,115 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
     return $table;
 });
 
-//-------------------------------
-// TESTES
-//-------------------------------
-Route::get('teste4/', function () {
-    // auth()->guard('client')->attempt(['login' => trim('dudu.martins373@gmail.com'), 'password' => trim('Eduardo3386')]);
-    // echo auth()->guard('client')->check();
-    auth()->guard('client')->logout();
-});
-Route::get('teste3', function () {
-    echo (Redirect::intended(route('requests'))->headers->get('Location'));
-    // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);
+// //-------------------------------
+// // TESTES
+// //-------------------------------
+// Route::get('teste4/', function () {
+//     // auth()->guard('client')->attempt(['login' => trim('dudu.martins373@gmail.com'), 'password' => trim('Eduardo3386')]);
+//     // echo auth()->guard('client')->check();
+//     auth()->guard('client')->logout();
+// });
+// Route::get('teste3', function () {
+//     echo (Redirect::intended(route('requests'))->headers->get('Location'));
+//     // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);
 
-    // if (auth()->attempt(['login' => 'Eduardo', 'password' => 'xivunk'])) {
-    //     // usuário autenticado com sucesso
-    //     // return redirect()->intended('/dashboard');
+//     // if (auth()->attempt(['login' => 'Eduardo', 'password' => 'xivunk'])) {
+//     //     // usuário autenticado com sucesso
+//     //     // return redirect()->intended('/dashboard');
 
-    //     echo 'logado';
-    // } else {
-    //     // credenciais inválidas
-    //     // return back()->withErrors(['email' => 'Credenciais inválidas']);
-    //     echo 'Erro';
-    // }
+//     //     echo 'logado';
+//     // } else {
+//     //     // credenciais inválidas
+//     //     // return back()->withErrors(['email' => 'Credenciais inválidas']);
+//     //     echo 'Erro';
+//     // }
 
-});
-Route::get('teste2/{permission}', function ($permission) {
-    // Permission::create(['name' => 'Teste']);
+// });
+// Route::get('teste2/{permission}', function ($permission) {
+//     // Permission::create(['name' => 'Teste']);
 
-    // $editor = Role::create(['name' => 'Teste']);
-    // $editor->givePermissionTo('Teste');
+//     // $editor = Role::create(['name' => 'Teste']);
+//     // $editor->givePermissionTo('Teste');
 
-    $login = LoginAppModel::find(25);
-    // $login->assignRole($permission);
-    $login->givePermissionTo($permission);
-    // $login->removeRole('Dashboard');
-    // $login->revokePermissionTo('Teste');
+//     $login = LoginAppModel::find(25);
+//     // $login->assignRole($permission);
+//     $login->givePermissionTo($permission);
+//     // $login->removeRole('Dashboard');
+//     // $login->revokePermissionTo('Teste');
 
-    // if ($login->hasRole('Teste')) {
-    //     echo 'Tem a Hole teste.';
-    // }
-    // if ($login->hasPermissionTo('Teste')) {
-    //     echo 'Tem a permissão teste.';
-    // }
+//     // if ($login->hasRole('Teste')) {
+//     //     echo 'Tem a Hole teste.';
+//     // }
+//     // if ($login->hasPermissionTo('Teste')) {
+//     //     echo 'Tem a permissão teste.';
+//     // }
 
-});
-Route::get('teste', function () {
-    $permissions = [
-        //     // DASHBOARD
-        //     'dashboard',
-        //     // PEDIDOS
-        //     'view_orders',
-        //     'create_order',
-        //     'delete_request',
-        //     'delete_order',
-        //     'print_requests',
-        //     'finalize_order',
-        //     // DELIVERY
-        //     'view_delivery',
-        //     'create_delivery',
-        //     'delete_delivery',
-        //     'delete_request_delivery',
-        //     'edit_delivery',
-        //     'sts_delivery',
-        //     // MESAS
-        //     'view_tables',
-        //     'qr_code_actions',
-        //     // CARDAPIO
-        //     'view_menu',
-        //     'create_item_menu',
-        //     'edit_item_menu',
-        //     'delete_item_menu',
-        //     'create_type_menu',
-        //     'edit_type_menu',
-        //     'delete_type_menu',
-        //     'create_additional_menu',
-        //     'edit_additional_menu',
-        //     'delete_additional_menu',
-        //     // CONFIG. APP
-        //     'config_app_data',
-        //     'config_app_delivery',
-        //     'config_app_email',
-        //     'config_app_theme',
-        //     // USUARIOS
-        //     'edit_user',
-        //     'create_user',
-        //     'delete_user',
-        //     'config_users',
-        //     'permissions_user',
-        // 'reset_password',
-        //     // CONFIG. SITE
-        //     'config_site',
+// });
+// Route::get('teste', function () {
+//     $permissions = [
+//         //     // DASHBOARD
+//         //     'dashboard',
+//         //     // PEDIDOS
+//         //     'view_orders',
+//         //     'create_order',
+//         //     'delete_request',
+//         //     'delete_order',
+//         //     'print_requests',
+//         //     'finalize_order',
+//         //     // DELIVERY
+//         //     'view_delivery',
+//         //     'create_delivery',
+//         //     'delete_delivery',
+//         //     'delete_request_delivery',
+//         //     'edit_delivery',
+//         //     'sts_delivery',
+//         //     // MESAS
+//         //     'view_tables',
+//         //     'qr_code_actions',
+//         //     // CARDAPIO
+//         //     'view_menu',
+//         //     'create_item_menu',
+//         //     'edit_item_menu',
+//         //     'delete_item_menu',
+//         //     'create_type_menu',
+//         //     'edit_type_menu',
+//         //     'delete_type_menu',
+//         //     'create_additional_menu',
+//         //     'edit_additional_menu',
+//         //     'delete_additional_menu',
+//         //     // CONFIG. APP
+//         //     'config_app_data',
+//         //     'config_app_delivery',
+//         //     'config_app_email',
+//         //     'config_app_theme',
+//         //     // USUARIOS
+//         //     'edit_user',
+//         //     'create_user',
+//         //     'delete_user',
+//         //     'config_users',
+//         //     'permissions_user',
+//         // 'reset_password',
+//         //     // CONFIG. SITE
+//         //     'config_site',
 
-    ];
-    Permission::create(['name' => 'reset_password', 'display_name' => 'Resetar senha', 'group_name' => 'user']);
+//     ];
+//     Permission::create(['name' => 'reset_password', 'display_name' => 'Resetar senha', 'group_name' => 'user']);
 
-    // foreach ($permissions as $permission) {
-    //     Permission::create(['name' => $permission]);
-    // }
+//     // foreach ($permissions as $permission) {
+//     //     Permission::create(['name' => $permission]);
+//     // }
 
-    // $editor = Role::create(['name' => $role]);
-    // $editor->givePermissionTo('Teste');
+//     // $editor = Role::create(['name' => $role]);
+//     // $editor->givePermissionTo('Teste');
 
-    // $login = LoginAppModel::find(1);
-    // // $login->givePermissionTo('Teste');
+//     // $login = LoginAppModel::find(1);
+//     // // $login->givePermissionTo('Teste');
 
-    // if ($login->hasRole('Teste')) {
-    //     echo 'Tem a Hole teste.';
-    // }
-    // if ($login->hasPermissionTo('Teste')) {
-    //     echo 'Tem a permissão teste.';
-    // }
+//     // if ($login->hasRole('Teste')) {
+//     //     echo 'Tem a Hole teste.';
+//     // }
+//     // if ($login->hasPermissionTo('Teste')) {
+//     //     echo 'Tem a permissão teste.';
+//     // }
 
-});
+// });

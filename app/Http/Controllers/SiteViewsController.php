@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AppSettingsModel;
 use App\Models\ItemModel;
 use App\Models\RequestsItemsModel;
 use App\Models\TypeItemModel;
@@ -32,5 +33,13 @@ class SiteViewsController extends Controller
     public function contact()
     {
         return view('site.contact');
+    }
+    public function form_login()
+    {
+        $data = [
+            'app_settings' => AppSettingsModel::first(),
+        ];
+
+        return view('site.login.form-login', $data);
     }
 }

@@ -1,9 +1,9 @@
 (function ($) {
     'use script';
-    var $loader = $('#preloader');
+    var $loader = $('.preloader');
     if ($loader.length > 0) {
         $(window).on('load', function (event) {
-            $('#preloader').delay(500).fadeOut(500);
+            $('.preloader').delay(300).fadeOut(500);
         });
     }
 
@@ -37,49 +37,6 @@
             type: 'iframe',
         });
     }
-
-
-
-    // ///add minicart login serach
-    //   let searchForm = document.querySelector('.search-form');
-
-    //     document.querySelector('#search-btn').onclick = () =>{
-    //      searchForm.classList.toggle('active');
-    //      shoppingCart.classList.remove('active');
-    //      loginForm.classList.remove('active');
-    //     }
-
-    // let shoppingCart = document.querySelector('.mini-cart-side');
-
-    // document.querySelector('#cart-btn').onclick = () => {
-    //     shoppingCart.classList.toggle('active');
-    //     loginForm.classList.remove('active');
-    // }
-
-    // let loginForm = document.querySelector('.login-form');
-
-    // document.querySelector('#login-btn').onclick = () => {
-    //     loginForm.classList.toggle('active');
-    //     shoppingCart.classList.remove('active');
-
-    // }
-
-    // window.onscroll = () => {
-    //     shoppingCart.classList.remove('active');
-    //     loginForm.classList.remove('active');
-
-    // }
-
-
-    // // close
-    // document.querySelector('#close-btn').onclick = () => {
-    //     shoppingCart.classList.remove('active');
-    // }
-    // document.querySelector('#close-login').onclick = () => {
-    //     loginForm.classList.remove('active');
-    // }
-
-
 
     ///banner
     var $full = $('.slider-area-full');
@@ -441,5 +398,13 @@
     });
 
 }(jQuery));
-
-
+var active = false
+function login_btn() {
+    if (active == true) {
+        $('.login-form').removeClass('active');
+        active = false
+    } else {
+        $('.login-form').addClass('active');
+        active = true
+    }
+}

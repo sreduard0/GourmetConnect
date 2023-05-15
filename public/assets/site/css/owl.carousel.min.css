@@ -77,11 +77,146 @@
 
 .owl-carousel .owl-nav button.owl-next, .owl-carousel .owl-nav button.owl-prev, .owl-carousel button.owl-dot {
     background: 0 0;
-    color: inherit;
+    color: #007bff;
     border: none;
     padding: 0 !important;
-    font: inherit
+    font: inherit;
+    font-size: 20px;
+    margin: 0px 1rem;
 }
+
+.accent-primary .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #007bff;
+}
+
+.accent-warning .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #ffc107;
+}
+
+.accent-orange .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #fd7e14;
+}
+
+.accent-info .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #17a2b8;
+}
+
+.accent-danger .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #dc3545;
+}
+
+.accent-success .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #28a745;
+}
+
+.accent-indigo .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #6610f2;
+}
+
+.accent-lightblue .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #3c8dbc;
+}
+
+.accent-purple .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #6f42c1;
+}
+
+.accent-fuchsia .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #f012be;
+}
+
+
+.accent-pink .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #e83e8c;
+}
+
+.accent-maroon .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #d81b60;
+}
+
+.accent-lime .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #01ff70;
+}
+
+.accent-teal .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #20c997;
+}
+
+.accent-olive .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #3d9970;
+}
+
+.accent-navy .owl-carousel .owl-nav button[class*="owl-"], .owl-carousel button.owl-dot {
+    color: #001f3f;
+}
+
+.accent-primary .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #007bff;
+}
+
+.accent-warning .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #ffc107;
+}
+
+.accent-orange .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #fd7e14;
+}
+
+.accent-info .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #17a2b8;
+}
+
+.accent-danger .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #dc3545;
+}
+
+.accent-success .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #28a745;
+}
+
+.accent-indigo .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #6610f2;
+}
+
+.accent-lightblue .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #3c8dbc;
+}
+
+.accent-navy .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #001f3f;
+}
+
+.accent-purple .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #6f42c1;
+}
+
+.accent-fuchsia .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #f012be;
+}
+
+
+.accent-pink .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #e83e8c;
+}
+
+.accent-maroon .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #d81b60;
+}
+
+.accent-lime .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #01ff70;
+}
+
+.accent-teal .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #20c997;
+}
+
+.accent-olive .owl-theme .owl-nav [class*="owl-"]:hover {
+    color: #3d9970;
+}
+
+
+
 
 .owl-carousel.owl-loading {
     opacity: 0;

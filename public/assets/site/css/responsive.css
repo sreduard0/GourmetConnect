@@ -114,13 +114,22 @@
         margin-right: 10px;
     }
 
-    .mobile-toggle a {
+    .dark-mode .mobile-toggle a {
         line-height: 61px;
         font-size: 24px;
         padding: 4px;
         background: transparent;
         display: inline;
         color: #fff;
+    }
+
+    .mobile-toggle a {
+        line-height: 61px;
+        font-size: 24px;
+        padding: 4px;
+        background: transparent;
+        display: inline;
+        color: #191919;
     }
 
     .hero-slider-img {
@@ -512,13 +521,11 @@
     .list-area-cart-user ul li .btn {
         padding: 10px 0px;
         text-decoration: none;
-        color: #FFFFFF;
         position: relative;
         font-size: 18px;
         width: 40px !important;
         height: 40px;
         display: inline-block;
-        background: #d30000;
         display: flex;
         justify-content: center;
         align-items: center;

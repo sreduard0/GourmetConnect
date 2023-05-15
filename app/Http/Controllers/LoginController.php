@@ -80,10 +80,17 @@ class LoginController extends Controller
     }
 
     // LOGOUT
-    public function logout()
+    public function logout_app()
     {
         session()->flush();
         auth()->logout();
         return redirect()->route('form_login');
+    }
+    // LOGOUT CLIENTE
+    public function logout_client()
+    {
+        session()->flush();
+        auth()->logout();
+        return redirect()->route('home_page');
     }
 }

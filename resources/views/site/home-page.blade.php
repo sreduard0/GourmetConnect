@@ -26,8 +26,9 @@ use App\Classes\Tools;
                                     <div class="slider-single-full">
                                         <h2>{{ $banner['title'] }}</h2>
                                         <p>{!! $banner['description'] !!}</p>
-                                        <div class="button-bar pt-20 rounded-pill">
-                                            <a href="#" class="btn btn-lg">
+                                        <div class="button-bar pt-20">
+                                            <a href="#" class="rounded-pill btn btn-lg">
+
                                                 <span>Ver</span>
                                             </a>
                                         </div>
@@ -147,19 +148,20 @@ use App\Classes\Tools;
                                     @endif
                                 </div>
                                 <div class="product-content">
-                                    <span class="text-danger fs-10">{{ $item->type->name }}</span>
-                                    <h3 class="title"><a href="">{{ $item->name }}</a></h3>
+                                    <span class="text-accent fs-10">{{ $item->type->name }}</span>
+                                    <h3 class="title">{{ $item->name }}</h3>
                                     <div class="price">R${{ number_format($item->value, 2, ',', '.') }}@if($item->old_value > $item->value) <span>R${{ number_format($item->old_value, 2, ',', '.') }}</span>@endif</div>
                                     <ul class="social">
-                                        <li><button onclick="return add_cart('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa-solid fa-cart-circle-plus"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return add_cart_modal('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa-solid fa-cart-circle-plus"></i></button></li>
                                         @auth('client')
                                         @if ($item->like)
-                                        <li><button onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fas fa-heart"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fas fa-heart"></i></button></li>
                                         @else
-                                        <li><button onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="far fa-heart"></i></button></li>
+                                        <li><button class=" btn btn-accent" onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="far fa-heart"></i></button></li>
                                         @endif
                                         @endauth
-                                        <li><button onclick="return view_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa fa-eye"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return view_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa fa-eye"></i></button></li>
+
                                     </ul>
                                 </div>
                             </div>
@@ -202,19 +204,19 @@ use App\Classes\Tools;
                                     @endif
                                 </div>
                                 <div class="product-content">
-                                    <span class="text-danger fs-10">{{ $item->type->name }}</span>
-                                    <h3 class="title"><a href="">{{ $item->name }}</a></h3>
+                                    <span class="text-accet fs-10">{{ $item->type->name }}</span>
+                                    <h3 class="title">{{ $item->name }}</h3>
                                     <div class="price">R${{ number_format($item->value, 2, ',', '.') }}<span>R${{ number_format($item->old_value, 2, ',', '.') }}</span></div>
                                     <ul class="social">
-                                        <li><button onclick="return new_order('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa-solid fa-cart-circle-plus"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return add_cart_modal('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa-solid fa-cart-circle-plus"></i></button></li>
                                         @auth('client')
                                         @if ($item->like)
-                                        <li><button onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fas fa-heart"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fas fa-heart"></i></button></li>
                                         @else
-                                        <li><button onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="far fa-heart"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return like_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="far fa-heart"></i></button></li>
                                         @endif
                                         @endauth
-                                        <li><button onclick="return view_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa fa-eye"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return view_item('{{ Tools::hash($item->id,'encrypt') }}')"><i class="fa fa-eye"></i></button></li>
                                     </ul>
                                 </div>
                             </div>
@@ -238,10 +240,11 @@ use App\Classes\Tools;
             </div>
         </div>
         <div class="row pt-40">
+            {{-- MAIS PEDIDOS --}}
+            @if (count($more_requests)>0)
             <div class="product-slider owl-carousel owl-theme owl-loaded owl-drag">
                 <div class="owl-stage-outer">
                     <div class="owl-stage" style="transform: translate3d(-2612px, 0px, 0px); transition: all 0.25s ease 0s; width: 4571px;">
-                        {{-- MAIS PEDIDOS --}}
                         @foreach ($more_requests as $item)
                         <div class="owl-item {{ Tools::hash($item->product->id,'encrypt') }}">
                             <div class="product-grid">
@@ -259,28 +262,34 @@ use App\Classes\Tools;
                                     @endif
                                 </div>
                                 <div class="product-content">
-                                    <span class="text-danger fs-10">{{ $item->product->type->name }}</span>
-                                    <h3 class="title"><a href="">{{ $item->product->name }}</a></h3>
+                                    <span class="text-accent fs-10">{{ $item->product->type->name }}</span>
+                                    <h3 class="title">{{ $item->product->name }}</h3>
                                     <div class="price">R${{ number_format($item->product->value, 2, ',', '.') }}@if($item->product->old_value > $item->product->value) <span>R${{ number_format($item->product->old_value, 2, ',', '.') }}</span>@endif</div>
                                     <ul class="social">
-                                        <li><button onclick="return new_order('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="fa-solid fa-cart-circle-plus"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return add_cart_modal('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="fa-solid fa-cart-circle-plus"></i></button></li>
                                         @auth('client')
                                         @if ($item->product->like)
-                                        <li><button onclick="return like_item('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="fas fa-heart"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return like_item('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="fas fa-heart"></i></button></li>
                                         @else
-                                        <li><button onclick="return like_item('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="far fa-heart"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return like_item('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="far fa-heart"></i></button></li>
                                         @endif
                                         @endauth
-                                        <li><button onclick="return view_item('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="fa fa-eye"></i></button></li>
+                                        <li><button class="btn btn-accent" onclick="return view_item('{{ Tools::hash($item->product->id,'encrypt') }}')"><i class="fa fa-eye"></i></button></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         @endforeach
-                        {{-- MAIS PEDIDOS --}}
                     </div>
                 </div>
             </div>
+            @else
+            <div class="p-l-50 row">
+                <span class="fs-18">Ainda não há item vendidos.</span>
+            </div>
+            @endif
+            {{-- MAIS PEDIDOS --}}
+
         </div>
     </div>
 </section>
@@ -380,43 +389,37 @@ use App\Classes\Tools;
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-between">
-                <h3 class="text-light modal-title" id="item-name"></h3>
-                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+                <h3 class="modal-title" id="item-name"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-6 col-md-12">
                             <div class="modal-img">
-                                <img style="border-radius:20px" id="item-img" src="" alt="1">
+                                <img style="border-radius:20px" width="350" id="item-img" src="" alt="1">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-12">
                             <div class="details-info">
                                 <div class="detail-rating">
                                     <ul>
-                                        <li><i class="fas fa-heart"></i><span id="item-likes" class="text-light">0</span></li>
+                                        <li><i class="fas fa-heart"></i> <strong id="item-likes">0</strong></li>
                                     </ul>
                                 </div>
                                 <div class="product-price">
                                     <span id="item-value" class="money-price"></span>
                                     <span id="item-old-value" class="old-price"></span>
                                 </div>
-                                <div id="item-description" class="detail-description">
-                                </div>
-                                <div class="product-qty">
-                                    <span class="qtys">Quantidade:</span>
-                                    <div class="counter-qty">
-                                        <span class="down" onclick="decreaseCount(event, this)">-</span>
-                                        <input type="text" value="1">
-                                        <span class="up" onclick="increaseCount(event, this)">+</span>
-                                    </div>
-                                </div>
                                 <div class="pro-detail-button">
                                     <ul>
-                                        <li><a href="#" title="wish list"><i class="far fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa-solid fa-cart-circle-plus"></i> Adicionar</a></li>
+                                        <input type="hidden" id="pro-detail-button-id">
+                                        <li><button onclick="return like_item($('#pro-detail-button-id').val())" class="btn btn-accent" title="wish list"><i class="far fa-heart"></i></button></li>
+                                        <li><button onclick="return add_cart_modal($('#pro-detail-button-id').val())" class="btn btn-accent"><i class="fa-solid fa-cart-circle-plus"></i> Adicionar ao carrinho</button></li>
+
                                     </ul>
+                                </div>
+                                <div id="item-description" class="m-t-20 detail-description">
                                 </div>
                             </div>
                         </div>
@@ -426,55 +429,17 @@ use App\Classes\Tools;
         </div>
     </div>
 </div>
-{{-- NOVO PEDIDO --}}
-<div class="modal fade" id="new-order" role="dialog" tabindex="-1" aria-labelledby="newReqLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header d-flex justify-content-between">
-                <h5 class="modal-title text-light">PEDIDOS</h5>
-                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between row">
-                            <h3 id="title-requests" class="card-title "></h3>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table style="width:100%" id="order-requests-table" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th width="25px">Foto</th>
-                                    <th>Item</th>
-                                    <th width="60px">Valor</th>
-                                    <th width="70px">Ações</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer" id="modal-footer" style="display:none">
-                <button id="send-request" type="button" class="btn btn-accent rounded-pill float-right"><strong>ENVIAR PEDIDO</strong></button>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- ADICIONAIS E OBS --}}
-<div class="modal fade" id="observation-item" role="dialog" tabindex="-1" aria-labelledby="observation-item-modalLabel" aria-hidden="true">
+{{-- ADICIONAR AO CARRINHO   --}}
+<div class="modal fade" id="add-cart" role="dialog" tabindex="-1" aria-labelledby="add-cart-modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header d-flex justify-content-between">
-                <h5 class="modal-title text-light">ADICIONAIS E OBSERVAÇÕES</h5>
-                <button type="button" class="btn btn-sm btn-danger close" data-dismiss="modal" aria-label="Close">
+            <div class="modal-header">
+                <h5 class="modal-title">ADICIONAIS E OBSERVAÇÕES</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="request_id">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title "><strong>Adicionais</strong></h5>
@@ -490,7 +455,7 @@ use App\Classes\Tools;
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <textarea name="obs-additional" id="obs-additional" rows="8" class="form-control"></textarea>
+                            <textarea id="obs-item-request" rows="4" class="form-control"></textarea>
                         </div>
                     </div>
                 </div>
@@ -501,7 +466,7 @@ use App\Classes\Tools;
                     <input id="qty-item-request" type="text" value="1">
                     <span class="up" onclick="increaseCount(event, this)">+</span>
                 </div>
-                <button id="save-obs-item-request" type="button" class="btn btn-danger rounded-pill float-right"><strong>ADICIONAR</strong></button>
+                <button onclick="add_cart()" type="button" class="btn btn-accent float-right"><strong>ADICIONAR</strong></button>
             </div>
         </div>
     </div>

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->string('last_name', 255);
             $table->string('email', 255);
             $table->string('photo_url', 255)->default('img/avatar/user.png');
-            $table->bigInteger('phone');
-            $table->date('date_birth');
+            $table->bigInteger('phone')->nullable();
+            $table->date('date_birth')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

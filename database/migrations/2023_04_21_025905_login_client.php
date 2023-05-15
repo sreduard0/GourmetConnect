@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('login', 255);
             $table->string('password', 255);
             $table->integer('verify_error');
+            $table->string('google_id', 255)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -12,432 +12,32 @@ function money(value) {
 
     return value;
 }
-//-----------------------------------
-//    TABELAS
-//-----------------------------------
-// $(function () {
-//     $("#requests-table").DataTable({
-//         "order": [
-//             [3, 'asc']
-//         ],
-//         "bInfo": false
-//         , "paging": true
-//         , "pagingType": 'simple_numbers'
-//         , "responsive": true
-//         , "lengthChange": true
-//         , "iDisplayLength": 10
-//         , "autoWidth": false
-//         , "dom": '<"top">rt<"bottom"ip> <"clear" > '
-//         , "language": {
-//             "url": window.location.origin + "/assets/app/plugins/datatables/Portuguese2.json"
-//         },
-//         "aoColumnDefs": [{
-//             'className': 'td-buttons text-center',
-//             'aTargets': 5
-//         }],
-//         "processing": true
-//         , "serverSide": true
-//         , "ajax": {
-//             "url": window.location.origin + "/administrator/post/table/orders"
-//             , "type": "POST"
-//             , "headers": {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                 ,
-//             }
-//             ,
-//         },
-//         "drawCallback": function () {
-//             var max = 0; // valor máximo inicializado em zero
-//             // Loop pelas células da tabela com a classe "tdbtn"
-//             $("td.td-buttons").each(function () {
-//                 var count = $(this).children().length; // conta o número de elementos dentro da célula
-//                 if (count > max) { // verifica se o número de elementos é maior que o valor máximo atual
-//                     max = count;
-//                 }
-//             });
-//             calc = max * 35;
-//             $("th.td-buttons").css({
-//                 "width": calc + "px",
-//             });
-//             $("td").css({
-//                 "white-space": "nowrap",
-//             });
-//         }
-
-//     });
-//     $("#menu-table").DataTable({
-//         "order": [
-//             [1, 'asc']
-//         ],
-//         "pagingType": 'simple_numbers',
-//         "bInfo": false,
-//         "responsive": true,
-//         "lengthChange": false,
-//         "iDisplayLength": 10,
-//         "autoWidth": false,
-//         "dom": '<"top">rt<"bottom"ip><"clear" >',
-//         "language": {
-//             "url": window.location.origin + "/assets/app/plugins/datatables/Portuguese2.json"
-//         },
-//         "aoColumnDefs": [{
-//             'className': 'text-center',
-//             'aTargets': [0, 3]
-//         },
-//         {
-//             'className': 'td-buttons',
-//             'aTargets': 3
-//         },
-//         {
-//             'sortable': false,
-//             'aTargets': [0, 2, 3]
-//         }],
-//         "serverSide": true,
-//         "ajax": {
-//             "url": window.location.origin + "/administrator/post/table/request/menu",
-//             "type": "POST",
-//             "headers": {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-
-//             }
-
-//         },
-//         "drawCallback": function () {
-//             var max = 0; // valor máximo inicializado em zero
-//             var maxCell; // célula com o valor máximo
-
-//             // Loop pelas células da tabela com a classe "tdbtn"
-//             $("td.td-buttons").each(function () {
-//                 var count = $(this).children().length; // conta o número de elementos dentro da célula
-//                 if (count > max) { // verifica se o número de elementos é maior que o valor máximo atual
-//                     max = count;
-//                     maxCell = this; // atualiza o valor máximo e a célula correspondente
-//                 }
-//             });
-//             calc = max * 35;
-//             $("th.td-buttons").css({
-//                 "width": calc + "px",
-//             });
-//             $("td").css({
-//                 "white-space": "nowrap",
-//             });
-//         }
-
-//     });
-//     $("#order-requests-table").DataTable({
-//         "order": [
-//             [3, 'asc']
-//         ],
-//         "bInfo": false
-//         , "paging": true
-//         , "pagingType": 'simple_numbers'
-//         , "responsive": true
-//         , "lengthChange": false
-//         , "iDisplayLength": 10
-//         , "autoWidth": false,
-//         "dom": '<"top">rt<"bottom"ip> <"clear">'
-//         , "language": {
-//             "url": window.location.origin + "/assets/app/plugins/datatables/Portuguese2.json"
-//         },
-//         "aoColumnDefs": [{
-//             'className': 'text-center',
-//             'aTargets': [0, 3]
-//         },
-//         {
-//             'className': 'td-buttons',
-//             'aTargets': 3
-//         },
-//         {
-//             'sortable': false,
-//             'aTargets': [0, 3]
-//         }],
-//         "serverSide": true
-//         , "ajax": {
-//             "url": window.location.origin + "/administrator/post/table/request/client"
-//             , "type": "POST"
-//             , "headers": {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                 ,
-//             }
-//             ,
-//         },
-//         "drawCallback": function () {
-//             var max = 0; // valor máximo inicializado em zero
-//             var maxCell; // célula com o valor máximo
-
-//             // Loop pelas células da tabela com a classe "tdbtn"
-//             $("td.td-buttons").each(function () {
-//                 var count = $(this).children().length; // conta o número de elementos dentro da célula
-//                 if (count > max) { // verifica se o número de elementos é maior que o valor máximo atual
-//                     max = count;
-//                     maxCell = this; // atualiza o valor máximo e a célula correspondente
-//                 }
-//             });
-//             calc = max * 35;
-//             $("th.td-buttons").css({
-//                 "width": calc + "px",
-//             });
-//             $("td").css({
-//                 "white-space": "nowrap",
-//             });
-//         }
-//     });
-//     $("#list-items-equals-table").DataTable({
-//         "bInfo": false
-//         , "paging": true
-//         , "pagingType": 'simple_numbers'
-//         , "responsive": true
-//         , "lengthChange": false
-//         , "iDisplayLength": 10
-//         , "autoWidth": false,
-//         "dom": '<"top">rt<"bottom"ip> <"clear">'
-//         , "language": {
-//             "url": window.location.origin + "/assets/app/plugins/datatables/Portuguese2.json"
-//         },
-//         "aoColumnDefs": [{
-//             'className': 'text-center',
-//             'aTargets': [0, 3, 4]
-//         },
-//         {
-//             'className': 'td-buttons',
-//             'aTargets': 4
-//         },],
-//         "serverSide": true
-//         , "ajax": {
-//             "url": window.location.origin + "/administrator/post/table/request/list-items-equals"
-//             , "type": "POST"
-//             , "headers": {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                 ,
-//             }
-//             ,
-//         },
-//         "drawCallback": function () {
-//             var max = 0; // valor máximo inicializado em zero
-//             var maxCell; // célula com o valor máximo
-
-//             // Loop pelas células da tabela com a classe "tdbtn"
-//             $("td.td-buttons").each(function () {
-//                 var count = $(this).children().length; // conta o número de elementos dentro da célula
-//                 if (count > max) { // verifica se o número de elementos é maior que o valor máximo atual
-//                     max = count;
-//                     maxCell = this; // atualiza o valor máximo e a célula correspondente
-//                 }
-//             });
-//             calc = max * 35;
-//             $("th.td-buttons").css({
-//                 "width": calc + "px",
-//             });
-//             $("td").css({
-//                 "white-space": "nowrap",
-//             });
-//         }
-//     });
-//     $("#client-requests-view-table").DataTable({
-//         "order": [
-//             [1, 'asc']
-//         ],
-//         "bInfo": false
-//         , "paging": false
-//         , "pagingType": 'simple_numbers'
-//         , "responsive": true
-//         , "lengthChange": false
-//         , "iDisplayLength": 10
-//         , "autoWidth": false,
-//         "dom": '<"top">rt<"bottom"ip> <"clear">'
-//         , "language": {
-//             "url": window.location.origin + "/assets/app/plugins/datatables/Portuguese2.json"
-//         },
-//         "aoColumnDefs": [{
-//             'className': 'text-center',
-//             'aTargets': [0, 2, 3, 4]
-//         },
-//         {
-//             'className': 'td-buttons-table',
-//             'aTargets': 4
-//         },
-//         {
-//             'sortable': false,
-//             'aTargets': [0, 3, 4]
-//         }],
-//         "serverSide": true
-//         , "ajax": {
-//             "url": window.location.origin + "/administrator/post/table/request/client-view"
-//             , "type": "POST"
-//             , "headers": {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                 ,
-//             }
-//             ,
-//         },
-//         "drawCallback": function () {
-//             var max = 0; // valor máximo inicializado em zero
-//             var maxCell; // célula com o valor máximo
-
-//             // Loop pelas células da tabela com a classe "tdbtn"
-//             $("td.td-buttons-table").each(function () {
-//                 var count = $(this).children().length; // conta o número de elementos dentro da célula
-//                 if (count > max) { // verifica se o número de elementos é maior que o valor máximo atual
-//                     max = count;
-//                     maxCell = this; // atualiza o valor máximo e a célula correspondente
-//                 }
-//             });
-//             calc = max * 35;
-//             $("th.td-buttons-table").css({
-//                 "width": calc + "px",
-//             });
-//             $("td").css({
-//                 "white-space": "nowrap",
-//             });
-//         }
-//     });
-//     $("#client-requests-payment-table").DataTable({
-//         "order": [
-//             [1, 'asc']
-//         ],
-//         "bInfo": false
-//         , "paging": false
-//         , "pagingType": 'simple_numbers'
-//         , "responsive": true
-//         , "lengthChange": false
-//         , "iDisplayLength": 10
-//         , "autoWidth": false,
-//         "dom": '<"top">rt<"bottom"ip> <"clear">'
-//         , "language": {
-//             "url": window.location.origin + "/assets/app/plugins/datatables/Portuguese2.json"
-//         },
-//         "aoColumnDefs": [{
-//             'className': 'text-center',
-//             'aTargets': [0, 3, 4, 5]
-//         },
-//         {
-//             'className': 'td-buttons',
-//             'aTargets': 5
-//         },
-//         {
-//             'sortable': false,
-//             'aTargets': [0, 1, 4, 5]
-//         }],
-//         "serverSide": true
-//         , "ajax": {
-//             "url": window.location.origin + "/administrator/post/table/request/client-payment/" + $('#print_id').val()
-//             , "type": "POST"
-//             , "headers": {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                 ,
-//             }
-//             ,
-//         },
-//         "drawCallback": function () {
-//             var max = 0; // valor máximo inicializado em zero
-//             var maxCell; // célula com o valor máximo
-
-//             // Loop pelas células da tabela com a classe "tdbtn"
-//             $("td.td-buttons").each(function () {
-//                 var count = $(this).children().length; // conta o número de elementos dentro da célula
-//                 if (count > max) { // verifica se o número de elementos é maior que o valor máximo atual
-//                     max = count;
-//                     maxCell = this; // atualiza o valor máximo e a célula correspondente
-//                 }
-//             });
-//             calc = max * 35;
-//             $("th.td-buttons").css({
-//                 "width": calc + "px",
-//             });
-//             $("td").css({
-//                 "white-space": "nowrap",
-//             });
-//         }
-//     });
-//     $("#split-payment-table").DataTable({
-//         "order": [
-//             [1, 'asc']
-//         ],
-//         "bInfo": false
-//         , "paging": false
-//         , "responsive": true
-//         , "lengthChange": false
-//         , "iDisplayLength": 10
-//         , "autoWidth": false,
-//         "dom": '<"top">rt<"bottom"ip> <"clear">'
-//         , "language": {
-//             "url": window.location.origin + "/assets/app/plugins/datatables/Portuguese2.json"
-//         },
-//         "aoColumnDefs": [{
-//             'className': 'text-center',
-//             'aTargets': [0, 3]
-//         },
-//         {
-//             'className': 'td-buttons',
-//             'aTargets': 3
-//         },
-//         {
-//             'sortable': false,
-//             'aTargets': [0, 2, 3]
-//         }],
-//         "serverSide": true
-//         , "ajax": {
-//             "url": window.location.origin + "/administrator/post/table/request/split-payment"
-//             , "type": "POST"
-//             , "headers": {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                 ,
-//             }
-//             ,
-//         },
-//         "drawCallback": function () {
-//             var max = 0; // valor máximo inicializado em zero
-//             var maxCell; // célula com o valor máximo
-
-//             // Loop pelas células da tabela com a classe "tdbtn"
-//             $("td.td-buttons").each(function () {
-//                 var count = $(this).children().length; // conta o número de elementos dentro da célula
-//                 if (count > max) { // verifica se o número de elementos é maior que o valor máximo atual
-//                     max = count;
-//                     maxCell = this; // atualiza o valor máximo e a célula correspondente
-//                 }
-//             });
-//             calc = max * 35;
-//             $("th.td-buttons").css({
-//                 "width": calc + "px",
-//             });
-//             $("td").css({
-//                 "white-space": "nowrap",
-//             });
-//         }
-//     })
-// });
-
 //---------------------------------------------------------------
 //   ITEMS E PEDIDOS
 //---------------------------------------------------------------
-// NOVO PDIDO
-function new_order() {
-    $('#new-order').modal('show');
-}
-// ADICIONAR AO CARRINHO
-function add_cart(id) {
+//MODAL ADICIONAR AO CARRINHO
+function add_cart_modal(id) {
     $.ajax({
-        url: window.location.origin + '/get/request/item/additionals/' + id,
+        url: window.location.origin + '/get/item/additionals/' + id,
         type: 'GET',
         dataType: 'text',
         success: function (response) {
+
             var data = JSON.parse(response)
             $('#checkbox-container').empty()
             if (data['items'].length === 0) {
-                $('#checkbox-container').html('<div class="col text-center text-light"><span>Este item não possui adicionais.</span></div>')
+                $('#checkbox-container').html('<div class="col text-center"><span>Este item não possui adicionais.</span></div>')
             } else {
                 $.each(data.items, function (index, checkbox) {
-                    $('#checkbox-container').append('<div class= "border-bottom-list d-flex justify-content-between"><span class="text-light">' + checkbox.name + ' - R$' + money(checkbox.value) + '</span><div class=" col-md-1 custom-control custom-switch "><input type="checkbox" class="custom-control-input" name="' + checkbox.name.toLowerCase().replace(' ', '-') + '-additional" id="' + checkbox.name.toLowerCase().replace(' ', '-') + '-additional" value="' + checkbox.id + '" ' + checkbox.check + '><label class="custom-control-label" for="' + checkbox.name.toLowerCase().replace(' ', '-') + '-additional"></label></div></div><hr>');
+                    $('#checkbox-container').append('<div class= "border-bottom-list d-flex justify-content-between"><span>' + checkbox.name + ' - R$' + money(checkbox.value) + '</span><div class=" col-md-1 custom-control custom-switch "><input type="checkbox" class="custom-control-input" name="' + checkbox.name.toLowerCase().replace(' ', '-') + '-additional" id="' + checkbox.name.toLowerCase().replace(' ', '-') + '-additional" value="' + checkbox.id + '" ' + checkbox.check + '><label class="custom-control-label" for="' + checkbox.name.toLowerCase().replace(' ', '-') + '-additional"></label></div></div><hr>');
                 });
             }
-            $('#observation-item').modal('show');
+            $('.modal').modal('hide');
+            $('#add-cart').modal('show');
         },
-        error: function () {
-
-        }
     });
 }
-// VER ITEMS
+//MODAL VER ITEMS
 function view_item(id) {
     $.get(window.location.origin + "/get/item/show/" + id, function (data) {
         // LIMPANDO CAMPOS
@@ -447,6 +47,9 @@ function view_item(id) {
         $('#item-value').text('')
         $('#item-old-value').text('')
         $('#item-description').text('')
+        $('#pro-detail-button-id').val('')
+        $('#view-item').attr('class', '')
+        $('#view-item').addClass('modal fade')
 
         // PREENCHENDO CAMPOS
         $('#item-img').attr('src', data.photo_url)
@@ -456,11 +59,77 @@ function view_item(id) {
         if (data.value < data.old_value) {
             $('#item-old-value').text('R$ ' + money(data.old_value))
         }
-        $('#item-description').text(data.description)
+        $('#item-description').html(data.description)
+        $('#pro-detail-button-id').val(id)
+        $('#view-item').addClass(id)
         $('#view-item').modal('show')
     });
 }
-// ADICIONAIS E OBSERVAÇÃO
-function additional_show(product_id) {
-
+// ADICIONAR PEDIDO AO CARRINHO
+function add_cart() {
+    var inputs = {};
+    $('#form-add-additional :input').each(function () {
+        if ($(this).prop('checked')) {
+            inputs[$(this).attr('name')] = {
+                name: $(this).attr('name'),
+                id: $(this).val(),
+                check: true
+            }
+        } else {
+            inputs[$(this).attr('name')] = {
+                name: $(this).attr('name'),
+                id: $(this).val(),
+                check: false
+            }
+        }
+    });
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+        , url: window.location.origin + '/put/add/item/cart'
+        , type: 'PUT'
+        , data: {
+            additionals: inputs,
+            obs: $('#obs-item-request').val(),
+            qty: $('#qty-item-request').val(),
+        }
+        , dataType: 'text'
+        , success: function (response) {
+            var responseData = JSON.parse(response)
+            if (!responseData.error) {
+                $('#add-cart').modal('hide');
+                $('#obs-item-request').val('')
+                $('#qty-item-request').val('')
+                let dialog = bootbox.dialog({
+                    message: '<p class="text-center mb-0"><i class="fs-50 text-success fa-solid fa-check fa-beat-fade"></i></p><p class="text-center mb-0">' + responseData.message + '</p>',
+                    size: 'small',
+                    centerVertical: true,
+                    closeButton: false
+                });
+                setTimeout(() => {
+                    dialog.modal('hide');
+                }, 1000);
+            } else {
+                $('#add-cart').modal('hide');
+                $('#obs-item-request').val('')
+                $('#qty-item-request').val('1')
+                let dialog = bootbox.dialog({
+                    message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">' + responseData.message + '</p>',
+                    centerVertical: true,
+                    closeButton: false
+                });
+                setTimeout(() => {
+                    dialog.modal('hide');
+                }, 2000);
+            }
+        }
+        , error: function () {
+            // Toast.fire({
+            //     icon: 'error'
+            //     , title: '&nbsp&nbsp Erro na rede.'
+            // });
+        }
+    });
 }
+
