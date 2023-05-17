@@ -86,19 +86,6 @@ class GoogleLoginController extends Controller
         } catch (\Throwable $th) {
             return ['error' => true, 'message' => $th->getMessage()];
         }
-
-        // dd($user);
-        // "sub" => "105229560683506769316"
-        // "name" => "Eduardo Martins"
-        // "given_name" => "Eduardo"  // user + first_name
-        // "family_name" => "Martins"   // user + last_name
-        // "picture" => "https://lh3.googleusercontent.com/AGNmyxZVj8BqevAwQfsFugTIZRSqh0mHBOvAPNrnK8HGLg=s96-c" // user + photo_url
-        // "email" => "dudu.martins373@gmail.com" // login + login
-        // "email_verified" => true
-        // "locale" => "pt-BR"
-        // "id" => "105229560683506769316" //login +  google_id
-        // "verified_email" => true
-        // "link" => null
     }
 
 }

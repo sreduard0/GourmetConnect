@@ -33,7 +33,9 @@ class AppSettingsController extends Controller
 
         $save_data = AppSettingsModel::all()->first();
         $save_data->establishment_name = $data['establishment_name'];
-        $save_data->logo_url = $fileDir . $imageName;
+        if ($data['establishment_logo']) {
+            $save_data->logo_url = $fileDir . $imageName;
+        }
         $save_data->establishment_legal_name = $data['establishment_legal_name'];
         $save_data->cnpj = str_replace(['/', '.', '-', '_'], '', $data['establishment_cnpj']);
         $save_data->address = $data['establishment_address'];

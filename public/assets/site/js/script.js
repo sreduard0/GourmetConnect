@@ -144,15 +144,20 @@
     }
 
     ///client
-    var $clint = $('.client-slider');
+    var $clint = $('.client-slider .owl-item');
     if ($clint.length > 0) {
         $(document).ready(function () {
+            if ($clint.length == 1) {
+                var items = 1
+            } else {
+                var items = 2
+            }
             $(".client-slider").owlCarousel({
                 loop: true,
                 autoplay: true,
                 autoplayTimeout: 9000,
-                items: 2,
                 nav: true,
+                items: 2,
                 navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
                 responsive: {
                     // breakpoint from 0 up
@@ -168,7 +173,7 @@
                         items: 1,
                     },
                     929: {
-                        items: 2,
+                        items: items,
                     }
                 }
             });

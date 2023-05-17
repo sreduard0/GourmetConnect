@@ -80,7 +80,7 @@ class SaleItemsController extends Controller
      */
     public function show($id)
     {
-        return ItemModel::find(Tools::hash($id, 'decrypt'));
+        return ItemModel::with('like')->find(Tools::hash($id, 'decrypt'));
     }
 
     /**

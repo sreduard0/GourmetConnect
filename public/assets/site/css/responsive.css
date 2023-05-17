@@ -231,6 +231,20 @@
 
 
 @media (max-width: 767px) {
+    .section-heading h2 {
+
+        border-bottom: 1px solid #000;
+        width: 60%;
+        font-size: 22px;
+    }
+
+    .dark-mode .section-heading h2 {
+        border-bottom: 1px solid #fff;
+        width: 60%;
+        font-size: 22px;
+
+    }
+
     .mobile-off-canvas-menu {
         width: 280px;
     }
@@ -424,6 +438,20 @@
 
 
 @media all and (max-width:575px) {
+    .section-heading h2 {
+
+        border-bottom: 1px solid #000;
+        width: 60%;
+        font-size: 22px;
+    }
+
+    .dark-mode .section-heading h2 {
+        border-bottom: 1px solid #fff;
+        width: 60%;
+        font-size: 22px;
+
+    }
+
     .mobile-main-menu .menu-content li a {
         font-size: 16px;
     }
@@ -508,6 +536,20 @@
 }
 
 @media all and (max-width:490px) {
+    .section-heading h2 {
+
+        border-bottom: 1px solid #000;
+        width: 60%;
+        font-size: 22px;
+    }
+
+    .dark-mode .section-heading h2 {
+        border-bottom: 1px solid #fff;
+        width: 60%;
+        font-size: 22px;
+
+    }
+
     .list-area-cart-user ul {
         display: flex;
         justify-content: end;

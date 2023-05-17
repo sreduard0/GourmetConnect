@@ -4,6 +4,7 @@ use App\Http\Controllers\AdditionalItemsController;
 use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\AppViewsController;
 use App\Http\Controllers\AssetsController;
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ControlPanelController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\GoogleLoginController;
@@ -210,6 +211,12 @@ Route::get('contact', [SiteViewsController::class, 'contact'])->name('contact');
 Route::get('get/item/show/{id}', [SaleItemsController::class, 'show']);
 Route::get('get/item/additionals/{id}', [SaleItemsController::class, 'additionals'])->middleware('auth:client');
 Route::put('put/add/item/cart', [SaleItemsController::class, 'create'])->middleware('auth:client');
+
+//-------------------------------
+// SITE/ COMENTARIOS
+//-------------------------------
+// NOVO COMENTARIO
+Route::post('post/create/comment/client', [CommentsController::class, 'create'])->middleware('auth:client');
 
 //-------------------------------
 // SITE/ LIKES

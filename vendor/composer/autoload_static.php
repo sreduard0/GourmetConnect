@@ -536,6 +536,7 @@ class ComposerStaticInitd608c73624d8894de43ee9d660012089
         'App\\Http\\Controllers\\ControlPanelController' => __DIR__ . '/../..' . '/app/Http/Controllers/ControlPanelController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\DeliveryController' => __DIR__ . '/../..' . '/app/Http/Controllers/DeliveryController.php',
+        'App\\Http\\Controllers\\GoogleLoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/GoogleLoginController.php',
         'App\\Http\\Controllers\\ItemsController' => __DIR__ . '/../..' . '/app/Http/Controllers/ItemsController.php',
         'App\\Http\\Controllers\\LikesController' => __DIR__ . '/../..' . '/app/Http/Controllers/LikesController.php',
         'App\\Http\\Controllers\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/LoginController.php',

@@ -12,6 +12,24 @@ function money(value) {
 
     return value;
 }
+
+function increaseCount(a, b) {
+    var input = b.previousElementSibling;
+    var value = parseInt(input.value, 10);
+    value = isNaN(value) ? 0 : value;
+    value++;
+    input.value = value;
+}
+
+function decreaseCount(a, b) {
+    var input = b.nextElementSibling;
+    var value = parseInt(input.value, 10);
+    if (value > 1) {
+        value = isNaN(value) ? 0 : value;
+        value--;
+        input.value = value;
+    }
+}
 //---------------------------------------------------------------
 //   ITEMS E PEDIDOS
 //---------------------------------------------------------------
@@ -49,6 +67,8 @@ function view_item(id) {
         $('#item-description').text('')
         $('#pro-detail-button-id').val('')
         $('#view-item').attr('class', '')
+        $('.detail-rating i').removeClass('far fas')
+        $('.pro-detail-button i').removeClass('far fas')
         $('#view-item').addClass('modal fade')
 
         // PREENCHENDO CAMPOS
@@ -59,6 +79,14 @@ function view_item(id) {
         if (data.value < data.old_value) {
             $('#item-old-value').text('R$ ' + money(data.old_value))
         }
+        if (data.like == null) {
+            $('.detail-rating i').addClass('far')
+            $('.pro-detail-button i').addClass('far')
+        } else {
+            $('.detail-rating i').addClass('fas')
+            $('.pro-detail-button i').addClass('fas')
+        }
+
         $('#item-description').html(data.description)
         $('#pro-detail-button-id').val(id)
         $('#view-item').addClass(id)

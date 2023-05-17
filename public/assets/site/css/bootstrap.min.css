@@ -60771,12 +60771,6 @@ a.text-muted:hover {
     color: #001f3f;
 }
 
-.accent-navy .btn-link:hover,
-.accent-navy a:not(.dropdown-item):not(.btn-app):not(.nav-link):not(.brand-link):not(.page-link):not(.badge):not(.btn):hover,
-.accent-navy .nav-tabs .nav-link:hover {
-    color: black;
-}
-
 .accent-navy .dropdown-item:active, .accent-navy .dropdown-item.active {
     background-color: #001f3f;
     color: #fff;
@@ -64058,12 +64052,6 @@ a.text-muted:hover {
 .dark-mode .accent-navy a:not(.dropdown-item):not(.btn-app):not(.nav-link):not(.brand-link):not(.page-link):not(.badge):not(.btn),
 .dark-mode .accent-navy .nav-tabs .nav-link {
     color: #002c59;
-}
-
-.dark-mode .accent-navy .btn-link:hover,
-.dark-mode .accent-navy a:not(.dropdown-item):not(.btn-app):not(.nav-link):not(.brand-link):not(.page-link):not(.badge):not(.btn):hover,
-.dark-mode .accent-navy .nav-tabs .nav-link:hover {
-    color: #00060c;
 }
 
 .dark-mode .accent-navy .dropdown-item:active, .dark-mode .accent-navy .dropdown-item.active {

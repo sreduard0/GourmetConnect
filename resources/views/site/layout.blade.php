@@ -3,7 +3,7 @@ use App\Models\AppSettingsModel;
 $app_settings = AppSettingsModel::all()->first();
 @endphp
 <!DOCTYPE html>
-<html class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" lang="en">
+<html lang="pt-br">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
@@ -14,9 +14,9 @@ $app_settings = AppSettingsModel::all()->first();
     <title>{{ $app_settings->establishment_name }} - @yield('title')</title>
     <script src="{{ asset('assets/site/js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/bootbox.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('assets/site/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/responsive.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/site/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/fontawesome/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/owl.theme.default.min.css') }}">
@@ -33,7 +33,7 @@ $app_settings = AppSettingsModel::all()->first();
     {{-- /JS/CSS --}}
 
 </head>
-<body class="accent-navy">
+<body class="accent-orange">
     <div class="preloader flex-column justify-content-center align-items-center">
         <img class="animation__shake" src="{{  asset($app_settings->logo_url) }}" height="200" width="200">
         <span class="fs-30"><strong>{{ $app_settings->establishment_name }}</strong> </span>

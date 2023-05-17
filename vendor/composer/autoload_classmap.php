@@ -21,6 +21,7 @@ return array(
     'App\\Http\\Controllers\\ControlPanelController' => $baseDir . '/app/Http/Controllers/ControlPanelController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\DeliveryController' => $baseDir . '/app/Http/Controllers/DeliveryController.php',
+    'App\\Http\\Controllers\\GoogleLoginController' => $baseDir . '/app/Http/Controllers/GoogleLoginController.php',
     'App\\Http\\Controllers\\ItemsController' => $baseDir . '/app/Http/Controllers/ItemsController.php',
     'App\\Http\\Controllers\\LikesController' => $baseDir . '/app/Http/Controllers/LikesController.php',
     'App\\Http\\Controllers\\LoginController' => $baseDir . '/app/Http/Controllers/LoginController.php',
