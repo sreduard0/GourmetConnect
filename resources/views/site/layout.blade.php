@@ -25,8 +25,6 @@ $app_settings = AppSettingsModel::all()->first();
     <link rel="stylesheet" href="{{ asset('assets/site/css/mega-menu.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/css/defult.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/site/js/summernote/summernote-bs4.min.css') }}">
-
-
     {{-- JS/CSS --}}
     @yield('script')
     @yield('css')
@@ -53,7 +51,7 @@ $app_settings = AppSettingsModel::all()->first();
                             <div class="header-menu">
                                 <div class="header-horizontal-menu">
                                     <ul class="menu-content">
-                                        <li><a href="{{ route('home_page') }}">Início </a></li>
+                                        <li class="@yield('home_tab')"><a href="{{ route('home_page') }}">Início </a></li>
                                         <li><a href="#">Cardápio</a></li>
                                         <li><a href="{{ route('agenda') }}">Agenda</a></li>
                                         <li><a href="{{ route('contact') }}">Contato</a></li>
@@ -101,7 +99,7 @@ $app_settings = AppSettingsModel::all()->first();
                         <div class="list-area-cart-user d-flex justify-content-end">
                             <ul>
                                 <li><button class="btn btn-accent"><i class="fas fa-heart"></i></button></li>{{-- ou fas depois de coutido para preencher --}}
-                                <li><a href="javascript:void(0)" class="btn btn-accent" id="cart-btn"><i class="fa-solid fa-cart-shopping"></i> <span>5</span></a></li>
+                                <li><a href="javascript:void(0)" class="btn btn-accent" id="cart-btn"><i class="fa-solid fa-cart-shopping"></i> <span>{{ }}</span></a></li>
                                 <li><button href="javascript:void(0)" onclick="login_btn()" class="d-none d-lg-block btn btn-accent"><i class="fas fa-user"></i></button></li>
                             </ul>
                             <div class="login-form">
@@ -131,11 +129,9 @@ $app_settings = AppSettingsModel::all()->first();
         </div>
         </div>
     </header>
-
     {{-- CONTEUDO --}}
     @yield('content')
     {{-- / CONTEUDO --}}
-
     <!-- footer-area -->
     <footer id="footer" class="footer-area">
         <div class="container">
@@ -148,8 +144,8 @@ $app_settings = AppSettingsModel::all()->first();
                             </div>
                         </div>
                         <div class="ft-description">
-                            <p>Frase slogam</p>
-
+                            <p> <strong>{{ $app_settings->establishment_name }}</strong><br>
+                                - Slogan</p>
                         </div>
                         <div class="scoial-area">
                             <h4>REDES SOCIAIS:</h4>
@@ -231,7 +227,6 @@ $app_settings = AppSettingsModel::all()->first();
     <div class="scroll-area">
         <i class="fa fa-angle-up"></i>
     </div>
-
     {{-- MODALS --}}
     @yield('modal')
     {{-- /MODALS --}}

@@ -4,6 +4,7 @@ use App\Classes\Tools;
 @endphp
 @extends('site.layout')
 @section('title', 'Início')
+@section('home_tab', 'active')
 @section('meta')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection

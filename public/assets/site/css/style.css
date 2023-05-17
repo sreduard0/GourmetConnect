@@ -268,10 +268,148 @@ h4 {
     transition: all 0.3s linear;
 }
 
-.header-horizontal-menu .menu-content li.active>a, .header-horizontal-menu .menu-content li:hover>a {
-    background: #0000000c;
+.header-horizontal-menu .menu-content li.active>a {
+    background: #007bff;
     border-radius: 20px
 }
+
+
+.accent-primary .header-horizontal-menu .menu-content li.active>a {
+    background: #007bff;
+}
+
+.accent-warning .header-horizontal-menu .menu-content li.active>a {
+    background: #ffc107;
+}
+
+.accent-orange .header-horizontal-menu .menu-content li.active>a {
+    background: #fd7e14;
+}
+
+.accent-info .header-horizontal-menu .menu-content li.active>a {
+    background: #17a2b8;
+}
+
+.accent-danger .header-horizontal-menu .menu-content li.active>a {
+    background: #dc3545;
+}
+
+.accent-success .header-horizontal-menu .menu-content li.active>a {
+    background: #28a745;
+}
+
+.accent-indigo .header-horizontal-menu .menu-content li.active>a {
+    background: #6610f2;
+}
+
+.accent-lightblue .header-horizontal-menu .menu-content li.active>a {
+    background: #3c8dbc;
+}
+
+.accent-navy .header-horizontal-menu .menu-content li.active>a {
+    background: #001f3f;
+}
+
+.accent-purple .header-horizontal-menu .menu-content li.active>a {
+    background: #6f42c1;
+}
+
+.accent-fuchsia .header-horizontal-menu .menu-content li.active>a {
+    background: #f012be;
+}
+
+
+.accent-pink .header-horizontal-menu .menu-content li.active>a {
+    background: #e83e8c;
+}
+
+.accent-maroon .header-horizontal-menu .menu-content li.active>a {
+    background: #d81b60;
+}
+
+.accent-lime .header-horizontal-menu .menu-content li.active>a {
+    background: #01ff70;
+}
+
+.accent-teal .header-horizontal-menu .menu-content li.active>a {
+    background: #20c997;
+}
+
+.accent-olive .header-horizontal-menu .menu-content li.active>a {
+    background: #3d9970;
+}
+
+.header-horizontal-menu .menu-content li:hover>a {
+    background: #00000023;
+    border-radius: 20px
+}
+
+
+.accent-primary .header-horizontal-menu .menu-content li:hover>a {
+    background: #007bff23;
+}
+
+.accent-warning .header-horizontal-menu .menu-content li:hover>a {
+    background: #ffc10723;
+}
+
+.accent-orange .header-horizontal-menu .menu-content li:hover>a {
+    background: #fd7e1423;
+}
+
+.accent-info .header-horizontal-menu .menu-content li:hover>a {
+    background: #17a2b823;
+}
+
+.accent-danger .header-horizontal-menu .menu-content li:hover>a {
+    background: #dc354523;
+}
+
+.accent-success .header-horizontal-menu .menu-content li:hover>a {
+    background: #28a74523;
+}
+
+.accent-indigo .header-horizontal-menu .menu-content li:hover>a {
+    background: #6610f223;
+}
+
+.accent-lightblue .header-horizontal-menu .menu-content li:hover>a {
+    background: #3c8dbc23;
+}
+
+.accent-navy .header-horizontal-menu .menu-content li:hover>a {
+    background: #001f3f23;
+}
+
+.accent-purple .header-horizontal-menu .menu-content li:hover>a {
+    background: #6f42c123;
+}
+
+.accent-fuchsia .header-horizontal-menu .menu-content li:hover>a {
+    background: #f012be23;
+}
+
+
+.accent-pink .header-horizontal-menu .menu-content li:hover>a {
+    background: #e83e8c23;
+}
+
+.accent-maroon .header-horizontal-menu .menu-content li:hover>a {
+    background: #d81b6023;
+}
+
+.accent-lime .header-horizontal-menu .menu-content li:hover>a {
+    background: #01ff7023;
+}
+
+.accent-teal .header-horizontal-menu .menu-content li:hover>a {
+    background: #20c99723;
+}
+
+.accent-olive .header-horizontal-menu .menu-content li:hover>a {
+    background: #3d997023;
+}
+
 
 .header-horizontal-menu .menu-content li .sub-menu {
     box-shadow: 0px 2px 8px 0.56px rgba(0, 0, 0, 0.1);
