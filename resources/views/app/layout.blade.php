@@ -155,7 +155,7 @@ $app_settings = AppSettingsModel::all()->first();
                             <a href="#" class="rounded-pill nav-link @yield('users')@yield('app-settings')@yield('site-settings')">
                                 <i class="nav-icon fa-duotone fa-gears"></i>
                                 <p>
-                                    Configurações
+                                    Administrador
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>

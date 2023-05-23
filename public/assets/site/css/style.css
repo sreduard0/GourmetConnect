@@ -81,7 +81,7 @@ h4 {
 }
 
 .section-padding {
-    padding: 80px 0px;
+    padding: 65px 0px;
 }
 
 /*loader*/
@@ -906,6 +906,21 @@ h4 {
     width: 300px;
     max-width: 100%;
     position: absolute;
+    background: #f7f7f7;
+    height: auto;
+    z-index: 999;
+    display: none;
+    top: 98%;
+    transition: all .3s ease;
+    box-sizing: border-box;
+    border-radius: 20px;
+
+}
+
+.dark-mode .login-form {
+    width: 300px;
+    max-width: 100%;
+    position: absolute;
     background: #333230;
     height: auto;
     z-index: 999;
@@ -934,20 +949,95 @@ h4 {
 }
 
 .form-container .form-icon {
-    color: #E6304F;
     font-size: 55px;
     justify-content: center;
     line-height: 100px;
     margin: 0 auto 15px;
     border-radius: 100%;
-    box-shadow: 0px 0px 16px 10px #151414;
+    box-shadow: 0px 0px 16px 2px #151414;
     display: grid;
     width: 130px;
     height: 129px;
-    border: 3px solid red;
+    border: 3px solid #007bff;
+}
+
+.accent-primary .form-container .form-icon {
+    border: 3px solid #007bff;
+
+}
+
+.accent-warning .form-container .form-icon {
+    border: 3px solid #ffc107;
+}
+
+.accent-orange .form-container .form-icon {
+    border: 3px solid #fd7e14;
+}
+
+.accent-info .form-container .form-icon {
+    border: 3px solid #17a2b8;
+}
+
+.accent-danger .form-container .form-icon {
+    border: 3px solid #dc3545;
+}
+
+.accent-success .form-container .form-icon {
+    border: 3px solid #28a745;
+}
+
+.accent-indigo .form-container .form-icon {
+    border: 3px solid #6610f2;
+}
+
+.accent-lightblue .form-container .form-icon {
+    border: 3px solid #3c8dbc;
+}
+
+.accent-navy .form-container .form-icon {
+    border: 3px solid #001f3f;
+}
+
+.accent-purple .form-container .form-icon {
+    border: 3px solid #6f42c1;
+}
+
+.accent-fuchsia .form-container .form-icon {
+    border: 3px solid #f012be;
+}
+
+
+.accent-pink .form-container .form-icon {
+    border: 3px solid #e83e8c;
+}
+
+.accent-maroon .form-container .form-icon {
+    border: 3px solid #d81b60;
+}
+
+.accent-lime .form-container .form-icon {
+    border: 3px solid #01ff70;
+}
+
+.accent-teal .form-container .form-icon {
+    border: 3px solid #20c997;
+}
+
+.accent-olive .form-container .form-icon {
+    border: 3px solid #3d9970;
 }
 
 .form-container .title {
+    color: #2f2f2f;
+    font-size: 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    margin: 0 0 20px;
+}
+
+.dark-mode .form-container .title {
     color: #aeadad;
     font-size: 25px;
     font-weight: 700;
@@ -3542,11 +3632,6 @@ h4 {
     margin-bottom: 2.125rem;
 }
 
-.table> :not(:last-child)> :last-child>* {
-    border-bottom-color: currentColor;
-    color: #dfdbdb;
-    text-align: center;
-}
 
 /*tabs*/
 
@@ -3758,15 +3843,6 @@ display .tabs-table table tbody tr td {
     background: none;
     border: 1px solid gray;
     display: block;
-}
-
-.table-responsive table tbody tr td {
-    font-weight: 501;
-    text-transform: capitalize;
-    text-align: center;
-    border-bottom: 1px solid gray;
-    color: white;
-
 }
 
 .product_name a {
@@ -5128,4 +5204,21 @@ input::-moz-focus-inner, input::-moz-focus-outer {
 /*gallery-area*/
 .gallery-area {
     background: #2F2E2E;
+}
+
+
+.load-table-custom {
+    position: absolute;
+    width: 96%;
+    height: 100%;
+    margin-top: -26px;
+    text-align: center;
+    padding: 1em 0;
+    background: #fff;
+    z-index: 1;
+}
+
+.load-table-custom i {
+    top: 35%;
+    height: 100%;
 }

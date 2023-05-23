@@ -69,6 +69,7 @@ function view_item(id) {
         $('#view-item').attr('class', '')
         $('.detail-rating i').removeClass('far fas')
         $('.pro-detail-button i').removeClass('far fas')
+        $('.modal').modal('hide')
         $('#view-item').addClass('modal fade')
 
         // PREENCHENDO CAMPOS
@@ -128,7 +129,8 @@ function add_cart() {
             if (!responseData.error) {
                 $('#add-cart').modal('hide');
                 $('#obs-item-request').val('')
-                $('#qty-item-request').val('')
+                $('#qty-item-request').val(1)
+                cart_count()
                 let dialog = bootbox.dialog({
                     message: '<p class="text-center mb-0"><i class="fs-50 text-success fa-solid fa-check fa-beat-fade"></i></p><p class="text-center mb-0">' + responseData.message + '</p>',
                     size: 'small',

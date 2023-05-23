@@ -1,7 +1,7 @@
 {
     "emptyTable": "Não foi encontrado nenhum item",
     "loadingRecords": "Carregando...",
-    "processing": "Processando...",
+    "processing": "<i class='fs-60 fa-duotone fa-burger-soda fa-flip'></i>",
     "lengthMenu": "Mostrar _MENU_ items",
     "zeroRecords": "Não foram encontrados resultados",
     "search": "EB/ Placa:",

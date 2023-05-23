@@ -42,7 +42,6 @@
                             <th width="130px">Tipo</th>
                             <th width="100px">Valor</th>
                             <th>Ações</th>
-
                         </tr>
                     </thead>
                 </table>
@@ -53,12 +52,10 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between">
-
                     <h3 class="card-title">TIPO</h3>
                     @can('create_type_menu')
                     <button class="btn btn-accent btn-sm rounded-pill btnres" onclick="modal_new_type_item()"><strong>NOVO TIPO</strong></button>
                     @endcan
-
                 </div>
             </div>
             <div class="card-body">

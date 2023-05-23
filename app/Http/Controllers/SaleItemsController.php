@@ -27,22 +27,13 @@ class SaleItemsController extends Controller
     {
         $data = $request->all();
         try {
-            $delivery_order = RequestsModel::select('id')->where('client_id', auth()->id())->where('delivery', 1)->first();
-            if (!$delivery_order) {
-                $delivery_order = new RequestsModel();
-                $delivery_order->delivery = 0;
-                $delivery_order->client_name = strtoupper(session('user')['name']);
-                $delivery_order->client_id = auth()->id();
-                $delivery_order->status = 1;
-                $delivery_order->save();
-            }
-            $delivery_order = RequestsModel::select('id')->where('client_id', auth()->id())->where('delivery', 1)->first();
+            $delivery_order = RequestsModel::select('id')->where('client_id', auth()->guard('client')->id())->where('status', '<=', 3)->where('delivery', 1)->first();
             if (!$delivery_order) {
                 $delivery_order = new RequestsModel();
                 $delivery_order->delivery = 1;
                 $delivery_order->client_name = strtoupper(session('user')['name']);
-                $delivery_order->client_id = auth()->id();
-                $delivery_order->status = 1;
+                $delivery_order->client_id = auth()->guard('client')->id();
+                $delivery_order->status = 0;
                 $delivery_order->save();
             }
 
@@ -124,6 +115,17 @@ class SaleItemsController extends Controller
             }
         }
         return $additionalItems;
+    }
+
+    // CONTAGEM DE ITENS NO CARRINHO
+    public function cart_count()
+    {
+        $order = RequestsModel::where('client_id', auth()->guard('client')->id())->where('status', '<=', 3)->where('delivery', 1)->first();
+        if ($order) {
+            return RequestsItemsModel::where('request_id', $order->id)->where('status', 1)->count();
+        } else {
+            return false;
+        }
     }
 
 }

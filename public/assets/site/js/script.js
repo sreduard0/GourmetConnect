@@ -68,10 +68,10 @@
                 navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
                 responsive: {
                     0: {
-                        items: 1,
+                        items: 3,
                     },
                     430: {
-                        items: 2,
+                        items: 3,
                     },
                     767: {
                         items: 3,
@@ -97,10 +97,10 @@
                 navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
                 responsive: {
                     0: {
-                        items: 1,
+                        items: 3,
                     },
                     430: {
-                        items: 2,
+                        items: 3,
                     },
                     767: {
                         items: 3,
@@ -127,10 +127,10 @@
                 navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>'],
                 responsive: {
                     0: {
-                        items: 1,
+                        items: 3,
                     },
                     430: {
-                        items: 2,
+                        items: 3,
                     },
                     767: {
                         items: 3,
@@ -179,7 +179,6 @@
             });
         });
     }
-
 
     //blog
     var $news = $('#news-slider');
@@ -413,3 +412,47 @@ function login_btn() {
         active = true
     }
 }
+
+function cart_count() {
+    $.get(window.location.origin + "/cart/item/count", function (data) {
+        if (data > 0) {
+            $('#cart-count').html('<span>' + data + '</span>')
+        } else {
+            $('#cart-count').html('')
+        }
+    });
+
+}
+
+
+
+//-------------------------------
+// SELEÇÃO DA TAB
+// ------------------------------
+// AUTO SELECIONAR ABA VIA URL
+$(function () {
+    var url = window.location.href;
+    var element_id = $('#' + url.split('#')[1]);
+    if (element_id.length) {
+        var headerHeight = document.querySelector('header').offsetHeight;
+        $('html, body').stop().animate({
+            scrollTop: element_id.offset().top - headerHeight
+        }, 1000);
+    }
+
+});
+
+$(document).ready(function () {
+    $('a[href^="#"]').on('click', function (event) {
+        event.preventDefault();
+
+        var target = $(this.getAttribute('href'));
+
+        if (target.length) {
+            var headerHeight = document.querySelector('header').offsetHeight;
+            $('html, body').stop().animate({
+                scrollTop: target.offset().top - headerHeight
+            }, 1000);
+        }
+    });
+});

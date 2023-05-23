@@ -96,8 +96,6 @@
                         <button type="button" onclick='print_request()' class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
                     </div>
                     @endcan
-
-
                 </div>
 
             </div>

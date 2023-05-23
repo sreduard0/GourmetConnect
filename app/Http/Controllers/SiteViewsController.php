@@ -21,8 +21,20 @@ class SiteViewsController extends Controller
             'more_requests' => RequestsItemsModel::select('product_id', DB::raw('COUNT(product_id) as total_quantity'))->with('product')->whereMonth('updated_at', date('m'))->whereYear('updated_at', date('Y'))->where('status', 4)
                 ->groupBy('product_id')->orderBy('total_quantity', 'desc')->take(10)->get(),
             'comments' => CommentsModel::with('client')->take(15)->latest()->get(),
+
         ];
         return view('site.home-page', $data);
+    }
+    public function menu()
+    {
+        $data = [
+            'items' => ItemModel::with('like')->take(15)->latest()->orderBy('type_id', 'asc')->get(),
+            'promo' => ItemModel::with('like')->whereColumn('old_value', '>', 'value')->latest()->take(15)->orderBy('type_id', 'asc')->get(),
+            'types' => TypeItemModel::latest()->get(),
+            'more_requests' => RequestsItemsModel::select('product_id', DB::raw('COUNT(product_id) as total_quantity'))->with('product')->whereMonth('updated_at', date('m'))->whereYear('updated_at', date('Y'))->where('status', 4)
+                ->groupBy('product_id')->orderBy('total_quantity', 'desc')->take(10)->get(),
+        ];
+        return view('site.menu', $data);
     }
     public function about()
     {

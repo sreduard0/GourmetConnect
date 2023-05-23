@@ -201,6 +201,7 @@ Route::get('auth/google/callback', [GoogleLoginController::class, 'callback']);
 // SITE/ VIEWS
 //-------------------------------
 Route::get('/', [SiteViewsController::class, 'home_page'])->name('home_page');
+Route::get('menu', [SiteViewsController::class, 'menu'])->name('menu');
 Route::get('about', [SiteViewsController::class, 'about'])->name('about');
 Route::get('agenda', [SiteViewsController::class, 'agenda'])->name('agenda');
 Route::get('contact', [SiteViewsController::class, 'contact'])->name('contact');
@@ -221,7 +222,16 @@ Route::post('post/create/comment/client', [CommentsController::class, 'create'])
 //-------------------------------
 // SITE/ LIKES
 //-------------------------------
-Route::get('get/items/like/{item}', [LikesController::class, 'like_item'])->middleware('auth:client');
+// CURTIR ITEM
+Route::get('get/item/like/{item}', [LikesController::class, 'like_item'])->middleware('auth:client');
+// TABELA DE CURTIDOS
+Route::post('post/table/item/like', [LikesController::class, 'table'])->middleware('auth:client');
+
+//-------------------------------
+// SITE/ CARRINHO
+//-------------------------------
+// CONTAR ITENS DO CARRINHO
+Route::get('cart/item/count', [SaleItemsController::class, 'cart_count'])->middleware('auth:client');
 
 //-------------------------------
 // SITE/ PEDIDOS
@@ -342,3 +352,6 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 //     // }
 
 // });
+Route::get('teste', function () {
+
+});
