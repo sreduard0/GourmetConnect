@@ -5,9 +5,6 @@ use App\Classes\Tools;
 @extends('site.layout')
 @section('title', 'Início')
 @section('home_tab', 'active')
-@section('meta')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-@endsection
 @section('script')
 @auth('client')
 <script src="{{ asset('assets/site/js/comments.js') }}"></script>
@@ -94,7 +91,8 @@ use App\Classes\Tools;
                                     <img src="{{ asset($type->photo_url) }}">
                                     <div class="box-content">
                                         <ul class="icon">
-                                            <li><a href="{{ route('menu').'#'.strtolower($type->name) }}-tab">{{ $type->name }}</a></li>
+                                            <li><a href="{{ route('menu_client').'#'.strtolower($type->name) }}-tab">{{ $type->name }}</a></li>
+
                                         </ul>
                                     </div>
                                     <div class="cat-title-content">
@@ -172,6 +170,7 @@ use App\Classes\Tools;
         </div>
     </div>
 </section>
+@if (count($promo)>0)
 <!-- promoções -->
 <section class="promo-area section-padding">
     <div class="container">
@@ -230,6 +229,8 @@ use App\Classes\Tools;
         </div>
     </div>
 </section>
+@endif
+@if (count($more_requests)>0)
 <!-- mais pedidos -->
 <section class="product-area section-padding">
     <div class="container">
@@ -243,7 +244,7 @@ use App\Classes\Tools;
         <div class="row pt-40">
             <div class="col-md-12">
                 {{-- MAIS PEDIDOS --}}
-                @if (count($more_requests)>0)
+
                 <div class="product-slider owl-carousel owl-theme owl-loaded owl-drag">
                     <div class="owl-stage-outer">
                         <div class="owl-stage" style="transform: translate3d(-2612px, 0px, 0px); transition: all 0.25s ease 0s; width: 4571px;">
@@ -285,16 +286,13 @@ use App\Classes\Tools;
                         </div>
                     </div>
                 </div>
-                @else
-                <div class="p-l-50 row">
-                    <span class="fs-18">Ainda não há item vendidos.</span>
-                </div>
-                @endif
+
                 {{-- MAIS PEDIDOS --}}
             </div>
         </div>
     </div>
 </section>
+@endif
 <!-- review-area -->
 <section class="client-area section-padding">
     <div class="container">

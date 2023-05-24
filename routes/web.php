@@ -201,7 +201,8 @@ Route::get('auth/google/callback', [GoogleLoginController::class, 'callback']);
 // SITE/ VIEWS
 //-------------------------------
 Route::get('/', [SiteViewsController::class, 'home_page'])->name('home_page');
-Route::get('menu', [SiteViewsController::class, 'menu'])->name('menu');
+Route::get('menu', [SiteViewsController::class, 'menu'])->name('menu_client');
+Route::get('cart', [SiteViewsController::class, 'cart'])->name('cart')->middleware('auth:client');
 Route::get('about', [SiteViewsController::class, 'about'])->name('about');
 Route::get('agenda', [SiteViewsController::class, 'agenda'])->name('agenda');
 Route::get('contact', [SiteViewsController::class, 'contact'])->name('contact');
@@ -232,6 +233,7 @@ Route::post('post/table/item/like', [LikesController::class, 'table'])->middlewa
 //-------------------------------
 // CONTAR ITENS DO CARRINHO
 Route::get('cart/item/count', [SaleItemsController::class, 'cart_count'])->middleware('auth:client');
+Route::post('post/table/cart', [SaleItemsController::class, 'cart_table'])->middleware('auth:client');
 
 //-------------------------------
 // SITE/ PEDIDOS

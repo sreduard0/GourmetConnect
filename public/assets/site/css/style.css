@@ -230,7 +230,7 @@ h4 {
 .header-top {
     background: #f4f4f4;
     padding: 5px 0px;
-    box-shadow: #000 0px 3px 42px 0px;
+    box-shadow: #0000005e 0px 3px 20px 0px;
 }
 
 .dark-mode .header-top {
@@ -1282,7 +1282,7 @@ h4 {
     position: relative;
     z-index: 999;
     transition: all 1s ease 0s;
-    padding: 13px 40px;
+    padding: 13px 30px;
     border-radius: 2px;
     border: 1px solid #007bff;
 }
@@ -3855,6 +3855,10 @@ display .tabs-table table tbody tr td {
 
 
 .cart-page {
+    background: #fff;
+}
+
+.dark-mode .cart-page {
     background: #282828;
 }
 
@@ -3918,9 +3922,6 @@ display .tabs-table table tbody tr td {
     background: #282828;
 }
 
-.card-header {
-    border-bottom: 1px solid gray;
-}
 
 /*about-page*/
 .about-page {

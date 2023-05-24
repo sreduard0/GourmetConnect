@@ -10,6 +10,7 @@ $app_settings = AppSettingsModel::all()->first();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @yield('meta')
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset($app_settings->logo_url) }}" type="image/x-icon">
     <title>{{ $app_settings->establishment_name }} - @yield('title')</title>
     <script src="{{ asset('assets/site/js/jquery-3.5.1.min.js') }}"></script>
@@ -65,7 +66,7 @@ $app_settings = AppSettingsModel::all()->first();
                                 <div class="header-horizontal-menu">
                                     <ul class="menu-content">
                                         <li class="@yield('home_tab')"><a href="{{ route('home_page') }}">Início </a></li>
-                                        <li class="@yield('menu_tab')"><a href="{{ route('menu') }}">Cardápio</a></li>
+                                        <li class="@yield('menu_tab')"><a href="{{ route('menu_client') }}">Cardápio</a></li>
                                         <li><a href="{{ route('agenda') }}">Agenda</a></li>
                                         <li><a href="{{ route('contact') }}">Contato</a></li>
                                         <li><a href="{{ route('about') }}">Sobre nós</a></li>
@@ -109,7 +110,7 @@ $app_settings = AppSettingsModel::all()->first();
                         <div class="list-area-cart-user d-flex justify-content-end">
                             <ul>
                                 <li><button class="btn btn-accent" onclick="like_items()"><i class="fas fa-heart"></i></button></li>
-                                <li><a href="javascript:void(0)" class="btn btn-accent" id="cart-btn"><i class="fa-solid fa-cart-shopping"></i>
+                                <li><a href="{{ route('cart') }}" class="btn btn-accent" id="cart-btn"><i class="fa-solid fa-cart-shopping"></i>
                                         <div id="cart-count"></div>
                                     </a></li>
                                 <li><button href="javascript:void(0)" onclick="login_btn()" class="d-none d-lg-block btn btn-accent"><i class="fas fa-user"></i></button></li>

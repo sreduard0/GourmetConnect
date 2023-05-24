@@ -204,7 +204,6 @@
                             </table>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="modal-footer" id="modal-footer" style="display:none">

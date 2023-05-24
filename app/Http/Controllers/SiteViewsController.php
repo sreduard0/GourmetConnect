@@ -36,6 +36,13 @@ class SiteViewsController extends Controller
         ];
         return view('site.menu', $data);
     }
+    public function cart()
+    {
+        $data = [
+            'items' => ItemModel::with('like')->take(15)->latest()->orderBy('type_id', 'asc')->get(),
+        ];
+        return view('site.cart', $data);
+    }
     public function about()
     {
         return view('site.about');

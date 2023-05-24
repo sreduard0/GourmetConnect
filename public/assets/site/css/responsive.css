@@ -438,6 +438,18 @@
 
 
 @media all and (max-width:575px) {
+    .product-grid .title {
+        font-size: 12px;
+    }
+
+    .product-grid .price {
+        font-size: 11px;
+    }
+
+    .product-grid .price span {
+        font-size: 11px;
+    }
+
     .section-heading h2 {
 
         border-bottom: 1px solid #000;
@@ -536,6 +548,18 @@
 }
 
 @media all and (max-width:490px) {
+    .product-grid .title {
+        font-size: 12px;
+    }
+
+    .product-grid .price {
+        font-size: 11px;
+    }
+
+    .product-grid .price span {
+        font-size: 11px;
+    }
+
     .section-heading h2 {
 
         border-bottom: 1px solid #000;

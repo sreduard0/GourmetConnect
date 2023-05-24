@@ -3,60 +3,80 @@ use App\Classes\Calculate;
 use App\Classes\Tools;
 @endphp
 @extends('site.layout')
-@section('title', 'Cardápio')
-@section('menu_tab', 'active')
+@section('title', 'Carrinho')
 @section('content')
-<!-- categorys -->
-<section class="category-area section-padding m-t-100">
+<!-- cart-start -->
+<div class="m-t-70 cart-page section-padding">
     <div class="container">
-        <div class="row pt-40">
-            <div class="col-md-12">
-                <div class="category-slider owl-carousel owl-theme owl-loaded owl-drag">
-                    <div class="owl-stage-outer">
-                        <div class="owl-stage">
-                            {{-- CATEGORIA --}}
-                            @foreach ($types as $type)
-                            <div class="owl-item">
-                                <div class="shop-box category-box">
-                                    <img src="{{ asset($type->photo_url) }}">
-                                    <div class="box-content">
-                                        <ul class="icon">
-                                            <li><a href="#{{ strtolower($type->name) }}-tab">{{ $type->name }}</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="cat-title-content">
-                                        <span class="cat-title">{{ $type->name }}</span>
-                                    </div>
-                                </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="pb-20 float-right">
+                    <button type="submit" class="btn btn-accent rounded-pill ">Limpar carrinho</button>
+                </div>
+                <ul class="nav nav-pills">
+                    <li class="nav-item" onclick="cart_table(false)"><a class="requests nav-link rounded-pill active" href="#requests" data-toggle="tab">Pedidos</a></li>
+                    <li class="nav-item" onclick="cart_table(true)"><a class="pending nav-link rounded-pill" href="#pending" data-toggle="tab">Pendentes</a></li>
+                </ul>
+
+                <table class="table table-striped" id="client-cart-table">
+                    <thead>
+                        <tr>
+                            <th width="30px">Cod.</th>
+                            <th width="40px">Foto</th>
+                            <th>Item</th>
+                            <th width="50px">Qtd.</th>
+                            <th width="100px">Valor</th>
+                            <th width="30px">Ver</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div class="tab-content">
+                    <div class="requests tab-panel" id="requests">
+                        <div class="col-md-5 m-t-10">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th style="width:50%">TOTAL:</th>
+                                            <td class="value-total"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            @endforeach
-                            {{-- CATEGORIA --}}
                         </div>
                     </div>
+
+                    <div class="pending tab-pane" id="pending">
+                        <input type="hidden" id="print_id">
+                        <button type="button" onclick='print_request()' class="btn btn-accent rounded-pill float-right m-t-10"><strong>IMPRIMIR PEDIDO</strong></button>
+                    </div>
+
+                </div>
+                <div class="pt-50 float-right">
+                    <button type="submit" class="btn btn rounded-pill">Enviar pedido</button>
                 </div>
             </div>
         </div>
     </div>
-</section>
-@foreach ($types as $type)
+</div>
 <!-- product -->
-<section id="{{ strtolower($type->name) }}-tab" class="product-area section-padding">
+<section class="product-area section-padding">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-heading">
-                    <h2>{{ $type->name }}</h2>
+                    <h2>PEÇA TAMBÉM</h2>
                 </div>
             </div>
         </div>
         <div class="row pt-40">
             <div class="col-md-12">
-                <div class="product-slider owl-carousel owl-theme owl-loaded owl-drag">
+                <div class="suggestion-slider owl-carousel owl-theme owl-loaded owl-drag">
                     <div class="owl-stage-outer">
                         <div class="owl-stage">
                             {{-- ITEMS --}}
                             @foreach ($items as $item)
-                            @if ($type->id == $item->type_id)
                             <div class="owl-item {{ Tools::hash($item->id,'encrypt') }}">
                                 <div class="product-grid">
                                     <div class="product-image">
@@ -91,7 +111,6 @@ use App\Classes\Tools;
                                     </div>
                                 </div>
                             </div>
-                            @endif
                             @endforeach
                             {{-- ITEMS --}}
                         </div>
@@ -102,5 +121,10 @@ use App\Classes\Tools;
         </div>
     </div>
 </section>
-@endforeach
+@endsection
+@section('model')
+
+@endsection
+@section('plugins')
+<script src="{{ asset('assets/site/js/cart.js') }}"></script>
 @endsection
