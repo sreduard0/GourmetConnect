@@ -438,6 +438,10 @@
 
 
 @media all and (max-width:575px) {
+    body {
+        font-size: 12px;
+    }
+
     .product-grid .title {
         font-size: 12px;
     }
@@ -548,6 +552,10 @@
 }
 
 @media all and (max-width:490px) {
+    body {
+        font-size: 12px;
+    }
+
     .product-grid .title {
         font-size: 12px;
     }

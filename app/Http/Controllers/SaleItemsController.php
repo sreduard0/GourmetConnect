@@ -134,17 +134,26 @@ class SaleItemsController extends Controller
     {
         $requestData = $request->all();
         $order = RequestsModel::where('client_id', auth()->guard('client')->id())->where('delivery', 1)->where('status', '<', 5)->first();
-        if ($order) {
-            $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
-                ->where('request_id', $order->id)
-                ->where('status', 1)
-                ->groupBy('product_id')
-                ->orderBy('count', $requestData['order'][0]['dir'])
-                ->get();
-            $rows = count($items);
-        } else {
-            $items = array();
-            $rows = 0;
+        switch ($requestData['columns'][1]['search']['value']) {
+            case 'value':
+                # code...
+                break;
+
+            default:
+                if ($order) {
+                    $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
+                        ->where('request_id', $order->id)
+                        ->where('status', 1)
+                        ->groupBy('product_id')
+                        ->orderBy('count', $requestData['order'][0]['dir'])
+                        ->get();
+                    $rows = count($items);
+                } else {
+                    $items = array();
+                    $rows = 0;
+                }
+
+                break;
         }
         $filtered = count($items);
         $dados = array();

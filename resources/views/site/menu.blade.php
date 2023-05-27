@@ -5,6 +5,9 @@ use App\Classes\Tools;
 @extends('site.layout')
 @section('title', 'Cardápio')
 @section('menu_tab', 'active')
+@section('plugins')
+<script src="{{ asset('assets/site/js/menu.js') }}"></script>
+@endsection
 @section('content')
 <!-- categorys -->
 <section class="category-area section-padding m-t-100">

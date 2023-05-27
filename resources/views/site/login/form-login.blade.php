@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <title>{{ $app_settings->establishment_name }} - Login</title>
     <meta charset="UTF-8">

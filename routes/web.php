@@ -21,6 +21,8 @@ use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UsersController;
+use App\Models\LoginClientModel;
+use App\Models\UsersClientModel;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
@@ -190,7 +192,7 @@ Route::middleware('auth')->group(function () {
 //  SITE/ LOGIN
 //----------------------------------------------
 // FORM LOGIN
-Route::get('login', [SiteViewsController::class, 'form_login'])->name('site_login_form');
+Route::get('login', [SiteViewsController::class, 'form_login'])->name('site_login_form')->middleware('ifAuth');
 Route::get('logout', [LoginController::class, 'logout_client'])->name('logout_client');
 
 // LOGIN COM GOOGLE
@@ -355,5 +357,19 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
 
 // });
 Route::get('teste', function () {
+    $login = LoginClientModel::where('google_id', '105229560683506769316')->first();
+    if ($login) {
+        auth()->guard('client')->login($login);
+        $user = UsersClientModel::where('login_id', auth()->guard('client')->id())->first();
+        session()->put([
+            'user' => [
+                'name' => $user->first_name,
+                'photo' => $user->photo_url,
+                'email' => $user->email,
+            ],
+        ]);
+
+        return redirect()->route('home_page');
+    }
 
 });

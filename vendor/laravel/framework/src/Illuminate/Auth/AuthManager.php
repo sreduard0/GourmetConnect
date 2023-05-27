@@ -54,7 +54,7 @@ class AuthManager implements FactoryContract
     {
         $this->app = $app;
 
-        $this->userResolver = fn ($guard = null) => $this->guard($guard)->user();
+        $this->userResolver = fn($guard = null) => $this->guard($guard)->user();
     }
 
     /**
@@ -90,7 +90,7 @@ class AuthManager implements FactoryContract
             return $this->callCustomCreator($name, $config);
         }
 
-        $driverMethod = 'create'.ucfirst($config['driver']).'Driver';
+        $driverMethod = 'create' . ucfirst($config['driver']) . 'Driver';
 
         if (method_exists($this, $driverMethod)) {
             return $this->{$driverMethod}($name, $config);
@@ -210,7 +210,7 @@ class AuthManager implements FactoryContract
 
         $this->setDefaultDriver($name);
 
-        $this->userResolver = fn ($name = null) => $this->guard($name)->user();
+        $this->userResolver = fn($name = null) => $this->guard($name)->user();
     }
 
     /**
