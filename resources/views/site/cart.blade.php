@@ -13,7 +13,7 @@ use App\Classes\Tools;
                 <div class="d-flex justify-content-between">
                     <h5 class="title p-b-20"><i class="fa-duotone fa-cart-shopping"></i> CARRINHO</h5>
                     <div class="col">
-                        <button type="submit" class="btn btn-sm btn-danger rounded-pill float-right"><strong>LIMPAR CARRINHO</strong></button>
+                        <button id="clear-cart" class="btn btn-sm btn-danger rounded-pill float-right"><strong>LIMPAR CARRINHO</strong></button>
                     </div>
                 </div>
                 <table class="table table-striped" id="client-cart-table">
@@ -41,31 +41,31 @@ use App\Classes\Tools;
                     </div>
                 </div>
                 <div class="col">
-                    <button type="submit" class="btn btn-accent rounded-pill float-right"><strong>ENVIAR PEDIDO</strong></button>
+                    <button id="set_address" class="btn btn-accent rounded-pill float-right"><strong>FAZER PEDIDO</strong></button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- cart -->
+{{-- PEDIDOS PENDENTES/ANDAMENTOO/FINALIZADO  --}}
 <div class="cart-page m-t-20">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 p-b-30">
                 <h5 class="title p-b-20"><i class="fa-duotone fa-burger-soda"></i> PEDIDOS</h5>
                 <ul class="nav nav-pills table-responsive">
-                    <li class="nav-item" onclick="cart_table('pending')"><a class="pending nav-link rounded-pill" href="#pending" data-toggle="tab">Pendentes</a></li>
-                    <li class="nav-item" onclick="cart_table('production')"><a class="pending nav-link rounded-pill" href="#production" data-toggle="tab">Em andamento</a></li>
-                    <li class="nav-item" onclick="cart_table('send-delivery')"><a class="pending nav-link rounded-pill" href="#send-delivery" data-toggle="tab">Saiu para entrega</a></li>
+                    <li class="nav-item p-r-5" onclick="orders_table('pending')"><a class="nav-link rounded-pill" id="pending" data-toggle="tab">Pendentes</a></li>
+                    <li class="nav-item p-r-5" onclick="orders_table('production')"><a class="nav-link rounded-pill" id="production" data-toggle="tab">Em andamento</a></li>
+                    <li class="nav-item p-r-5" onclick="orders_table('send-delivery')"><a class="nav-link rounded-pill" id="send-delivery" data-toggle="tab">Saiu para entrega</a></li>
+                    <li class="nav-item p-r-5" onclick="orders_table('finished')"><a class="nav-link rounded-pill" id="finished" data-toggle="tab">Finalizados</a></li>
                 </ul>
                 <table id="orders-table" class="table table-striped">
                     <thead>
                         <tr>
                             <th width="30px">Ord.</th>
-                            <th>Cliente</th>
-                            <th width='200px'>Contato</th>
-                            <th width="150px">Bairro</th>
-                            <th width='130px'>Status</th>
+                            <th width="100px">Pagamento</th>
+                            <th width='200px'>Data/Hora</th>
+                            <th>Endereço</th>
                             <th width="130px">Valor</th>
                             <th width="110px">Ações</th>
                         </tr>
@@ -129,9 +129,131 @@ use App\Classes\Tools;
         </div>
     </div>
 </div>
-
 @endsection
 @section('modal')
+{{-- SET ADDRESS DELIVERY --}}
+<div class="modal fade" id="set-address-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ENDEREÇO/PAGAMENTO</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-8">
+                        <div class="border-bottom border-default m-b-20 col-md-3">
+                            <h5>PAGAMENTO</h5>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="payment-method">Qual será sua forma de pagamento? <span style="color:red">*</span></label>
+                                <select class="text-center select-rounded form-control " id="payment-method" name="payment-method" class="form-control">
+                                    <optgroup label="Cartões de crédito">
+                                        @foreach ($payment_methods as $method)
+                                        @if ($method->group_payment == 'credit_card')
+                                        <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                        @endif
+                                        @endforeach
+                                    </optgroup>
+                                    <optgroup label="Cartões de débito">
+                                        @foreach ($payment_methods as $method)
+                                        @if ($method->group_payment == 'debit_card')
+                                        <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                        @endif
+                                        @endforeach
+                                    </optgroup>
+                                    <optgroup label="Outras formas de pagamento">
+                                        @foreach ($payment_methods as $method)
+                                        @if ($method->group_payment == 'other_forms')
+                                        <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                        @endif
+                                        @endforeach
+                                    </optgroup>
+                                    <option selected disabled value="">Selecione um método de pagamento</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-8">
+                        <hr>
+                        <div class="border-bottom border-default m-b-20 col-md-3">
+                            <h5>ENDEREÇO</h5>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="select-address">Aonde devemos entregar este pedido? <span style="color:red">*</span></label>
+                                <select class="text-center select-rounded form-control " id="select-address" class="form-control">
+                                    <option selected disabled value="">Selecione um endereço</option>
+                                    <option value="saved-address">Av. Santa Rita, 1840 - Centro</option>
+                                    <option value="other-address">Outro endereço</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="address-form" class="d-none">
+                    <form id="form-set-address" class="d-flex justify-content-center">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="delivery-client-phone">Telefone<span style="color:red">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="delivery-client-phone" name="delivery-client-phone" data-inputmask="'mask':'(99) 9 9999-9999'" data-mask="" inputmode="text" placeholder="EX: (51) 9 9999-9999">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="delivery-location">Região <span style="color:red">*</span></label>
+                                    <select class="text-center select-rounded form-control" id="delivery-location" name="delivery-location" class="form-control">
+                                        <option value='' disabled selected>Selecione uma região</option>
+                                        @foreach($locations as $location)
+                                        <option value='{{ $location->id }}'>{{ $location->neighborhood }} - {{ $location->reference }} | Valor: R${{ number_format($location->value_delivery, 2, ',', '.') }}</option>
+
+
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <label for="delivery-address">Logradouro <span style="color:red">*</span></label>
+                                    <input id="delivery-address" type="text" class="form-control" placeholder="EX: Rua do Açai">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="delivery-number">Nº <span style="color:red">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="delivery-number" data-inputmask="'mask':'9999'" data-mask="" inputmode="text" placeholder="EX: 1800">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="delivery-neighborhood">Bairro <span style="color:red">*</span></label>
+                                    <input id="delivery-neighborhood" type="text" class="form-control" placeholder="EX: Centro">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="delivery-reference">Referência <span style="color:red">*</span></label>
+                                    <input id="delivery-reference" type="text" class="form-control" placeholder="EX: Casa azul">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="send-cart" type="button" class="btn btn-accent rounded-pill"><strong>FAZER PEDIDO</strong></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 {{-- PEDIDOS DO CLIENTE --}}
 <div class="modal fade" id="delivery-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -203,8 +325,46 @@ use App\Classes\Tools;
         </div>
     </div>
 </div>
+{{-- EDITAR ITEM   --}}
+<div class="modal fade" id="edit-item" role="dialog" tabindex="-1" aria-labelledby="edit-item-modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">EDITAR ITEM</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title "><strong>Adicionais</strong></h5>
+                    </div>
+                    <form id="form-add-additional-edit">
+                        <div id="checkbox-container-edit-item" class="card-body">
+                        </div>
+                    </form>
+                </div>
+                <div class="card m-t-20">
+                    <div class="card-header">
+                        <h5 class="card-title"> <strong>Observações</strong> </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <textarea id="edit-obs-item-request" rows="4" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer  d-flex justify-content-between">
+                <button onclick="" type="button" class="btn btn-accent rounded-pill float-right"><strong>SALVAR</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 @section('plugins')
 <script src="{{ asset('assets/site/js/cart.js') }}"></script>
+<script src="{{ asset('assets/site/js/inputmask.js') }}"></script>
 @endsection

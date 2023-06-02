@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\AppSettingsModel;
 use App\Models\CommentsModel;
+use App\Models\DeliveryLocationsModel;
 use App\Models\ItemModel;
+use App\Models\PaymentMethodsModel;
 use App\Models\RequestsItemsModel;
 use App\Models\TypeItemModel;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +42,8 @@ class SiteViewsController extends Controller
     {
         $data = [
             'items' => ItemModel::with('like')->take(15)->latest()->orderBy('type_id', 'asc')->get(),
+            'locations' => DeliveryLocationsModel::all(),
+            'payment_methods' => PaymentMethodsModel::where('active', 1)->get(),
         ];
         return view('site.cart', $data);
     }

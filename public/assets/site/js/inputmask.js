@@ -1,4 +1,4 @@
-$('[data-mask]').inputmask()
+
 // // Datemask dd / mm / yyyy
 // $('#date').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' });
 // // Datemask2 mm / dd / yyyy
@@ -12,6 +12,36 @@ $('[data-mask]').inputmask()
 //     locale: 'pt-br',
 
 // });
+
+$(function () {
+    $('.text').summernote({
+        height: 150,
+        toolbar: [
+            // [groupName, [list of button]]
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font'],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table'],
+        ]
+    });
+});
+
+$(function () {
+    $('#obs-additional').summernote({
+        placeholder: 'Observações do pedido.',
+        height: 150,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['para', ['ul', 'ol', 'paragraph']],
+        ]
+    });
+    $('#obs-additional').summernote('code', '');
+
+});
+
 // $('.date').datetimepicker({
 //     timePicker: true,
 //     timePickerIncrement: 30,
@@ -25,7 +55,7 @@ $('[data-mask]').inputmask()
 //     locale: 'pt-br',
 // });
 
-
+$('[data-mask]').inputmask()
 
 
 //Date and time picker

@@ -130,6 +130,7 @@ function add_cart() {
                 $('#add-cart').modal('hide');
                 $('#obs-item-request').val('')
                 $('#qty-item-request').val(1)
+                $('#client-cart-table').DataTable().clear().draw()
                 cart_count()
                 let dialog = bootbox.dialog({
                     message: '<p class="text-center mb-0"><i class="fs-50 text-success fa-solid fa-check fa-beat-fade"></i></p><p class="text-center mb-0">' + responseData.message + '</p>',

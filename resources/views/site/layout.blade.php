@@ -370,7 +370,6 @@ $app_settings = AppSettingsModel::all()->first();
     <script src="{{ asset('assets/app/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/app/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/modernizr.min.js') }}"></script>
-    <script src="{{ asset('assets/site/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/bootstrap.bundle.js') }}"></script>
     <script src="{{ asset('assets/site/js/summernote/summernote-bs4.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/owl.carousel.min.js') }}"></script>
@@ -378,6 +377,7 @@ $app_settings = AppSettingsModel::all()->first();
     <script src="{{ asset('assets/site/js/jquery.waypoints.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/jquery.nav.min.js') }}"></script>
     <script src="{{ asset('assets/site/js/script.js') }}"></script>
+    <script src="{{ asset('assets/app/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     {{-- JS  --}}
     @yield('plugins')
     {{-- /JS --}}
