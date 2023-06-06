@@ -68,26 +68,74 @@ class SaleItemsController extends Controller
         return ItemModel::with('like')->find(Tools::hash($id, 'decrypt'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // PREENCHE FORM DE EDIÇÂO
     public function edit(string $id)
     {
-        return RequestsItemsModel::with('product', 'additionals')->find(Tools::hash($id, 'decrypt'));
+        $item = RequestsItemsModel::find(Tools::hash($id, 'decrypt'));
+        $itemsCheck = RequestAdditionalItemModal::where('item_id', $item->id)->get();
+        $items = AdditionalItemModel::where('item_id', $item->product_id)->get();
+
+        $additionalItems['observation'] = $item->observation;
+        $additionalItems['items'] = [];
+        foreach ($items as $item) {
+            if ($item->status == 1) {
+                $additionalItems['items'][$item->id] = [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'value' => $item->value,
+                    'check' => '',
+                ];
+            }
+            foreach ($itemsCheck as $itemCheck) {
+                if ($item->id === $itemCheck->additional_id) {
+                    $additionalItems['items'][$item->id] = [
+                        'id' => $item->id,
+                        'name' => $item->name,
+                        'value' => $item->value,
+                        'check' => 'checked',
+                    ];
+                }
+            }
+        }
+        return $additionalItems;
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // SALVA EDIÇÃO ITEM DO PEDIDO
+    public function update(Request $request)
     {
-        //
+        try {
+            $inputs = $request->all();
+            if (isset($inputs['additionals'])) {
+                foreach ($inputs['additionals'] as $input) {
+                    if ($input['check'] == 'true') {
+                        $additional = AdditionalItemModel::select('value')->find($input['id']);
+                        $additionals = [
+                            'additional_id' => $input['id'],
+                            'item_id' => Tools::hash($inputs['id'], 'decrypt'),
+                            'value' => $additional->value,
+                        ];
+                        RequestAdditionalItemModal::updateOrCreate(['additional_id' => $input['id'], 'item_id' => Tools::hash($inputs['id'], 'decrypt')], $additionals);
+                    } else {
+                        RequestAdditionalItemModal::where('additional_id', $input['id'])->where('item_id', Tools::hash($inputs['id'], 'decrypt'))->delete();
+                    }
+                }
+            }
+            $observation = RequestsItemsModel::find(Tools::hash($inputs['id'], 'decrypt'));
+            $observation->observation = $inputs['obs'];
+            $observation->value = Calculate::itemValue(Tools::hash($inputs['id'], 'decrypt'));
+            $observation->save();
+            return ['error' => false, 'message' => 'Salvo!'];
+        } catch (\Throwable $th) {
+            return ['error' => true, 'message' => 'Ouve um erro ao salvar .'];
+
+        }
     }
 
     // DELETA ITEM DO CARRINHO
     public function delete($id)
     {
-    if (RequestsItemsModel::find(Tools::hash($id, 'decrypt'))->delete() && RequestAdditionalItemModal::where('item_id',Tools::hash($id, 'decrypt'))->delete()) {
+        if (RequestsItemsModel::find(Tools::hash($id, 'decrypt'))->delete() && RequestAdditionalItemModal::where('item_id', Tools::hash($id, 'decrypt'))->delete()) {
             return ['error' => false, 'message' => 'Item excluido.'];
         } else {
             return ['error' => true, 'message' => 'Ouve um erro ao excluir.'];
@@ -102,7 +150,7 @@ class SaleItemsController extends Controller
             $items = RequestsItemsModel::where('request_id', $delivery_order->id)->where('status', 1)->get();
             foreach ($items as $item) {
                 RequestsItemsModel::find($item->id)->delete();
-                RequestAdditionalItemModal::where('item_id',$item->id)->delete();
+                RequestAdditionalItemModal::where('item_id', $item->id)->delete();
             }
             return ['error' => false, 'message' => 'Seu carrinho agora esta limpo.'];
 
@@ -168,7 +216,6 @@ class SaleItemsController extends Controller
         }
         return $additionalItems;
     }
-
     // CONTAGEM DE ITENS NO CARRINHO
     public function cart_count()
     {
@@ -200,7 +247,12 @@ class SaleItemsController extends Controller
         return $count;
 
     }
-
+    // SOMA VALOR DO CARRINHO
+    public function sum_cart_value()
+    {
+        $order = RequestsModel::where('client_id', auth()->guard('client')->id())->where('status', false)->first();
+        return Calculate::requestValue($order->id, 1, true, true);
+    }
     //---------------------------------------
     // TABELAS
     //---------------------------------------

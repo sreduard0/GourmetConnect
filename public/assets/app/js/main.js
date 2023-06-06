@@ -64,6 +64,35 @@ $('#btn-submit-form').on('click', function () {
                             closeButton: false
                         });
                         break;
+                    case 'not-smtp':
+                        $.ajax({
+                            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                            type: "POST",
+                            url: window.location.origin + "/administrator/post/submit/login",
+                            data: {
+                                email: $('#email').val(),
+                                password: $('#password').val(),
+                            },
+                            dataType: 'text',
+                            success: function (response) {
+                                response = JSON.parse(response)
+                                if (response.error == 'logged') {
+                                    window.location.replace(response.url);
+                                }
+                            },
+                            error: function () {
+                                $('.modal-check-code').modal('hide')
+                                let dialog = bootbox.dialog({
+                                    message: '<p class="text-center mb-0">Desculpe, parece que ouve algum erro, Tente novamente.</p>',
+                                    centerVertical: true,
+                                    closeButton: false
+                                });
+                                setTimeout(() => {
+                                    dialog.modal('hide')
+                                }, 2000);
+                            }
+                        });
+                        break;
                     case 'erro':
                         bootbox.dialog({
                             message: '<p class="text-center mb-0">Desculpe, parece que o <strong>e-mail e/ou senha</strong> que você inseriu estão incorretos. Por favor, verifique se ambos estão corretos e tente novamente.</p><div class="text-center m-t-20" id="close"><p class="text-center">Tente novamente em:</p><strong><p class="text-center fs-30" id="countdown"></p></strong></div>',

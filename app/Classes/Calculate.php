@@ -12,7 +12,7 @@ class Calculate
 // SOMA VALORES
 // -------------------------------
     // SOMA O VALOR DE PRODUTOS
-    public static function requestValue($id, $status, $delivery_value = false, $formated = false)
+    public static function requestValue(mixed $id, mixed $status, bool $delivery_value = false, bool $formated = false)
     {
         if (!is_array($id)) {
             $id = array($id);

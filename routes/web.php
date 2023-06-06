@@ -234,11 +234,12 @@ Route::post('post/table/item/like', [LikesController::class, 'table'])->middlewa
 // SITE/ CARRINHO
 //-------------------------------
 Route::get('get/orders/status/count', [SaleItemsController::class, 'count_orders'])->middleware('auth:client');
+Route::get('get/sum/cart/value', [SaleItemsController::class, 'sum_cart_value'])->middleware('auth:client');
 Route::get('cart/item/count', [SaleItemsController::class, 'cart_count'])->middleware('auth:client');
 Route::delete('delete/clear/cart', [SaleItemsController::class, 'clear_cart'])->middleware('auth:client');
 Route::put('put/send/cart', [SaleItemsController::class, 'send_cart'])->middleware('auth:client');
 Route::delete('delete/item/cart/{id}', [SaleItemsController::class, 'delete'])->middleware('auth:client');
-Route::post('get/edit/item', [RequstsController::class, 'additionals_items_request'])->middleware('auth:client');
+Route::get('get/edit/item/{id}', [SaleItemsController::class, 'edit'])->middleware('auth:client');
 Route::put('put/item/edit', [SaleItemsController::class, 'update'])->middleware('auth:client');
 Route::post('post/table/cart', [SaleItemsController::class, 'cart_table'])->middleware('auth:client');
 Route::post('post/table/cart/items', [SaleItemsController::class, 'cart_items'])->middleware('auth:client');

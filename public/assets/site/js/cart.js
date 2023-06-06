@@ -1,6 +1,7 @@
 // CARREGA A CONTAGEM DOS STATUS
 $(window).on('load', function (event) {
     count_orders()
+    sum_cart_value()
 });
 
 function count_orders() {
@@ -10,6 +11,11 @@ function count_orders() {
         });
     });
     $('#pending').tab('show');
+}
+function sum_cart_value() {
+    $.get(window.location.origin + "/get/sum/cart/value", function (data) {
+        $('.value-total').text(data + ' + ENTREGA');
+    });
 }
 
 //----------------------------------------
@@ -226,7 +232,7 @@ $('#clear-cart').on('click', function () {
                                 centerVertical: true,
                                 closeButton: false
                             });
-                            s$('#client-cart-table').DataTable().clear().draw()
+                            $('#client-cart-table').DataTable().clear().draw()
                             setTimeout(() => {
                                 dialog.modal('hide');
                             }, 2000);
@@ -251,7 +257,6 @@ $('#clear-cart').on('click', function () {
     });
 
 });
-
 // ENVIAR PEDIDO
 $('#send-cart').on('click', function () {
     // Verificação
@@ -391,7 +396,13 @@ $('#send-cart').on('click', function () {
     });
 
 });
-
+// LISTA O PEDIDO
+function list_items_equals_request(request, item, product) {
+    $('#product_name').text(product)
+    $('#list-items-equals-table').DataTable().column(1).search(request).column(2).search(item).column(4).search('delivery').draw()
+    $('#delivery-client-modal').modal('hide')
+    $('#list-items-equals-modal').modal('show')
+}
 // APAGAR ITEM CARRINHO
 function delete_item_request(id) {
     bootbox.confirm({
@@ -465,24 +476,21 @@ function delete_item_request(id) {
 // EDITA ITEM DO CARRINHO
 function edit_item(id) {
     $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-        , url: window.location.origin + '/get/edit/item/' + id
-        , type: 'POST'
+        url: window.location.origin + '/get/edit/item/' + id
+        , type: 'GET'
         , dataType: 'text'
         , success: function (data) {
             data = JSON.parse(data);
             $('#checkbox-container-edit-item').empty()
-            if (data.additionals.length === 0) {
+            if (data['items'].length === 0) {
                 $('#checkbox-container-edit-item').html('<div class="col text-center"><span>Este item não possui adicionais.</span></div>')
             } else {
-                $.each(data.additionals, function (index, checkbox) {
-                    console.log(checkbox)
+                $.each(data.items, function (index, checkbox) {
                     $('#checkbox-container-edit-item').append('<div class= "d-flex justify-content-between row border-bottom-list" ><div div class= "m-r-30"><span>' + checkbox.name + ' - R$' + money(checkbox.value) + '</span></div><div class="custom-control custom-switch "><input type="checkbox" class="custom-control-input" name="' + checkbox.name.toLowerCase().replace(' ', '-') + '-additional" id="' + checkbox.name.toLowerCase().replace(' ', '-') + '-additional" value="' + checkbox.id + '" ' + checkbox.check + '><label class="custom-control-label" for="' + checkbox.name.toLowerCase().replace(' ', '-') + '-additional"></label></div></div><hr>');
                 });
             }
-            // $('#request_id').val(request_id)
+            $('#item_id').val(id)
+            $('#edit-obs-item-request').val(data.observation)
             $('#edit-item').modal('show')
         }
         , error: function () {
@@ -493,14 +501,82 @@ function edit_item(id) {
         }
     });
 }
-// LISTA O PEDIDO
-function list_items_equals_request(request, item, product) {
-    $('#product_name').text(product)
-    $('#list-items-equals-table').DataTable().column(1).search(request).column(2).search(item).column(4).search('delivery').draw()
-    $('#delivery-client-modal').modal('hide')
-    $('#list-items-equals-modal').modal('show')
-}
+// SALVA ALTERAÇÃO
+function save_edit_item() {
+    var id = $('#item_id').val()
+    var inputs = {};
+    $('#form-add-additional-edit :input').each(function () {
+        if ($(this).prop('checked')) {
+            inputs[$(this).attr('name')] = {
+                name: $(this).attr('name'),
+                id: $(this).val(),
+                check: true
+            }
+        } else {
+            inputs[$(this).attr('name')] = {
+                name: $(this).attr('name'),
+                id: $(this).val(),
+                check: false
+            }
+        }
+    });
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+        , url: window.location.origin + '/put/item/edit'
+        , type: 'PUT'
+        , data: {
+            id: id,
+            obs: $('#edit-obs-item-request').val(),
+            additionals: inputs,
+        }
+        , dataType: 'text'
+        , success: function (response) {
+            response = JSON.parse(response)
+            if (!response.error) {
+                $('#client-cart-table').DataTable().clear().draw()
+                $('#list-items-equals-table').DataTable().clear().draw()
+                $('#edit-item').modal('hide')
+                $('#checkbox-container').empty()
+                $('#edit-obs-item-request').val('')
+                $('#item_id').val('')
+                let dialog = bootbox.dialog({
+                    message: '<p class="text-center"><i class="fs-50 text-success fa-solid fa-check fa-beat-fade"></i></p><p class="text-center">' + response.message + '</p>',
+                    size: 'small',
+                    centerVertical: true,
+                    closeButton: false
+                });
+                setTimeout(() => {
+                    dialog.modal('hide');
+                }, 2000);
+            } else {
+                let dialog = bootbox.dialog({
+                    message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">' + response.message + '</p>',
+                    size: 'small',
+                    centerVertical: true,
+                    closeButton: false
+                });
+                $('#client-cart-table').DataTable().clear().draw()
+                setTimeout(() => {
+                    dialog.modal('hide');
+                }, 2000);
+            }
+        }
+        , error: function () {
+            let dialog = bootbox.dialog({
+                message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">ERRO NA REDE</p>',
+                size: 'small',
+                centerVertical: true,
+                closeButton: false
+            });
+            setTimeout(() => {
+                dialog.modal('hide');
+            }, 2000);
+        }
+    });
 
+}
 
 // MODAL ENDEREÇO E PAGAMENTO
 $('#set_address').on('click', function () {

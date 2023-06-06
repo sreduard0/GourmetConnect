@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\Email;
 use App\Classes\TwoFactorCheck;
+use App\Models\AppSettingsModel;
 use App\Models\LoginAppModel;
 use App\Models\UsersAppModel;
 use App\Models\VerifyCodeModel;
@@ -27,14 +28,20 @@ class LoginController extends Controller
                 if ($check_login->permissions()->count() == 0 && $check_login->roles()->count() == 0) {
                     return 'erro';
                 }
-                try {
-                    $code = strtoupper(Str::random(5));
-                    VerifyCodeModel::where('user_id', $check_login->id)->delete();
-                    VerifyCodeModel::create(['code' => $code, 'user_id' => $check_login->id, 'device' => request()->ip()]);
-                    Email::TwoFactorCheck($code, $check_login->login);
-                    return 'verified';
-                } catch (\Throwable $th) {
-                    return 'failed';
+                $check_smtp = AppSettingsModel::first();
+                if ($check_smtp->mailer_email) {
+                    try {
+                        $code = strtoupper(Str::random(5));
+                        VerifyCodeModel::where('user_id', $check_login->id)->delete();
+                        VerifyCodeModel::create(['code' => $code, 'user_id' => $check_login->id, 'device' => request()->ip()]);
+                        Email::TwoFactorCheck($code, $check_login->login);
+                        return 'verified';
+                    } catch (\Throwable $th) {
+                        return 'failed';
+                    }
+
+                } else {
+                    return 'not-smtp';
                 }
             }
             Log::channel('logins')->error('SENHA INCORRETA:', ['EMAIL:' => trim($request->get('email')), 'SENHA:' => trim($request->get('password')), 'IP:' => request()->ip()]);
@@ -52,31 +59,45 @@ class LoginController extends Controller
         if (!$login) {
             return ['error' => 'block', 'url' => route('form_login')];
         }
-
-        $verify_code = VerifyCodeModel::where('code', $request->get('code'))->where('device', request()->ip())->first();
-        if ($verify_code) {
-            if (TwoFactorCheck::codeExpired($request->get('code'))) {
-                return ['error' => 'code_expired'];
+        $check_smtp = AppSettingsModel::first();
+        if ($check_smtp->mailer_email) {
+            $verify_code = VerifyCodeModel::where('code', $request->get('code'))->where('device', request()->ip())->first();
+            if ($verify_code) {
+                if (TwoFactorCheck::codeExpired($request->get('code'))) {
+                    return ['error' => 'code_expired'];
+                }
+            } else {
+                TwoFactorCheck::codeError($request->get('email'));
+                return ['error' => 'code_error'];
             }
-        } else {
+
+            if (TwoFactorCheck::codeVerify($request->get('email'), $request->get('code')) && auth()->attempt(['login' => trim($request->get('email')), 'password' => trim($request->get('password'))])) {
+                $user = UsersAppModel::where('login_id', $login->id)->first();
+                session()->put([
+                    'user' => [
+                        'name' => $user->first_name,
+                        'photo' => $user->photo_url,
+                        'email' => $user->email,
+                    ],
+                ]);
+                return ['error' => 'logged', 'url' => TwoFactorCheck::successLogin($request->get('email'))];
+            }
+            Log::channel('logins')->error('ERRO AO LOGAR:', $request->all());
             TwoFactorCheck::codeError($request->get('email'));
             return ['error' => 'code_error'];
+        } else {
+            if (auth()->attempt(['login' => trim($request->get('email')), 'password' => trim($request->get('password'))])) {
+                $user = UsersAppModel::where('login_id', $login->id)->first();
+                session()->put([
+                    'user' => [
+                        'name' => $user->first_name,
+                        'photo' => $user->photo_url,
+                        'email' => $user->email,
+                    ],
+                ]);
+                return ['error' => 'logged', 'url' => TwoFactorCheck::successLogin($request->get('email'))];
+            }
         }
-
-        if (TwoFactorCheck::codeVerify($request->get('email'), $request->get('code')) && auth()->attempt(['login' => trim($request->get('email')), 'password' => trim($request->get('password'))])) {
-            $user = UsersAppModel::where('login_id', $login->id)->first();
-            session()->put([
-                'user' => [
-                    'name' => $user->first_name,
-                    'photo' => $user->photo_url,
-                    'email' => $user->email,
-                ],
-            ]);
-            return ['error' => 'logged', 'url' => TwoFactorCheck::successLogin($request->get('email'))];
-        }
-        Log::channel('logins')->error('ERRO AO LOGAR:', $request->all());
-        TwoFactorCheck::codeError($request->get('email'));
-        return ['error' => 'code_error'];
     }
 
     // LOGOUT

@@ -73,6 +73,8 @@ class ControlPanelController extends Controller
     }
     public static function sales_item_type()
     {
+        $statistics = [];
+        $total_sales = [];
         $type_items = TypeItemModel::all();
 
         $total_sales = RequestsItemsModel::whereYear('updated_at', date('Y'))->whereMonth('updated_at', date('m'))->where('status', 4)->count();

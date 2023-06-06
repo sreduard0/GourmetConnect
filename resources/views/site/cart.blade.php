@@ -356,8 +356,10 @@ use App\Classes\Tools;
                     </div>
                 </div>
             </div>
-            <div class="modal-footer  d-flex justify-content-between">
-                <button onclick="" type="button" class="btn btn-accent rounded-pill float-right"><strong>SALVAR</strong></button>
+            <div class="modal-footer">
+                <input type="hidden" id="item_id">
+                <button onclick="save_edit_item()" type="button" class="btn btn-accent rounded-pill"><strong>SALVAR</strong></button>
+
             </div>
         </div>
     </div>

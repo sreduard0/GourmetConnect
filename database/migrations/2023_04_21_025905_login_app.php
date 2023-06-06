@@ -13,7 +13,7 @@ return new class extends Migration
             $table->integer('active');
             $table->string('login', 255);
             $table->string('password', 255);
-            $table->integer('verify_error');
+            $table->integer('verify_error')->default(3);
             $table->timestamps();
             $table->softDeletes();
         });

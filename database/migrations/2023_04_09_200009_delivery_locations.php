@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('delivery_locations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('neighborhood ', 255);
+            $table->string('neighborhood', 255);
             $table->string('reference', 255);
             $table->decimal('value_delivery', 10, 2);
             $table->timestamps();
