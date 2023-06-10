@@ -81,6 +81,7 @@ $(function () {
             $("td").css({
                 "white-space": "nowrap",
             });
+            sum_cart_value()
         }
     });
     // TODAS PEDIDOS
@@ -132,6 +133,7 @@ $(function () {
             $("td").css({
                 "white-space": "nowrap",
             });
+            sum_cart_value()
         }
 
     });
@@ -225,6 +227,7 @@ $('#clear-cart').on('click', function () {
                                 centerVertical: true,
                             });
                             $('#client-cart-table').DataTable().clear().draw()
+
                         } else {
                             let dialog = bootbox.dialog({
                                 message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">' + response.message + '</p>',
@@ -233,6 +236,7 @@ $('#clear-cart').on('click', function () {
                                 closeButton: false
                             });
                             $('#client-cart-table').DataTable().clear().draw()
+
                             setTimeout(() => {
                                 dialog.modal('hide');
                             }, 2000);
@@ -247,6 +251,7 @@ $('#clear-cart').on('click', function () {
                             closeButton: false
                         });
                         s$('#client-cart-table').DataTable().clear().draw()
+
                         setTimeout(() => {
                             dialog.modal('hide');
                         }, 2000);
@@ -323,78 +328,94 @@ $('#send-cart').on('click', function () {
             reference: $('#delivery-reference').val(),
         }
     }
-    bootbox.confirm({
-        title: 'Enviar pedido?',
-        message: "<p>Aproveite explore novos sabores e desfrute de uma refeição saborosa.</p>",
-        centerVertical: true,
-        buttons: {
-            cancel: {
-                label: "CANCELAR",
-                className: 'btn-secondary rounded-pill',
-            },
-            confirm: {
-                label: "ENVIAR",
-                className: 'btn-accent rounded-pill',
-
-            }
-        },
-        callback: function (action) {
-            if (action) {
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    $.get(window.location.origin + '/get/send/cart/confirm', function (data) {
+        if (!data.error) {
+            bootbox.confirm({
+                title: 'Enviar pedido?',
+                message: "<p>Total do pedido + entrga: <strong> " + data.value + "</strong> .</p><br><p>Tem certeza que não deseja mais nada? Que tal dar mais uma olhadinha no cardápio.</p>",
+                centerVertical: true,
+                buttons: {
+                    cancel: {
+                        label: "CANCELAR",
+                        className: 'btn-secondary rounded-pill',
                     },
-                    data: {
-                        payment: $('#payment-method').val(),
-                        address: address
-                    },
-                    type: "PUT",
-                    url: window.location.origin + "/put/send/cart",
-                    success: function (response) {
-                        if (!response.error) {
-                            let dialog = bootbox.dialog({
-                                message: '<p class="text-center"><i class="m-l-24 fs-50 text-success fa-solid fa-check fa-beat-fade"></i></p><p class="text-center">' + response.message + '</p>',
-                                size: 'small',
-                                centerVertical: true,
-                            });
-                            $('#client-cart-table').DataTable().clear().draw()
-                            $('#orders-table').DataTable().clear().draw()
-                            count_orders()
-                            setTimeout(() => {
-                                dialog.modal('hide');
-                            }, 2000);
+                    confirm: {
+                        label: "ENVIAR",
+                        className: 'btn-accent rounded-pill',
 
-                        } else {
-                            let dialog = bootbox.dialog({
-                                message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">' + response.message + '</p>',
-                                size: 'small',
-                                centerVertical: true,
-                                closeButton: false
-                            });
-                            $('#client-cart-table').DataTable().clear().draw()
-                            $('#orders-table').DataTable().clear().draw()
-                            setTimeout(() => {
-                                dialog.modal('hide');
-                            }, 2000);
-                        }
-
-                    },
-                    error: function () {
-                        let dialog = bootbox.dialog({
-                            message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">ERRO NA REDE</p>',
-                            size: 'small',
-                            centerVertical: true,
-                            closeButton: false
-                        });
-                        setTimeout(() => {
-                            dialog.modal('hide');
-                        }, 2000);
                     }
-                });
-            }
-        }
-    });
+                },
+                callback: function (action) {
+                    if (action) {
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                payment: $('#payment-method').val(),
+                                address: address
+                            },
+                            type: "PUT",
+                            url: window.location.origin + "/put/send/cart",
+                            success: function (response) {
+                                if (!response.error) {
+                                    let dialog = bootbox.dialog({
+                                        message: '<p class="text-center"><i class="m-l-24 fs-50 text-success fa-solid fa-check fa-beat-fade"></i></p><p class="text-center">' + response.message + '</p>',
+                                        size: 'small',
+                                        centerVertical: true,
+                                    });
+                                    $('#client-cart-table').DataTable().clear().draw()
+                                    $('#orders-table').DataTable().clear().draw()
+                                    count_orders()
+                                    $('#set-address-modal').modal('hide');
+                                    setTimeout(() => {
+                                        dialog.modal('hide');
+                                    }, 2000);
 
+                                } else {
+                                    let dialog = bootbox.dialog({
+                                        message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">' + response.message + '</p>',
+                                        size: 'small',
+                                        centerVertical: true,
+                                        closeButton: false
+                                    });
+                                    $('#client-cart-table').DataTable().clear().draw()
+                                    $('#orders-table').DataTable().clear().draw()
+
+                                    setTimeout(() => {
+                                        dialog.modal('hide');
+                                    }, 2000);
+                                }
+
+                            },
+                            error: function () {
+                                let dialog = bootbox.dialog({
+                                    message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">ERRO NA REDE</p>',
+                                    size: 'small',
+                                    centerVertical: true,
+                                    closeButton: false
+                                });
+                                setTimeout(() => {
+                                    dialog.modal('hide');
+                                }, 2000);
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            let dialog = bootbox.dialog({
+                message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">' + response.message + '</p>',
+                size: 'small',
+                centerVertical: true,
+                closeButton: false
+            });
+            setTimeout(() => {
+                dialog.modal('hide');
+            }, 2000);
+        }
+
+    });
 });
 // LISTA O PEDIDO
 function list_items_equals_request(request, item, product) {
@@ -437,6 +458,7 @@ function delete_item_request(id) {
                             });
                             $('#client-cart-table').DataTable().clear().draw()
                             $('#list-items-equals-table').DataTable().clear().draw()
+
                             setTimeout(() => {
                                 dialog.modal('hide');
                             }, 1000);
@@ -547,6 +569,7 @@ function save_edit_item() {
                     centerVertical: true,
                     closeButton: false
                 });
+
                 setTimeout(() => {
                     dialog.modal('hide');
                 }, 2000);
@@ -558,6 +581,7 @@ function save_edit_item() {
                     closeButton: false
                 });
                 $('#client-cart-table').DataTable().clear().draw()
+
                 setTimeout(() => {
                     dialog.modal('hide');
                 }, 2000);

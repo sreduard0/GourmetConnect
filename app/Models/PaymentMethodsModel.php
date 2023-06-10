@@ -12,4 +12,5 @@ class PaymentMethodsModel extends Model
     use SoftDeletes;
     protected $table = 'payment_methods';
     protected $primarykey = 'id';
+    protected $fillable = ["name", "group_payment", "active", "logo_url"];
 }

@@ -190,7 +190,8 @@ use App\Classes\Tools;
                                 <label for="select-address">Aonde devemos entregar este pedido? <span style="color:red">*</span></label>
                                 <select class="text-center select-rounded form-control " id="select-address" class="form-control">
                                     <option selected disabled value="">Selecione um endereço</option>
-                                    <option value="saved-address">Av. Santa Rita, 1840 - Centro</option>
+                                    <option value="saved-address">{{ $user->street_address.', Nº'.$user->number.' - '.$user->neighborhood.' | R$' . number_format( $user->location->value_delivery, 2, ',', '.') }}</option>
+
                                     <option value="other-address">Outro endereço</option>
                                 </select>
                             </div>
@@ -216,9 +217,7 @@ use App\Classes\Tools;
                                     <select class="text-center select-rounded form-control" id="delivery-location" name="delivery-location" class="form-control">
                                         <option value='' disabled selected>Selecione uma região</option>
                                         @foreach($locations as $location)
-                                        <option value='{{ $location->id }}'>{{ $location->neighborhood }} - {{ $location->reference }} | Valor: R${{ number_format($location->value_delivery, 2, ',', '.') }}</option>
-
-
+                                        <option value='{{ $location->id }}'>{{ $location->neighborhood }} @if ($location->reference)- {{ $location->reference }}@endif | {{ 'R$' . number_format( $location->value_delivery, 2, ',', '.') }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -247,7 +246,7 @@ use App\Classes\Tools;
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button id="send-cart" type="button" class="btn btn-accent rounded-pill"><strong>FAZER PEDIDO</strong></button>
+                    <button id="send-cart" type="button" class="btn btn-accent rounded-pill"><strong>FINALIZAR</strong></button>
                 </div>
             </div>
         </div>

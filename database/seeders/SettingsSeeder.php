@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\AppSettingsModel;
 use App\Models\LoginAppModel;
+use App\Models\PaymentMethodsModel;
 use App\Models\UsersAppModel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -17,11 +18,17 @@ class SettingsSeeder extends Seeder
     public function run(): void
     {
         //===================================
-        // SET CONFIG
+        // SET CONFIG APP
         //===================================
         $settings = new AppSettingsModel();
         $settings->logo_url = 'img/gourmetconnect-logo/gourmetconnect.png';
         $settings->establishment_name = 'GourmetConnect';
+        $settings->mailer_host = 'smtp.gmail.com';
+        $settings->mailer_port = 465;
+        $settings->mailer_encryption = 'SSL';
+        $settings->theme_background = 'light-mode';
+        $settings->theme_accent = 'accent-danger';
+        $settings->theme_sidebar = 'sidebar-light-danger';
         $settings->save();
 
         //===================================
@@ -76,6 +83,34 @@ class SettingsSeeder extends Seeder
         ];
         foreach ($permissions as $permission) {
             Permission::create($permission);
+        }
+
+        //===================================
+        // CREATE PAYMENTS METHODS
+        //===================================
+        $payment_methods = [
+            ["name" => "Dinheiro", "group_payment" => "other_forms", "active" => 1, "logo_url" => "img\payment_method\money.png"],
+            ["name" => "Boleto bancário", "group_payment" => "other_forms", "active" => 1, "logo_url" => "img\payment_method\boleto.png"],
+            ["name" => "Pix", "group_payment" => "other_forms", "active" => 1, "logo_url" => "img\payment_method\pix.png"],
+            ["name" => "PayPal", "group_payment" => "other_forms", "active" => 1, "logo_url" => "img\payment_method\paypal.png"],
+            ["name" => "PagSeguro", "group_payment" => "other_forms", "active" => 1, "logo_url" => "img\payment_method\pagseguro.png"],
+            ["name" => "Mercado Pago", "group_payment" => "other_forms", "active" => 1, "logo_url" => "img\payment_method\mercadopago.png"],
+            ["name" => "Apple Pay", "group_payment" => "other_forms", "active" => 1, "logo_url" => "img\payment_method\applepay.png"],
+            ["name" => "Google Pay", "group_payment" => "other_forms", "active" => 1, "logo_url" => "img\payment_method\googlepay.png"],
+            ["name" => "Visa", "group_payment" => "credit_card", "active" => 1, "logo_url" => "img\payment_method\visa.png"],
+            ["name" => "Mastercard", "group_payment" => "credit_card", "active" => 1, "logo_url" => "img\payment_method\mastercard.png"],
+            ["name" => "American Express", "group_payment" => "credit_card", "active" => 1, "logo_url" => "img\payment_method\americamexpress.png"],
+            ["name" => "Discover", "group_payment" => "credit_card", "active" => 1, "logo_url" => "img\payment_method\discover.png"],
+            ["name" => "Diners", "group_payment" => "credit_card", "active" => 1, "logo_url" => "img\payment_method\diners.png"],
+            ["name" => "JCB", "group_payment" => "credit_card", "active" => 1, "logo_url" => "img\payment_method\jcb.png"],
+            ["name" => "Elo", "group_payment" => "credit_card", "active" => 1, "logo_url" => "img\payment_method\americamexpress.png"],
+            ["name" => "Hipercard", "group_payment" => "credit_card", "active" => 1, "logo_url" => "img\payment_method\hipercard.png"],
+            ["name" => "Maestro", "group_payment" => "debit_card", "active" => 1, "logo_url" => "img\payment_method\maestro.png"],
+            ["name" => "Visa Electron", "group_payment" => "debit_card", "active" => 1, "logo_url" => "img\payment_method\visa.png"],
+        ];
+
+        foreach ($payment_methods as $method) {
+            PaymentMethodsModel::create($method);
         }
 
         //===================================

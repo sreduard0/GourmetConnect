@@ -18,7 +18,7 @@ class Calculate
             $id = array($id);
         }
 
-        $sum = [];
+        $sum[] = 0.00;
         $query = RequestsItemsModel::with('additionals', 'product')
             ->whereIn('request_id', $id);
         if (is_array($status)) {

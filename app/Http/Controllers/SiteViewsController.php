@@ -9,6 +9,7 @@ use App\Models\ItemModel;
 use App\Models\PaymentMethodsModel;
 use App\Models\RequestsItemsModel;
 use App\Models\TypeItemModel;
+use App\Models\UsersClientModel;
 use Illuminate\Support\Facades\DB;
 
 class SiteViewsController extends Controller
@@ -44,6 +45,7 @@ class SiteViewsController extends Controller
             'items' => ItemModel::with('like')->take(15)->latest()->orderBy('type_id', 'asc')->get(),
             'locations' => DeliveryLocationsModel::all(),
             'payment_methods' => PaymentMethodsModel::where('active', 1)->get(),
+            'user' => UsersClientModel::with('location')->where('login_id', auth()->guard('client')->id())->first(),
         ];
         return view('site.cart', $data);
     }

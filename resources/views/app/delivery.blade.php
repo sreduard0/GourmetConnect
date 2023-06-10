@@ -165,7 +165,7 @@
                                     <select class="text-center select-rounded form-control" id="delivery-location" name="delivery-location" class="form-control">
                                         <option value='' disabled selected>Selecione uma região</option>
                                         @foreach($locations as $location)
-                                        <option value='{{ $location->id }}'>{{ $location->neighborhood }} - {{ $location->reference }}</option>
+                                        <option value='{{ $location->id }}'>{{ $location->neighborhood }} @if ($location->reference)- {{ $location->reference }}@endif | {{ 'R$' . number_format( $location->value_delivery, 2, ',', '.') }}</option>
                                         @endforeach
                                     </select>
                                 </div>

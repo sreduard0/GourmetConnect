@@ -11,6 +11,7 @@ use App\Models\ItemModel;
 use App\Models\RequestAdditionalItemModal;
 use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
+use App\Models\UsersClientModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -147,13 +148,16 @@ class SaleItemsController extends Controller
     {
         try {
             $delivery_order = RequestsModel::select('id')->where('client_id', auth()->guard('client')->id())->where('status', 0)->where('delivery', 1)->first();
-            $items = RequestsItemsModel::where('request_id', $delivery_order->id)->where('status', 1)->get();
-            foreach ($items as $item) {
-                RequestsItemsModel::find($item->id)->delete();
-                RequestAdditionalItemModal::where('item_id', $item->id)->delete();
+            if ($delivery_order) {
+                $items = RequestsItemsModel::where('request_id', $delivery_order->id)->where('status', 1)->get();
+                foreach ($items as $item) {
+                    RequestsItemsModel::find($item->id)->delete();
+                    RequestAdditionalItemModal::where('item_id', $item->id)->delete();
+                }
+                return ['error' => false, 'message' => 'Seu carrinho agora esta limpo.'];
+            } else {
+                return ['error' => true, 'message' => 'Não há pedidos para limpar.'];
             }
-            return ['error' => false, 'message' => 'Seu carrinho agora esta limpo.'];
-
         } catch (\Throwable $th) {
             return ['error' => true, 'message' => 'Ouve algum erro ao limpar o carrinho.'];
         }
@@ -184,6 +188,18 @@ class SaleItemsController extends Controller
                     $delivery_address->delivery_value = $delivery_location->value_delivery;
                     $delivery_address->save();
                 } else {
+                    $user_address = UsersClientModel::with('location')->where('login_id', auth()->guard('client')->id())->first();
+                    $delivery_address = new DeliveryAddressModel();
+                    $delivery_address->request_id = $delivery_order->id;
+                    $delivery_address->location_id = $user_address->location_id;
+                    $delivery_address->recipient_name = strtoupper(session('user')['name']);
+                    $delivery_address->street_address = $user_address->street_address;
+                    $delivery_address->neighborhood = $user_address->neighborhood;
+                    $delivery_address->phone = $user_address->phone;
+                    $delivery_address->reference = $user_address->reference;
+                    $delivery_address->number = $user_address->number;
+                    $delivery_address->delivery_value = $user_address->location->value_delivery;
+                    $delivery_address->save();
 
                 }
                 return ['error' => false, 'message' => 'Pedido enviado.'];
@@ -230,6 +246,8 @@ class SaleItemsController extends Controller
     public function count_orders()
     {
         $count_orders = RequestsModel::select('status', DB::raw('COUNT(status) as count'))->where('client_id', auth()->guard('client')->id())->where('delivery', 1)->groupBy('status')->get()->toArray();
+        $count = [];
+
         foreach ($count_orders as $orders) {
             if ($orders['status'] == 1) {
                 $count['pending']['count'] = $orders['count'];
@@ -251,7 +269,24 @@ class SaleItemsController extends Controller
     public function sum_cart_value()
     {
         $order = RequestsModel::where('client_id', auth()->guard('client')->id())->where('status', false)->first();
-        return Calculate::requestValue($order->id, 1, true, true);
+        if ($order) {
+            return Calculate::requestValue($order->id, 1, false, true);
+        } else {
+            return 'R$ 0,00';
+        }
+    }
+    // CONFIRMA ITENS E VALOR DO CARRINHO
+    public function send_cart_confirm()
+    {
+        $order = RequestsModel::where('client_id', auth()->guard('client')->id())->where('status', false)->first();
+        if ($order) {
+            return [
+                'error' => false,
+                'value' => Calculate::requestValue($order->id, 1, true, true),
+            ];
+        } else {
+            return ['error' => true, 'message' => 'Carrinho está vázio.'];
+        }
     }
     //---------------------------------------
     // TABELAS

@@ -148,7 +148,7 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="obs-type-product">Observações</label>
-                            <textarea name="obs-type-product" id="obs-type-product" rows="8" placeholder="Detalhes importantes da missão. Exemplo: Para Eixo Sul PGT" class="text form-control"></textarea>
+                            <textarea name="obs-type-product" id="obs-type-product" rows="8" class="form-control"></textarea>
                         </div>
                     </div>
                 </form>
@@ -214,7 +214,7 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="name-product">Nome <span style="color:red">*</span></label>
-                            <input minlength="2" maxlength="200" id="name-product" name="name-product" type="text" class="form-control" placeholder="EX: Pizza">
+                            <input minlength="2" maxlength="200" id="name-product" name="name-product" type="text" class="form-control" placeholder="EX: Gelo">
                         </div>
                     </div>
                     <div class="row">
@@ -228,7 +228,7 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="obs-product">Observações</label>
-                            <textarea name="obs-product" id="obs-product" rows="8" placeholder="Detalhes importantes da missão. Exemplo: Para Eixo Sul PGT" class="text form-control"></textarea>
+                            <textarea name="obs-product" id="obs-product" rows="8" lass="form-control"></textarea>
                         </div>
                     </div>
                 </form>
@@ -298,7 +298,7 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="obs-additional">Observações</label>
-                            <textarea name="obs-additional" id="obs-additional" rows="8" class="text form-control"></textarea>
+                            <textarea name="obs-additional" id="obs-additional" rows="8" class="form-control"></textarea>
                         </div>
                     </div>
                 </form>

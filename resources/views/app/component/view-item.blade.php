@@ -39,7 +39,7 @@
     </div>
 </div>
 <div style=" display:none;" class="popup-item">
-    <img src="{{ asset('img/product/item/item-CHADDER BACU-gourmetconnect.png') }}" alt="TESTE">
+    <img src="" alt="TESTE">
 </div>
 <script>
     function view_item_request(id) {

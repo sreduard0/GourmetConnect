@@ -15,6 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('logo_url', 255)->nullable();
             $table->string('establishment_name', 255)->nullable();
+            $table->string('establishment_legal_name', 255)->nullable();
             $table->string('cnpj', 14)->nullable();
             $table->string('address', 255)->nullable();
             $table->integer('number')->nullable();

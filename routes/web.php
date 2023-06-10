@@ -238,6 +238,7 @@ Route::get('get/sum/cart/value', [SaleItemsController::class, 'sum_cart_value'])
 Route::get('cart/item/count', [SaleItemsController::class, 'cart_count'])->middleware('auth:client');
 Route::delete('delete/clear/cart', [SaleItemsController::class, 'clear_cart'])->middleware('auth:client');
 Route::put('put/send/cart', [SaleItemsController::class, 'send_cart'])->middleware('auth:client');
+Route::get('get/send/cart/confirm', [SaleItemsController::class, 'send_cart_confirm'])->middleware('auth:client');
 Route::delete('delete/item/cart/{id}', [SaleItemsController::class, 'delete'])->middleware('auth:client');
 Route::get('get/edit/item/{id}', [SaleItemsController::class, 'edit'])->middleware('auth:client');
 Route::put('put/item/edit', [SaleItemsController::class, 'update'])->middleware('auth:client');

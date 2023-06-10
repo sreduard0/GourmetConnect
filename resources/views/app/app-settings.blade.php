@@ -195,7 +195,7 @@ use App\Classes\Tools;
                                     </div>
                                     <div class="row">
                                         <div class="form-group col">
-                                            <label for="delivery-reference">Referência<span style="color:red">*</span></label>
+                                            <label for="delivery-reference">Referência</label>
                                             <input value="" class="form-control" name="delivery-reference" id="delivery-reference" placeholder="EX: Até o mercado">
                                         </div>
                                     </div>

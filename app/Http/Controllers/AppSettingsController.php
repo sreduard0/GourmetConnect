@@ -18,7 +18,7 @@ class AppSettingsController extends Controller
     {
         $data = $request->all();
 
-// VERIFICANDO SE A FOTO DE PERFIL FOI ALTERADA E SALVANDO NO CAMPO
+        // VERIFICANDO SE A FOTO DE PERFIL FOI ALTERADA E SALVANDO NO CAMPO
         if ($data['establishment_logo']) {
             $image_array_1 = explode(";", $data['establishment_logo']);
             $image_array_2 = explode(",", $image_array_1[1]);
@@ -124,7 +124,7 @@ class AppSettingsController extends Controller
         foreach ($locations as $location) {
             $dado = array();
             $dado[] = $location->neighborhood;
-            $dado[] = $location->reference;
+            $dado[] = $location->reference ? $location->reference : '-';
             $dado[] = 'R$' . number_format($location->value_delivery, 2, ',', '.');
             $dado[] = '<button onclick="return delete_local(' . $location->id . ')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
             $dados[] = $dado;

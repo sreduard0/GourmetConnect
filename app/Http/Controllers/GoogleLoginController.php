@@ -41,6 +41,7 @@ class GoogleLoginController extends Controller
                 $create_login = new LoginClientModel();
                 $create_login->google_id = $auth_data->user['id'];
                 $create_login->active = 1;
+                $create_login->verify_error = 3;
                 $create_login->login = $auth_data->user['email'];
                 $pass = Str::random(8);
                 $create_login->password = Hash::make($pass);

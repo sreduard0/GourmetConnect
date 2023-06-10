@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('photo_url', 255)->default('img/avatar/user.png');
             $table->bigInteger('phone')->nullable();
             $table->date('date_birth')->nullable();
+            $table->integer('location_id')->nullable();
+            $table->string('street_address', 255)->nullable();
+            $table->string('neighborhood', 255)->nullable();
+            $table->string('reference', 255)->nullable();
+            $table->integer('number')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
