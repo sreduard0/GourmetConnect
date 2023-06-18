@@ -11,6 +11,7 @@ use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\LikesController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\NotificationClientController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
@@ -236,14 +237,19 @@ Route::post('post/table/item/like', [LikesController::class, 'table'])->middlewa
 Route::get('get/orders/status/count', [SaleItemsController::class, 'count_orders'])->middleware('auth:client');
 Route::get('get/sum/cart/value', [SaleItemsController::class, 'sum_cart_value'])->middleware('auth:client');
 Route::get('cart/item/count', [SaleItemsController::class, 'cart_count'])->middleware('auth:client');
+
 Route::delete('delete/clear/cart', [SaleItemsController::class, 'clear_cart'])->middleware('auth:client');
 Route::put('put/send/cart', [SaleItemsController::class, 'send_cart'])->middleware('auth:client');
-Route::get('get/send/cart/confirm', [SaleItemsController::class, 'send_cart_confirm'])->middleware('auth:client');
+Route::get('get/send/cart/confirm/{location}', [SaleItemsController::class, 'send_cart_confirm'])->middleware('auth:client');
 Route::delete('delete/item/cart/{id}', [SaleItemsController::class, 'delete'])->middleware('auth:client');
 Route::get('get/edit/item/{id}', [SaleItemsController::class, 'edit'])->middleware('auth:client');
 Route::put('put/item/edit', [SaleItemsController::class, 'update'])->middleware('auth:client');
+
+Route::get('get/edit/address/{id}', [SaleItemsController::class, 'edit_address_or_payment'])->middleware('auth:client');
+Route::get('get/order/information/{id}', [SaleItemsController::class, 'delivery_information_modal'])->middleware('auth:client');
 Route::post('post/table/cart', [SaleItemsController::class, 'cart_table'])->middleware('auth:client');
-Route::post('post/table/cart/items', [SaleItemsController::class, 'cart_items'])->middleware('auth:client');
+Route::post('post/table/items/request', [SaleItemsController::class, 'items_request_table'])->middleware('auth:client');
+Route::post('post/table/equals/items', [SaleItemsController::class, 'equals_items_table'])->middleware('auth:client');
 Route::post('post/table/orders', [SaleItemsController::class, 'orders_table'])->middleware('auth:client');
 
 //-------------------------------
@@ -253,118 +259,11 @@ Route::get('table/request/qr-code/client/{table}', function ($table) {
     return $table;
 });
 
-// //-------------------------------
-// // TESTES
-// //-------------------------------
-// Route::get('teste4/', function () {
-//     // auth()->guard('client')->attempt(['login' => trim('dudu.martins373@gmail.com'), 'password' => trim('Eduardo3386')]);
-//     // echo auth()->guard('client')->check();
-//     auth()->guard('client')->logout();
-// });
-// Route::get('teste3', function () {
-//     echo (Redirect::intended(route('requests'))->headers->get('Location'));
-//     // LoginAppModel::find(1)->update(['password' => Hash::make('xivunk')]);
+//-------------------------------
+// SITE/ NOTIFICAÇÕES
+//-------------------------------
+Route::get('get/notification/events', [NotificationClientController::class, 'notification'])->middleware('auth:client');
 
-//     // if (auth()->attempt(['login' => 'Eduardo', 'password' => 'xivunk'])) {
-//     //     // usuário autenticado com sucesso
-//     //     // return redirect()->intended('/dashboard');
-
-//     //     echo 'logado';
-//     // } else {
-//     //     // credenciais inválidas
-//     //     // return back()->withErrors(['email' => 'Credenciais inválidas']);
-//     //     echo 'Erro';
-//     // }
-
-// });
-// Route::get('teste2/{permission}', function ($permission) {
-//     // Permission::create(['name' => 'Teste']);
-
-//     // $editor = Role::create(['name' => 'Teste']);
-//     // $editor->givePermissionTo('Teste');
-
-//     $login = LoginAppModel::find(25);
-//     // $login->assignRole($permission);
-//     $login->givePermissionTo($permission);
-//     // $login->removeRole('Dashboard');
-//     // $login->revokePermissionTo('Teste');
-
-//     // if ($login->hasRole('Teste')) {
-//     //     echo 'Tem a Hole teste.';
-//     // }
-//     // if ($login->hasPermissionTo('Teste')) {
-//     //     echo 'Tem a permissão teste.';
-//     // }
-
-// });
-// Route::get('teste', function () {
-//     $permissions = [
-//         //     // DASHBOARD
-//         //     'dashboard',
-//         //     // PEDIDOS
-//         //     'view_orders',
-//         //     'create_order',
-//         //     'delete_request',
-//         //     'delete_order',
-//         //     'print_requests',
-//         //     'finalize_order',
-//         //     // DELIVERY
-//         //     'view_delivery',
-//         //     'create_delivery',
-//         //     'delete_delivery',
-//         //     'delete_request_delivery',
-//         //     'edit_delivery',
-//         //     'sts_delivery',
-//         //     // MESAS
-//         //     'view_tables',
-//         //     'qr_code_actions',
-//         //     // CARDAPIO
-//         //     'view_menu',
-//         //     'create_item_menu',
-//         //     'edit_item_menu',
-//         //     'delete_item_menu',
-//         //     'create_type_menu',
-//         //     'edit_type_menu',
-//         //     'delete_type_menu',
-//         //     'create_additional_menu',
-//         //     'edit_additional_menu',
-//         //     'delete_additional_menu',
-//         //     // CONFIG. APP
-//         //     'config_app_data',
-//         //     'config_app_delivery',
-//         //     'config_app_email',
-//         //     'config_app_theme',
-//         //     // USUARIOS
-//         //     'edit_user',
-//         //     'create_user',
-//         //     'delete_user',
-//         //     'config_users',
-//         //     'permissions_user',
-//         // 'reset_password',
-//         //     // CONFIG. SITE
-//         //     'config_site',
-
-//     ];
-//     Permission::create(['name' => 'reset_password', 'display_name' => 'Resetar senha', 'group_name' => 'user']);
-
-//     // foreach ($permissions as $permission) {
-//     //     Permission::create(['name' => $permission]);
-//     // }
-
-//     // $editor = Role::create(['name' => $role]);
-//     // $editor->givePermissionTo('Teste');
-
-//     // $login = LoginAppModel::find(1);
-//     // // $login->givePermissionTo('Teste');
-
-//     // if ($login->hasRole('Teste')) {
-//     //     echo 'Tem a Hole teste.';
-//     // }
-//     // if ($login->hasPermissionTo('Teste')) {
-//     //     echo 'Tem a permissão teste.';
-//     // }
-
-// });
 Route::get('teste', function () {
     $login = LoginClientModel::where('google_id', '105229560683506769316')->first();
     if ($login) {
@@ -377,7 +276,6 @@ Route::get('teste', function () {
                 'email' => $user->email,
             ],
         ]);
-
         return redirect()->route('home_page');
     }
 });

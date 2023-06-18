@@ -2,15 +2,18 @@
 $(window).on('load', function (event) {
     count_orders()
     sum_cart_value()
+    $('#pending').tab('show');
 });
 
 function count_orders() {
+    $('.nav-item .nav-link span').remove();
     $.get(window.location.origin + "/get/orders/status/count", function (data) {
         $.each(data, function (status, count) {
+
             $('#' + status).append('<span>' + count.count + '</span>');
         });
     });
-    $('#pending').tab('show');
+
 }
 function sum_cart_value() {
     $.get(window.location.origin + "/get/sum/cart/value", function (data) {
@@ -82,6 +85,70 @@ $(function () {
                 "white-space": "nowrap",
             });
             sum_cart_value()
+            cart_count()
+        }
+    });
+    // ITENS DO PEDIDO
+    $("#items-request-table").DataTable({
+        "order": [
+            [1, 'asc']
+        ],
+        "bInfo": false
+        , "paging": true
+        , "pagingType": 'simple_numbers'
+        , "responsive": true
+        , "lengthChange": false
+        , "iDisplayLength": 10
+        , "autoWidth": false,
+        "dom": '<"top">rt<"bottom"ip> <"clear">'
+        , "language": {
+            "url": window.location.origin + "/assets/app/plugins/datatables/Portuguese2.json"
+        },
+        "aoColumnDefs": [
+            {
+                'sortable': false,
+                'aTargets': [0, 1, 4]
+            },
+            {
+                'className': 'text-center',
+                'aTargets': [0, 4]
+            },
+            {
+                'className': 'td-buttons',
+                'aTargets': 4
+            },
+        ],
+        "serverSide": true
+        , "ajax": {
+            "url": window.location.origin + '/post/table/items/request'
+            , "type": "POST"
+            , "headers": {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                ,
+            }
+            ,
+        },
+        "drawCallback": function () {
+            var max = 0; // valor máximo inicializado em zero
+            var maxCell; // célula com o valor máximo
+
+            // Loop pelas células da tabela com a classe "tdbtn"
+            $("td.td-buttons").each(function () {
+                var count = $(this).children().length; // conta o número de elementos dentro da célula
+                if (count > max) { // verifica se o número de elementos é maior que o valor máximo atual
+                    max = count;
+                    maxCell = this; // atualiza o valor máximo e a célula correspondente
+                }
+            });
+            calc = max * 35;
+            $("th.td-buttons").css({
+                "width": calc + "px",
+            });
+            $("td").css({
+                "white-space": "nowrap",
+            });
+            sum_cart_value()
+            cart_count()
         }
     });
     // TODAS PEDIDOS
@@ -134,6 +201,7 @@ $(function () {
                 "white-space": "nowrap",
             });
             sum_cart_value()
+            count_orders()
         }
 
     });
@@ -160,7 +228,7 @@ $(function () {
         },],
         "serverSide": true
         , "ajax": {
-            "url": window.location.origin + "/post/table/cart/items"
+            "url": window.location.origin + "/post/table/equals/items"
             , "type": "POST"
             , "headers": {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -273,10 +341,12 @@ $('#send-cart').on('click', function () {
     }
     if ($('#select-address').val() == null) {
         $('#select-address').css('border', '2px solid red');
+
         return false;
     } else {
         $('#select-address').removeAttr('style');
     }
+    var location = 'saved-location'
     var address = {}
     if ($('#select-address').val() == 'other-address') {
         var phone = $('#delivery-client-phone').val().replace(/[()  ._-]/g, '')
@@ -292,6 +362,7 @@ $('#send-cart').on('click', function () {
             return false;
         } else {
             $('#delivery-location').removeAttr('style');
+            var location = $('#delivery-location').val()
         }
 
         if ($('#delivery-address').val() == '' || $('#delivery-address').val().length > 255) {
@@ -328,11 +399,11 @@ $('#send-cart').on('click', function () {
             reference: $('#delivery-reference').val(),
         }
     }
-    $.get(window.location.origin + '/get/send/cart/confirm', function (data) {
+    $.get(window.location.origin + '/get/send/cart/confirm/' + location, function (data) {
         if (!data.error) {
             bootbox.confirm({
                 title: 'Enviar pedido?',
-                message: "<p>Total do pedido + entrga: <strong> " + data.value + "</strong> .</p><br><p>Tem certeza que não deseja mais nada? Que tal dar mais uma olhadinha no cardápio.</p>",
+                message: "<p>Total do pedido + entrega: <strong> " + data.value + "</strong> .</p><br><p>Tem certeza que não deseja mais nada? Que tal dar mais uma olhadinha no cardápio?</p>",
                 centerVertical: true,
                 buttons: {
                     cancel: {
@@ -417,13 +488,6 @@ $('#send-cart').on('click', function () {
 
     });
 });
-// LISTA O PEDIDO
-function list_items_equals_request(request, item, product) {
-    $('#product_name').text(product)
-    $('#list-items-equals-table').DataTable().column(1).search(request).column(2).search(item).column(4).search('delivery').draw()
-    $('#delivery-client-modal').modal('hide')
-    $('#list-items-equals-modal').modal('show')
-}
 // APAGAR ITEM CARRINHO
 function delete_item_request(id) {
     bootbox.confirm({
@@ -513,6 +577,8 @@ function edit_item(id) {
             }
             $('#item_id').val(id)
             $('#edit-obs-item-request').val(data.observation)
+
+            $('#list-items-equals-modal').modal('hide')
             $('#edit-item').modal('show')
         }
         , error: function () {
@@ -522,6 +588,16 @@ function edit_item(id) {
             });
         }
     });
+}
+$('#edit-item').on('hidden.bs.modal', function () {
+    $('#list-items-equals-modal').modal('show')
+})
+function edit_address_or_payment(id) {
+    $.get(window.location.origin + "/get/edit/address/" + id, function (data) {
+
+    });
+    $('#items-request-modal').modal('hide');
+    $("#set-address-modal").modal('show')
 }
 // SALVA ALTERAÇÃO
 function save_edit_item() {
@@ -601,12 +677,33 @@ function save_edit_item() {
     });
 
 }
-
+// LISTA O PEDIDO
+function list_items_equals_request(request, item, product) {
+    $('#product_name').text(product)
+    $('#list-items-equals-table').DataTable().column(1).search(request).column(2).search(item).column(4).search('delivery').draw()
+    $('#items-request-modal').modal('hide')
+    $('#list-items-equals-modal').modal('show')
+}
+// ITENS DO PEDIDO
+function items_request(id) {
+    const URL = window.location.origin + '/get/order/information/' + id
+    $.ajax({
+        url: URL,
+        type: 'GET',
+        success: function (data) {
+            $('#items-request-table').DataTable().column(1).search(id).draw()
+            $('#btn-act').html(data.btn)
+            $('#DeliveryViewtitle').html('<strong> STATUS: </strong>' + data.status + '<br><strong> PAGAMENTO: </strong>' + data.payment + '<br><strong> DELIVERY: </strong> R$' + data.value + '<br><strong> ENDEREÇO: </strong>' + data.address + '<br><strong> CONTATO: </strong>' + data.phone)
+            $('#edit-delivery-btn').html(data.btn_delivery)
+            $('.order-total-value').text(data.value_total)
+            $('#items-request-modal').modal('show');
+        },
+    });
+}
 // MODAL ENDEREÇO E PAGAMENTO
 $('#set_address').on('click', function () {
     $('#set-address-modal').modal('show');
 });
-
 // SELEÇAO DE ENDEREÇO
 $('#select-address').on('change', function (event) {
     switch (event.target.value) {
@@ -626,6 +723,7 @@ $('#select-address').on('change', function (event) {
 function orders_table(val) {
     $('#orders-table').DataTable().column(1).search(val).draw()
 }
+
 
 //--------------------------------------
 // PAGINA

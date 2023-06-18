@@ -17,6 +17,7 @@ class NotificationModel extends Model
         'request_id',
         'messege',
         'size',
+        'delivery',
         'centervertical',
         'user_destination',
     ];

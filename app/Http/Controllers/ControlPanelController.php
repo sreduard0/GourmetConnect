@@ -16,7 +16,6 @@ class ControlPanelController extends Controller
     public function monthly_sales_chart()
     {
         $statistics = [];
-
         $items_menu = ItemModel::select('id', 'name')->get();
         foreach ($items_menu as $item) {
             $color = Tools::colorGenerate($item->id);

@@ -232,6 +232,38 @@ class SaleItemsController extends Controller
         }
         return $additionalItems;
     }
+    // INFORMAÇOES DO DELIVERY
+    public function delivery_information_modal($id)
+    {
+        $requestData = RequestsModel::find(Tools::hash($id, 'decrypt'));
+        $btn_delivery = '';
+        $btn = '';
+        switch ($requestData->status) {
+            case 1:
+                $status = 'PENDENTE';
+                $btn_delivery = '<button onclick="edit_address_or_payment(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn btn-sm btn-primary rounded-pill"><i class="fa-solid fa-pen"></i>  <strong>ALTERAR ENDEREÇO/PAGAMENTO</strong></button>';
+                break;
+            case 2:
+                $status = 'EM ANDAMENTO';
+                $btn_delivery = '<button onclick="edit_address_or_payment(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn btn-primary rounded-pill"><i class="fa-solid fa-pen"></i>  <strong>ALTERAR ENDEREÇO/PAGAMENTO</strong></button>';
+                break;
+            case 3:
+                $status = 'SAIU PARA ENTREGA';
+                break;
+        }
+        $delivery_address = DeliveryAddressModel::where('request_id', Tools::hash($id, 'decrypt'))->first();
+        $data = [
+            'status' => $status,
+            'address' => $delivery_address->street_address . ", " . $delivery_address->number . " - " . $delivery_address->neighborhood,
+            'payment' => $requestData->payment->name,
+            'phone' => Tools::mask('(##) # ####-####', $delivery_address->phone),
+            'btn' => $btn,
+            'btn_delivery' => $btn_delivery,
+            'value' => number_format($delivery_address->delivery_value, 2, ',', '.'),
+            'value_total' => Calculate::requestValue($requestData->id, [1, 4], true, true),
+        ];
+        return $data;
+    }
     // CONTAGEM DE ITENS NO CARRINHO
     public function cart_count()
     {
@@ -276,14 +308,23 @@ class SaleItemsController extends Controller
         }
     }
     // CONFIRMA ITENS E VALOR DO CARRINHO
-    public function send_cart_confirm()
+    public function send_cart_confirm($location)
     {
         $order = RequestsModel::where('client_id', auth()->guard('client')->id())->where('status', false)->first();
         if ($order) {
-            return [
-                'error' => false,
-                'value' => Calculate::requestValue($order->id, 1, true, true),
-            ];
+            if ($location == 'saved-location') {
+                $user = UsersClientModel::where('login_id', auth()->guard('client')->id())->first();
+                return [
+                    'error' => false,
+                    'value' => Calculate::sumDeliveryValue($order->id, $user->location_id, true),
+                ];
+
+            } else {
+                return [
+                    'error' => false,
+                    'value' => Calculate::sumDeliveryValue($order->id, $location, true),
+                ];
+            }
         } else {
             return ['error' => true, 'message' => 'Carrinho está vázio.'];
         }
@@ -341,6 +382,52 @@ class SaleItemsController extends Controller
 
         return json_encode($json_data); //enviar dados como formato json
     }
+    public function items_request_table(Request $request)
+    {
+        $requestData = $request->all();
+        $columns = [
+            0 => 'product_id',
+            1 => 'product_id',
+            2 => 'count',
+            3 => 'value',
+            4 => 'id',
+        ];
+        if ($requestData['columns'][1]['search']['value']) {
+            $order = RequestsModel::where('id', Tools::hash($requestData['columns'][1]['search']['value'], 'decrypt'))->where('delivery', 1)->first();
+            $items = RequestsItemsModel::with('product')->select('product_id', DB::raw('COUNT(id) as count'))
+                ->where('request_id', $order->id)
+                ->groupBy('product_id')
+                ->orderBy($columns[$requestData['order'][0]['column']], $requestData['order'][0]['dir'])
+                ->offset($requestData['start'])
+                ->take($requestData['length'])
+                ->get();
+            $rows = count($items);
+        } else {
+            $items = array();
+            $rows = 0;
+        }
+        $filtered = count($items);
+        $dados = array();
+        foreach ($items as $item) {
+            $dado = array();
+            $dado[] = '<img class="img-circle" src="' . asset($item->product->photo_url) . '" alt="" width="35">';
+            $dado[] = $item->product->name;
+            $dado[] = $item->count;
+            $dado[] = Calculate::itemEqualsValue($item->product_id, $order->id, [1, 2, 3, 4], true);
+            $dado[] = '<button onclick="return  list_items_equals_request(\'' . Tools::hash($order->id, 'encrypt') . '\',\'' . Tools::hash($item->product->id, 'encrypt') . '\',\'' . $item->product->name . '\',\'\')" class="btn btn-sm btn-primary m-t-3"><i class="fa-solid fa-eye"></i></button>';
+            $dados[] = $dado;
+        }
+
+        //Cria o array de informações a serem retornadas para o Javascript
+        $json_data = array(
+            "draw" => intval($requestData['draw']), //para cada requisição é enviado um número como parâmetro
+            "recordsTotal" => intval($filtered), //Quantidade de registros que há no banco de dados
+            "recordsFiltered" => intval($rows), //Total de registros quando houver pesquisa
+            "data" => $dados, //Array de dados completo dos dados retornados da tabela
+        );
+
+        return json_encode($json_data); //enviar dados como formato json
+    }
     // PEDIDOS JA FEITOS
     public function orders_table(Request $request)
     {
@@ -382,6 +469,7 @@ class SaleItemsController extends Controller
         $dados = array();
         foreach ($deliverys as $delivery) {
             $buttons = '';
+            $buttons .= '<button onclick="return items_request(\'' . Tools::hash($delivery->id, 'encrypt') . '\')" class="btn btn-sm btn-primary"><i class="fa-solid fa-eye"></i></button> ';
             $buttons .= '<button onclick="return delete_delivery(\'' . Tools::hash($delivery->id, 'encrypt') . '\')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button> ';
 
             $dado = array();
@@ -404,8 +492,8 @@ class SaleItemsController extends Controller
 
         return json_encode($json_data); //enviar dados como formato json
     }
-    // TABELA COM ITEMS DO PEDIDO
-    public function cart_items(Request $request)
+    // TABELA COM ITEMS ESPECIFICOS DO PEDIDO
+    public function equals_items_table(Request $request)
     {
         $requestData = $request->all();
 

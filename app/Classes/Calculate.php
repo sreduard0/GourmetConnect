@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use App\Models\DeliveryAddressModel;
+use App\Models\DeliveryLocationsModel;
 use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
 
@@ -37,6 +38,32 @@ class Calculate
             }
 
         }
+        foreach ($items as $item) {
+            $sum[] = $item->product->value;
+            foreach ($item->additionals as $additional) {
+                $sum[] = $additional->value;
+            }
+
+        }
+        if ($formated) {
+            return 'R$' . number_format(array_sum($sum), 2, ',', '.');
+        } else {
+            return array_sum($sum);
+        }
+    }
+
+    // SOMA O VALOR DE PRODUTOS + ENTREGA ESPECIFICA
+    public static function sumDeliveryValue(int $id, int $delivery_id, bool $formated = false)
+    {
+        $sum[] = 0.00;
+        $items = RequestsItemsModel::with('additionals', 'product')
+            ->where('request_id', $id)->where('status', 1)->get();
+
+        $delivery_address = DeliveryLocationsModel::find($delivery_id);
+        if ($delivery_address) {
+            $sum[] = $delivery_address->value_delivery;
+        }
+
         foreach ($items as $item) {
             $sum[] = $item->product->value;
             foreach ($item->additionals as $additional) {

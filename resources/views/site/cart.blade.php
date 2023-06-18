@@ -52,7 +52,7 @@ use App\Classes\Tools;
     <div class="container">
         <div class="row">
             <div class="col-lg-12 p-b-30">
-                <h5 class="title p-b-20"><i class="fa-duotone fa-burger-soda"></i> PEDIDOS</h5>
+                <h5 class="title p-b-20"><i class="fa-duotone fa-burger-soda"></i> SEUS PEDIDOS</h5>
                 <ul class="nav nav-pills table-responsive">
                     <li class="nav-item p-r-5" onclick="orders_table('pending')"><a class="nav-link rounded-pill" id="pending" data-toggle="tab">Pendentes</a></li>
                     <li class="nav-item p-r-5" onclick="orders_table('production')"><a class="nav-link rounded-pill" id="production" data-toggle="tab">Em andamento</a></li>
@@ -173,7 +173,6 @@ use App\Classes\Tools;
                                         @endforeach
                                     </optgroup>
                                     <option selected disabled value="">Selecione um método de pagamento</option>
-
                                 </select>
                             </div>
                         </div>
@@ -191,7 +190,6 @@ use App\Classes\Tools;
                                 <select class="text-center select-rounded form-control " id="select-address" class="form-control">
                                     <option selected disabled value="">Selecione um endereço</option>
                                     <option value="saved-address">{{ $user->street_address.', Nº'.$user->number.' - '.$user->neighborhood.' | R$' . number_format( $user->location->value_delivery, 2, ',', '.') }}</option>
-
                                     <option value="other-address">Outro endereço</option>
                                 </select>
                             </div>
@@ -253,8 +251,8 @@ use App\Classes\Tools;
     </div>
 
 </div>
-{{-- PEDIDOS DO CLIENTE --}}
-<div class="modal fade" id="delivery-client-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
+{{-- ITEMS DO CLIENTE --}}
+<div class="modal fade" id="items-request-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -263,12 +261,9 @@ use App\Classes\Tools;
                     <div id="edit-delivery-btn"></div>
                     <button type="button" data-dismiss="modal" aria-label="Close" class="btn"><i class="fs-18 fa-solid fa-times"></i></button>
                 </div>
-
             </div>
             <div class="modal-body">
-                <div class="d-flex justify-content-end" id="edit_request_btn">
-                </div>
-                <table style="width:100%" id="client-delivery-view-table" class="table table-bordered table-striped">
+                <table style="width:100%" id="items-request-table" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th width="25px">Foto</th>
@@ -286,14 +281,11 @@ use App\Classes\Tools;
                         <tbody>
                             <tr>
                                 <th style="width:50%">TOTAL:</th>
-                                <td class="value-total"> R$00,00</td>
+                                <td class="order-total-value"> R$00,00</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
-                <input type="hidden" id="print_id">
-                <div id="btn-act"></div>
             </div>
         </div>
     </div>
@@ -363,7 +355,6 @@ use App\Classes\Tools;
         </div>
     </div>
 </div>
-
 @endsection
 @section('plugins')
 <script src="{{ asset('assets/site/js/cart.js') }}"></script>

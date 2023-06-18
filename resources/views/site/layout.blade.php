@@ -364,6 +364,9 @@ $app_settings = AppSettingsModel::all()->first();
     </div>
     {{-- /MODALS --}}
     <!-- Js File -->
+    @auth('client')
+    <script src="{{ asset('assets/site/js/notification.js') }}"></script>
+    @endauth
     <script src="{{ asset('assets/app/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/app/plugins/datatables/numeric-comma.js') }}"></script>
     <script src="{{ asset('assets/app/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>

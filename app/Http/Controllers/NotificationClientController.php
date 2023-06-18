@@ -7,10 +7,9 @@ use App\Models\AppSettingsModel;
 use App\Models\NotificationModel;
 use App\Models\RequestsItemsModel;
 use App\Models\RequestsModel;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class NotificationController extends Controller
+class NotificationClientController extends Controller
 {
 // NOTIFICAÇÃO
     public function notification()
@@ -20,22 +19,12 @@ class NotificationController extends Controller
         $response = new Response();
         $response->headers->set('Content-Type', 'text/event-stream');
         $response->headers->set('Cache-Control', 'no-cache');
-        $notification = NotificationModel::where('notify', 1)->first();
+        $notification = NotificationModel::where('notify', true)->where('user_destination', auth()->guard('client')->id())->where('delivery', true)->first();
         if ($notification) {
-            if ($notification->user_destination == null || $notification->user_destination !== auth()->id()) {
-                $notification['icon'] = $app_config->logo_url;
-                $response->setContent('data: ' . json_encode($notification) . "\n\n");
-                $response->send();
-
-                $notification = NotificationModel::where('notify', 1)->where('delivery', false)->first();
-                $notification->notify = 0;
-                $notification->save();
-            } else {
-                $notification = null;
-                $response->setContent('data: ' . json_encode($notification) . "\n\n");
-                $response->send();
-
-            }
+            $notification['icon'] = $app_config->logo_url;
+            $response->setContent('data: ' . json_encode($notification) . "\n\n");
+            $response->send();
+            $notification = NotificationModel::where('notify', true)->where('user_destination', auth()->guard('client')->id())->where('delivery', true)->delete();
         } else {
             $notification = null;
             $response->setContent('data: ' . json_encode($notification) . "\n\n");
@@ -43,9 +32,9 @@ class NotificationController extends Controller
         }
 
     }
-    public function new_request_notification(Request $request)
+    public function new_request_notification($id)
     {
-        $requests = RequestsItemsModel::with('product', 'additionals')->where('request_id', Tools::hash($request->get('id'), 'decrypt'))->where('status', 2)->orderBy('product_id', 'desc')->get();
+        $requests = RequestsItemsModel::with('product', 'additionals')->where('request_id', Tools::hash($id, 'decrypt'))->where('status', 2)->orderBy('product_id', 'desc')->get();
         $items = [];
         foreach ($requests as $item) {
 
@@ -75,11 +64,12 @@ class NotificationController extends Controller
 
         $data = [
             'items' => $items,
-            'command' => RequestsModel::find(Tools::hash($request->get('id'), 'decrypt')),
+            'command' => RequestsModel::find(Tools::hash($id, 'decrypt')),
 
         ];
         return json_encode($data);
     }
+
     public function notification_check($id)
     {
         NotificationModel::find($id)->delete();

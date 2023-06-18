@@ -16,6 +16,7 @@ class sendNotificationNewRequest
             'title' => $response->data['title'],
             'messege' => $response->data['messege'],
             'size' => $response->data['size'],
+            'delivery' => $response->data['delivery'],
             'centervertical' => $response->data['centervertical'],
             'user_destination' => $response->data['user_destination'],
         ];

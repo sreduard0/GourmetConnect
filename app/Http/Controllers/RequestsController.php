@@ -70,6 +70,7 @@ class RequestsController extends Controller
                     'request_id' => Tools::hash($request->id, 'encrypt'),
                     'messege' => 'Há um novo pedido na MESA #' . $data['table'] . ' para ' . strtoupper($data['client']),
                     'size' => 'large',
+                    'delivery' => false,
                     'centervertical' => 1,
                     'user_destination' => auth()->id(),
                 ]));
@@ -248,22 +249,64 @@ class RequestsController extends Controller
     // MUDA O STATUS DO DO PEDIDO AO CONFIRMAR QUE FOI IMPRESSO
     public function print_confirm(Request $request)
     {
-        event(new notificationNewRequest([
-            'notify' => 0,
-            'type' => 'event_table',
-            'title' => null,
-            'request_id' => null,
-            'messege' => null,
-            'size' => null,
-            'centervertical' => null,
-            'user_destination' => null,
-        ]));
         if ($request->get('id') != 'all') {
             RequestsItemsModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->where('status', 2)->update(['status' => 3]);
-            RequestsModel::where('id', Tools::hash($request->get('id'), 'decrypt'))->where('delivery', 1)->update(['status' => 2]);
+            $order = RequestsModel::where('id', Tools::hash($request->get('id'), 'decrypt'))->where('delivery', true)->first();
+            $order->update(['status' => 2]);
+            if (!$order) {
+                event(new notificationNewRequest([
+                    'notify' => 0,
+                    'type' => 'event_table',
+                    'title' => null,
+                    'request_id' => null,
+                    'messege' => null,
+                    'size' => null,
+                    'delivery' => false,
+                    'centervertical' => null,
+                    'user_destination' => null,
+                ]));
+            } else {
+                event(new notificationNewRequest([
+                    'notify' => 1,
+                    'type' => 'bootbox',
+                    'title' => 'SEU PEDIDO MUDOU DE STATUS',
+                    'request_id' => $request->get('id'),
+                    'messege' => 'Seu pedido #' . Tools::hash($request->get('id'), 'decrypt') . ' já foi visualizado e está sendo preparado.',
+                    'size' => 'large',
+                    'delivery' => true,
+                    'centervertical' => true,
+                    'user_destination' => $order->client_id,
+                ]));
+            }
         } else {
             RequestsItemsModel::where('status', 2)->update(['status' => 3]);
-            RequestsModel::where('status', 1)->where('delivery', 1)->update(['status' => 2]);
+            event(new notificationNewRequest([
+                'notify' => 0,
+                'type' => 'event_table',
+                'title' => null,
+                'request_id' => null,
+                'messege' => null,
+                'size' => null,
+                'delivery' => false,
+                'centervertical' => null,
+                'user_destination' => null,
+            ]));
+
+            foreach (RequestsModel::where('status', 1)->where('delivery', true)->get() as $order) {
+                $order->update(['status' => 2]);
+                event(new notificationNewRequest([
+                    'notify' => 1,
+                    'type' => 'bootbox',
+                    'title' => 'SEU PEDIDO MUDOU DE STATUS',
+                    'request_id' => Tools::hash($order->id, 'encrypt'),
+                    'messege' => 'Seu pedido #' . $order->id . ' já foi visualizado e está sendo preparado.',
+                    'size' => 'large',
+                    'delivery' => true,
+                    'centervertical' => true,
+                    'user_destination' => $order->client_id,
+                ]));
+            }
+
         }
     }
     // TABELA COM PEDIDOS DO CLIENTE AINDA NÃO ENVIADO

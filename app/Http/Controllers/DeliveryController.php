@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\Calculate;
 use App\Classes\Tools;
+use App\Events\notificationNewRequest;
 use App\Models\DeliveryAddressModel;
 use App\Models\DeliveryLocationsModel;
 use App\Models\RequestsItemsModel;
@@ -97,7 +98,19 @@ class DeliveryController extends Controller
     // ALTERA STATUS PARA "SAIU PARA ENTREGA"
     public function out_for_delivery(Request $request)
     {
-        RequestsModel::where('id', Tools::hash($request->get('id'), 'decrypt'))->where('status', 2)->update(['status' => 3]);
+        $order = RequestsModel::where('id', Tools::hash($request->get('id'), 'decrypt'))->where('status', 2)->first();
+        $order->update(['status' => 3]);
+        event(new notificationNewRequest([
+            'notify' => 1,
+            'type' => 'bootbox',
+            'title' => 'SEU PEDIDO MUDOU DE STATUS',
+            'request_id' => null,
+            'messege' => 'Seu pedido #' . $order->id . ' está pronto e saindo para entrega. Aguarde no local.',
+            'size' => 'large',
+            'delivery' => true,
+            'centervertical' => true,
+            'user_destination' => $order->client_id,
+        ]));
     }
     // FINALIZA ENTREGA
     public function finalize_delivery(Request $request)
@@ -107,6 +120,18 @@ class DeliveryController extends Controller
             RequestsItemsModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->where('status', 3)->update(['status' => 4, 'payment_method' => $delivery->payment_method]);
             RequestsItemsModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->where('status', 2)->delete();
             DeliveryAddressModel::where('request_id', Tools::hash($request->get('id'), 'decrypt'))->where('delivered', 0)->update(['delivered' => 1]);
+            event(new notificationNewRequest([
+                'notify' => 1,
+                'type' => 'bootbox',
+                'title' => 'SEU PEDIDO FOI FINALIZADO',
+                'request_id' => null,
+                'messege' => 'Seu pedido #' . $delivery->id . ' já foi entregue. Agradecemos a preferência.',
+                'size' => 'large',
+                'delivery' => true,
+                'centervertical' => true,
+                'user_destination' => $delivery->client_id,
+            ]));
+
         }
     }
     // INFORMAÇÕES DO FORM PARA EDITAR DELIVERY
@@ -135,7 +160,7 @@ class DeliveryController extends Controller
                     $btn_request = '<button class="btn btn-accent rounded-pill" onclick="edit_request_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\',\'' . $requestData->client_name . '\')"><i class="fa-solid fa-pen"></i><strong> EDITAR PEDIDO</strong></button>';
                 }
                 if (Auth::user()->hasPermissionTo('edit_delivery')) {
-                    $btn_delivery = '<button onclick="edit_information_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn text-success"><i class="fa-solid fa-pen"></i> EDITAR <strong></strong></button>';
+                    $btn_delivery = '<button onclick="edit_information_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn text-success"><i class="fa-solid fa-pen"></i>  <strong>EDITAR</strong></button>';
                 }
                 break;
             case 2:
@@ -144,7 +169,7 @@ class DeliveryController extends Controller
                     $btn = '<button type="button" onclick="out_for_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn btn-primary rounded-pill float-right m-t-10"><strong>SAIU PARA ENTREGA</strong></button>';
                 }
                 if (Auth::user()->hasPermissionTo('edit_delivery')) {
-                    $btn_delivery = '<button onclick="edit_information_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn text-success"><i class="fa-solid fa-pen"></i> EDITAR <strong></strong></button>';
+                    $btn_delivery = '<button onclick="edit_information_delivery(\'' . Tools::hash($requestData->id, 'encrypt') . '\')" class="btn text-success"><i class="fa-solid fa-pen"></i>  <strong>EDITAR</strong></button>';
                 }
                 break;
             case 3:
