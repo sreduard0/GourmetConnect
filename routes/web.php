@@ -4,19 +4,21 @@ use App\Http\Controllers\AdditionalItemsController;
 use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\AppViewsController;
 use App\Http\Controllers\AssetsController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ControlPanelController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\ItemsSalesController;
 use App\Http\Controllers\LikesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NotificationClientController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrdersClientController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RequestsController;
-use App\Http\Controllers\SaleItemsController;
 use App\Http\Controllers\SiteViewsController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TypeItemsController;
@@ -213,9 +215,8 @@ Route::get('contact', [SiteViewsController::class, 'contact'])->name('contact');
 //-------------------------------
 // SITE/ ITEM
 //-------------------------------
-Route::get('get/item/show/{id}', [SaleItemsController::class, 'show']);
-Route::get('get/item/additionals/{id}', [SaleItemsController::class, 'additionals'])->middleware('auth:client');
-Route::put('put/add/item/cart', [SaleItemsController::class, 'create'])->middleware('auth:client');
+Route::get('get/item/show/{id}', [ItemsSalesController::class, 'show']);
+Route::get('get/item/additionals/{id}', [ItemsSalesController::class, 'additionals'])->middleware('auth:client');
 
 //-------------------------------
 // SITE/ COMENTARIOS
@@ -234,27 +235,34 @@ Route::post('post/table/item/like', [LikesController::class, 'table'])->middlewa
 //-------------------------------
 // SITE/ CARRINHO
 //-------------------------------
-Route::get('get/orders/status/count', [SaleItemsController::class, 'count_orders'])->middleware('auth:client');
-Route::get('get/sum/cart/value', [SaleItemsController::class, 'sum_cart_value'])->middleware('auth:client');
-Route::get('cart/item/count', [SaleItemsController::class, 'cart_count'])->middleware('auth:client');
-
-Route::delete('delete/clear/cart', [SaleItemsController::class, 'clear_cart'])->middleware('auth:client');
-Route::put('put/send/cart', [SaleItemsController::class, 'send_cart'])->middleware('auth:client');
-Route::get('get/send/cart/confirm/{location}', [SaleItemsController::class, 'send_cart_confirm'])->middleware('auth:client');
-Route::delete('delete/item/cart/{id}', [SaleItemsController::class, 'delete'])->middleware('auth:client');
-Route::get('get/edit/item/{id}', [SaleItemsController::class, 'edit'])->middleware('auth:client');
-Route::put('put/item/edit', [SaleItemsController::class, 'update'])->middleware('auth:client');
-
-Route::get('get/edit/address/{id}', [SaleItemsController::class, 'edit_address_or_payment'])->middleware('auth:client');
-Route::get('get/order/information/{id}', [SaleItemsController::class, 'delivery_information_modal'])->middleware('auth:client');
-Route::post('post/table/cart', [SaleItemsController::class, 'cart_table'])->middleware('auth:client');
-Route::post('post/table/items/request', [SaleItemsController::class, 'items_request_table'])->middleware('auth:client');
-Route::post('post/table/equals/items', [SaleItemsController::class, 'equals_items_table'])->middleware('auth:client');
-Route::post('post/table/orders', [SaleItemsController::class, 'orders_table'])->middleware('auth:client');
+// CONTA ITENS DO CARRINHO
+Route::get('cart/item/count', [CartController::class, 'cart_count'])->middleware('auth:client');
+// SOMA VALOR DO CARRINHO
+Route::get('get/sum/cart/value', [CartController::class, 'sum_cart_value'])->middleware('auth:client');
+// CRUD CARRINHO
+Route::put('put/add/item/cart', [CartController::class, 'create'])->middleware('auth:client');
+Route::get('get/edit/item/{id}', [CartController::class, 'edit'])->middleware('auth:client');
+Route::put('put/item/edit', [CartController::class, 'update'])->middleware('auth:client');
+Route::delete('delete/item/cart/{id}', [CartController::class, 'delete'])->middleware('auth:client');
+// AÇÕES DO CARRINHO
+Route::put('put/send/cart', [CartController::class, 'send_cart'])->middleware('auth:client');
+Route::get('get/send/cart/confirm/{location}', [CartController::class, 'send_cart_confirm'])->middleware('auth:client');
+Route::delete('delete/clear/cart', [CartController::class, 'clear_cart'])->middleware('auth:client');
+// TABELAS
+Route::post('post/table/cart', [CartController::class, 'cart_table'])->middleware('auth:client');
+Route::post('post/table/items/request', [CartController::class, 'items_request_table'])->middleware('auth:client');
+Route::post('post/table/equals/items', [CartController::class, 'equals_items_table'])->middleware('auth:client');
+Route::post('post/table/orders', [CartController::class, 'orders_table'])->middleware('auth:client');
 
 //-------------------------------
 // SITE/ PEDIDOS
 //-------------------------------
+// CONTA OSPEDIDOS
+Route::get('get/orders/status/count', [OrdersClientController::class, 'count_orders'])->middleware('auth:client');
+// PEDIDOS FEITOS
+Route::get('get/edit/address/{id}', [OrdersClientController::class, 'edit'])->middleware('auth:client');
+Route::get('get/order/information/{id}', [OrdersClientController::class, 'show'])->middleware('auth:client');
+
 Route::get('table/request/qr-code/client/{table}', function ($table) {
     return $table;
 });

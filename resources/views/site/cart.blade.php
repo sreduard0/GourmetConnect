@@ -251,6 +251,116 @@ use App\Classes\Tools;
     </div>
 
 </div>
+{{-- UPDATE ADDRESS DELIVERY --}}
+<div class="modal fade" id="update-address-modal" role="dialog" tabindex="-1" aria-labelledby="AddressClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">EDITAR ENDEREÇO/PAGAMENTO</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-8">
+                        <div class="border-bottom border-default m-b-20 col-md-3">
+                            <h5>PAGAMENTO</h5>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="new-payment-method">Qual será sua forma de pagamento? <span style="color:red">*</span></label>
+                                <select class="text-center select-rounded form-control " id="new-payment-method" name="new-payment-method" class="form-control">
+                                    <optgroup label="Cartões de crédito">
+                                        @foreach ($payment_methods as $method)
+                                        @if ($method->group_payment == 'credit_card')
+                                        <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                        @endif
+                                        @endforeach
+                                    </optgroup>
+                                    <optgroup label="Cartões de débito">
+                                        @foreach ($payment_methods as $method)
+                                        @if ($method->group_payment == 'debit_card')
+                                        <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                        @endif
+                                        @endforeach
+                                    </optgroup>
+                                    <optgroup label="Outras formas de pagamento">
+                                        @foreach ($payment_methods as $method)
+                                        @if ($method->group_payment == 'other_forms')
+                                        <option @if ($method->active) selected @endif value="{{ $method->id }}">{{ $method->name }}</option>
+                                        @endif
+                                        @endforeach
+                                    </optgroup>
+                                    <option selected disabled value="">Selecione um método de pagamento</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-8">
+                        <hr>
+                        <div class="border-bottom border-default m-b-20 col-md-3">
+                            <h5>ENDEREÇO</h5>
+                        </div>
+                        <div class="row">
+                            <form id="form-set-address" class="d-flex justify-content-center">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="form-group col">
+                                            <label for="new-delivery-client-phone">Telefone<span style="color:red">*</span></label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="new-delivery-client-phone" name="new-delivery-client-phone" data-inputmask="'mask':'(99) 9 9999-9999'" data-mask="" inputmode="text" placeholder="EX: (51) 9 9999-9999">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="form-group col">
+                                            <label for="new-delivery-location">Região <span style="color:red">*</span></label>
+                                            <select class="text-center select-rounded form-control" id="new-delivery-location" name="new-delivery-location" class="form-control">
+                                                <option value='' disabled selected>Selecione uma região</option>
+                                                @foreach($locations as $location)
+                                                <option value='{{ $location->id }}'>{{ $location->neighborhood }} @if ($location->reference)- {{ $location->reference }}@endif | {{ 'R$' . number_format( $location->value_delivery, 2, ',', '.') }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-8">
+                                            <label for="new-delivery-address">Logradouro <span style="color:red">*</span></label>
+                                            <input id="new-delivery-address" type="text" class="form-control" placeholder="EX: Rua do Açai">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="new-delivery-number">Nº <span style="color:red">*</span></label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="new-delivery-number" data-inputmask="'mask':'9999'" data-mask="" inputmode="text" placeholder="EX: 1800">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="new-delivery-neighborhood">Bairro <span style="color:red">*</span></label>
+                                            <input id="new-delivery-neighborhood" type="text" class="form-control" placeholder="EX: Centro">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="new-delivery-reference">Referência <span style="color:red">*</span></label>
+                                            <input id="new-delivery-reference" type="text" class="form-control" placeholder="EX: Casa azul">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="update-address" type="button" class="btn btn-accent rounded-pill"><strong>SALVAR</strong></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 {{-- ITEMS DO CLIENTE --}}
 <div class="modal fade" id="items-request-modal" role="dialog" tabindex="-1" aria-labelledby="reqClientLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">

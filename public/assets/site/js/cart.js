@@ -592,12 +592,18 @@ function edit_item(id) {
 $('#edit-item').on('hidden.bs.modal', function () {
     $('#list-items-equals-modal').modal('show')
 })
+// MODAL DE EDIÇÃO DE PAGAMENTO E ENDEREÇO
 function edit_address_or_payment(id) {
     $.get(window.location.origin + "/get/edit/address/" + id, function (data) {
-
+        $("#new-payment-method").val(data.payment.payment_method)
+        $("#new-delivery-client-phone").val(data.address.phone)
+        $("#new-delivery-location").val(data.address.location_id)
+        $("#new-delivery-address").val(data.address.street_address)
+        $("#new-delivery-number").val(data.address.number)
+        $("#new-delivery-neighborhood").val(data.address.neighborhood)
+        $("#new-delivery-reference").val(data.address.reference)
+        $("#update-address-modal").modal('show')
     });
-    $('#items-request-modal').modal('hide');
-    $("#set-address-modal").modal('show')
 }
 // SALVA ALTERAÇÃO
 function save_edit_item() {
@@ -692,9 +698,7 @@ function items_request(id) {
         type: 'GET',
         success: function (data) {
             $('#items-request-table').DataTable().column(1).search(id).draw()
-            $('#btn-act').html(data.btn)
             $('#DeliveryViewtitle').html('<strong> STATUS: </strong>' + data.status + '<br><strong> PAGAMENTO: </strong>' + data.payment + '<br><strong> DELIVERY: </strong> R$' + data.value + '<br><strong> ENDEREÇO: </strong>' + data.address + '<br><strong> CONTATO: </strong>' + data.phone)
-            $('#edit-delivery-btn').html(data.btn_delivery)
             $('.order-total-value').text(data.value_total)
             $('#items-request-modal').modal('show');
         },
@@ -703,6 +707,139 @@ function items_request(id) {
 // MODAL ENDEREÇO E PAGAMENTO
 $('#set_address').on('click', function () {
     $('#set-address-modal').modal('show');
+});
+// ENVIAR PEDIDO
+$('#update-address').on('click', function () {
+    // Verificação
+    if ($('#new-payment-method').val() == null) {
+        $('#payment-method').css('border', '2px solid red');
+        return false;
+    } else {
+        $('#new-payment-method').removeAttr('style');
+    }
+    var phone = $('#new-delivery-client-phone').val().replace(/[()  ._-]/g, '')
+    if ($('#new-delivery-client-phone').val() == null || phone.length != 11) {
+        $('#new-delivery-client-phone').addClass('is-invalid');
+        return false;
+    } else {
+        $('#new-delivery-client-phone').removeClass('is-invalid');
+    }
+
+    if ($('#new-delivery-location').val() == null) {
+        $('#new-delivery-location').css('border', '2px solid red');
+        return false;
+    } else {
+        $('#new-delivery-location').removeAttr('style');
+        var location = $('#new-delivery-location').val()
+    }
+
+    if ($('#new-delivery-address').val() == '' || $('#new-delivery-address').val().length > 255) {
+        $('#new-delivery-address').addClass('is-invalid');
+        return false;
+    } else {
+        $('#new-delivery-address').removeClass('is-invalid');
+    }
+    if ($('#new-delivery-number').val() == '' || $('#new-delivery-number').val().length > 5) {
+        $('#new-delivery-number').addClass('is-invalid');
+        return false;
+    } else {
+        $('#new-delivery-number').removeClass('is-invalid');
+    }
+    if ($('#new-delivery-neighborhood').val() == '' || $('#new-delivery-neighborhood').val().length > 255) {
+        $('#new-delivery-neighborhood').addClass('is-invalid');
+        return false;
+    } else {
+        $('#new-delivery-neighborhood').removeClass('is-invalid');
+    }
+    if ($('#new-delivery-reference').val() == '' || $('#new-delivery-reference').val().length > 255) {
+        $('#new-delivery-reference').addClass('is-invalid');
+        return false;
+    } else {
+        $('#new-delivery-reference').removeClass('is-invalid');
+    }
+
+    var address = {
+        phone: $('#new-delivery-client-phone').val(),
+        location: $('#new-delivery-location').val(),
+        street: $('#new-delivery-address').val(),
+        number: $('#new-delivery-number').val(),
+        neighborhood: $('#new-delivery-neighborhood').val(),
+        reference: $('#new-delivery-reference').val(),
+    }
+    console.log(address)
+    // bootbox.confirm({
+    //     title: 'Realmente deseja alterar o endereço de entrega?',
+    //     message: "Certifique-se que o endereço esta correto, o estabelecimento cobrará uma nova taxa de entrega em caso de erros.",
+    //     centerVertical: true,
+    //     buttons: {
+    //         cancel: {
+    //             label: "CANCELAR",
+    //             className: 'btn-secondary rounded-pill',
+    //         },
+    //         confirm: {
+    //             label: "SALVAR",
+    //             className: 'btn-accent rounded-pill',
+
+    //         }
+    //     },
+    //     callback: function (action) {
+    //         if (action) {
+    //             $.ajax({
+    //                 headers: {
+    //                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //                 },
+    //                 data: {
+    //                     payment: $('#new-payment-method').val(),
+    //                     address: address
+    //                 },
+    //                 type: "PUT",
+    //                 url: window.location.origin + "/put/update/address",
+    //                 success: function (response) {
+    //                     if (!response.error) {
+    //                         let dialog = bootbox.dialog({
+    //                             message: '<p class="text-center"><i class="m-l-24 fs-50 text-success fa-solid fa-check fa-beat-fade"></i></p><p class="text-center">' + response.message + '</p>',
+    //                             size: 'small',
+    //                             centerVertical: true,
+    //                         });
+    //                         $('#client-cart-table').DataTable().clear().draw()
+    //                         $('#orders-table').DataTable().clear().draw()
+    //                         count_orders()
+    //                         $('#set-address-modal').modal('hide');
+    //                         setTimeout(() => {
+    //                             dialog.modal('hide');
+    //                         }, 2000);
+
+    //                     } else {
+    //                         let dialog = bootbox.dialog({
+    //                             message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">' + response.message + '</p>',
+    //                             size: 'small',
+    //                             centerVertical: true,
+    //                             closeButton: false
+    //                         });
+    //                         $('#client-cart-table').DataTable().clear().draw()
+    //                         $('#orders-table').DataTable().clear().draw()
+
+    //                         setTimeout(() => {
+    //                             dialog.modal('hide');
+    //                         }, 2000);
+    //                     }
+
+    //                 },
+    //                 error: function () {
+    //                     let dialog = bootbox.dialog({
+    //                         message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">ERRO NA REDE</p>',
+    //                         size: 'small',
+    //                         centerVertical: true,
+    //                         closeButton: false
+    //                     });
+    //                     setTimeout(() => {
+    //                         dialog.modal('hide');
+    //                     }, 2000);
+    //                 }
+    //             });
+    //         }
+    //     }
+    // });
 });
 // SELEÇAO DE ENDEREÇO
 $('#select-address').on('change', function (event) {
@@ -718,7 +855,6 @@ $('#select-address').on('change', function (event) {
             break;
     }
 });
-
 // PEDIDOS PENDENTES/ANDAMENTOO/FINALIZADO
 function orders_table(val) {
     $('#orders-table').DataTable().column(1).search(val).draw()
@@ -758,4 +894,3 @@ if ($product.length > 0) {
         });
     });
 }
-
