@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\Calculate;
 use App\Classes\Tools;
+use App\Events\notificationNewRequest;
 use App\Models\AdditionalItemModel;
 use App\Models\DeliveryAddressModel;
 use App\Models\DeliveryLocationsModel;
@@ -122,7 +123,6 @@ class CartController extends Controller
             return ['error' => false, 'message' => 'Salvo!'];
         } catch (\Throwable $th) {
             return ['error' => true, 'message' => 'Ouve um erro ao salvar .'];
-
         }
     }
     // DELETA ITEM DO CARRINHO
@@ -191,6 +191,18 @@ class CartController extends Controller
                     $delivery_address->save();
 
                 }
+                event(new notificationNewRequest([
+                    'notify' => 1,
+                    'type' => 'bootbox',
+                    'title' => 'NOVO PEDIDO',
+                    'request_id' => Tools::hash($delivery_order->id, 'encrypt'),
+                    'messege' => 'Há um novo Delivery para ' . strtoupper(session('user')['name']),
+                    'size' => 'large',
+                    'delivery' => true,
+                    'centervertical' => 1,
+                    'user_destination' => auth()->id(),
+                ]));
+
                 return ['error' => false, 'message' => 'Pedido enviado.'];
             } else {
                 return ['error' => true, 'message' => 'Carrinho está vázio.'];

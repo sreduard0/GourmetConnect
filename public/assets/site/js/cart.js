@@ -724,7 +724,6 @@ $('#update-address').on('click', function () {
     } else {
         $('#new-delivery-client-phone').removeClass('is-invalid');
     }
-
     if ($('#new-delivery-location').val() == null) {
         $('#new-delivery-location').css('border', '2px solid red');
         return false;
@@ -732,7 +731,6 @@ $('#update-address').on('click', function () {
         $('#new-delivery-location').removeAttr('style');
         var location = $('#new-delivery-location').val()
     }
-
     if ($('#new-delivery-address').val() == '' || $('#new-delivery-address').val().length > 255) {
         $('#new-delivery-address').addClass('is-invalid');
         return false;
@@ -766,7 +764,6 @@ $('#update-address').on('click', function () {
         neighborhood: $('#new-delivery-neighborhood').val(),
         reference: $('#new-delivery-reference').val(),
     }
-    console.log(address)
     // bootbox.confirm({
     //     title: 'Realmente deseja alterar o endereço de entrega?',
     //     message: "Certifique-se que o endereço esta correto, o estabelecimento cobrará uma nova taxa de entrega em caso de erros.",
