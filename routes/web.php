@@ -252,16 +252,18 @@ Route::delete('delete/clear/cart', [CartController::class, 'clear_cart'])->middl
 Route::post('post/table/cart', [CartController::class, 'cart_table'])->middleware('auth:client');
 Route::post('post/table/items/request', [CartController::class, 'items_request_table'])->middleware('auth:client');
 Route::post('post/table/equals/items', [CartController::class, 'equals_items_table'])->middleware('auth:client');
-Route::post('post/table/orders', [CartController::class, 'orders_table'])->middleware('auth:client');
 
 //-------------------------------
 // SITE/ PEDIDOS
 //-------------------------------
-// CONTA OSPEDIDOS
+// CONTA OS PEDIDOS
 Route::get('get/orders/status/count', [OrdersClientController::class, 'count_orders'])->middleware('auth:client');
 // PEDIDOS FEITOS
 Route::get('get/edit/address/{id}', [OrdersClientController::class, 'edit'])->middleware('auth:client');
+Route::put('put/update/order', [OrdersClientController::class, 'update'])->middleware('auth:client');
 Route::get('get/order/information/{id}', [OrdersClientController::class, 'show'])->middleware('auth:client');
+// TABELA
+Route::post('post/table/orders', [OrdersClientController::class, 'orders_table'])->middleware('auth:client');
 
 Route::get('table/request/qr-code/client/{table}', function ($table) {
     return $table;

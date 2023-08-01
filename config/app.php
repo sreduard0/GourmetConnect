@@ -55,7 +55,7 @@ return [
     |
      */
 
-    'url' => "https: //afe4-45-183-78-250.ngrok-free.app",
+    'url' => "https://localhost",
 
     'asset_url' => '',
 

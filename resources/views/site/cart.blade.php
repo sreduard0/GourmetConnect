@@ -262,6 +262,7 @@ use App\Classes\Tools;
                 </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="order_id">
                 <div class="d-flex justify-content-center">
                     <div class="col-md-8">
                         <div class="border-bottom border-default m-b-20 col-md-3">
@@ -380,7 +381,8 @@ use App\Classes\Tools;
                             <th>Item</th>
                             <th width="30px">Qtd.</th>
                             <th width="80px">Valor</th>
-                            <th>Ver</th>
+                            <th width="35px">Ver</th>
+
                         </tr>
                     </thead>
                 </table>
@@ -416,7 +418,6 @@ use App\Classes\Tools;
                         <tr>
                             <th width="25px">Foto</th>
                             <th>Item</th>
-                            <th width="110px">Adic. por</th>
                             <th width="80px">Valor</th>
                             <th width="60px">Ações</th>
                         </tr>

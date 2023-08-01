@@ -113,10 +113,6 @@ $(function () {
                 'className': 'text-center',
                 'aTargets': [0, 4]
             },
-            {
-                'className': 'td-buttons',
-                'aTargets': 4
-            },
         ],
         "serverSide": true
         , "ajax": {
@@ -129,24 +125,6 @@ $(function () {
             ,
         },
         "drawCallback": function () {
-            var max = 0; // valor máximo inicializado em zero
-            var maxCell; // célula com o valor máximo
-
-            // Loop pelas células da tabela com a classe "tdbtn"
-            $("td.td-buttons").each(function () {
-                var count = $(this).children().length; // conta o número de elementos dentro da célula
-                if (count > max) { // verifica se o número de elementos é maior que o valor máximo atual
-                    max = count;
-                    maxCell = this; // atualiza o valor máximo e a célula correspondente
-                }
-            });
-            calc = max * 35;
-            $("th.td-buttons").css({
-                "width": calc + "px",
-            });
-            $("td").css({
-                "white-space": "nowrap",
-            });
             sum_cart_value()
             cart_count()
         }
@@ -218,14 +196,16 @@ $(function () {
         , "language": {
             "url": window.location.origin + "/assets/app/plugins/datatables/Portuguese2.json"
         },
-        "aoColumnDefs": [{
-            'className': 'text-center',
-            'aTargets': [0, 3, 4]
-        },
-        {
-            'className': 'td-buttons',
-            'aTargets': 4
-        },],
+        "aoColumnDefs": [
+            {
+                'className': 'text-center',
+                'aTargets': [0, 3]
+            },
+            {
+                'className': 'td-buttons-lie',
+                'aTargets': [3]
+            }
+        ],
         "serverSide": true
         , "ajax": {
             "url": window.location.origin + "/post/table/equals/items"
@@ -241,7 +221,7 @@ $(function () {
             var maxCell; // célula com o valor máximo
 
             // Loop pelas células da tabela com a classe "tdbtn"
-            $("td.td-buttons").each(function () {
+            $("td.td-buttons-lie").each(function () {
                 var count = $(this).children().length; // conta o número de elementos dentro da célula
                 if (count > max) { // verifica se o número de elementos é maior que o valor máximo atual
                     max = count;
@@ -595,6 +575,7 @@ $('#edit-item').on('hidden.bs.modal', function () {
 // MODAL DE EDIÇÃO DE PAGAMENTO E ENDEREÇO
 function edit_address_or_payment(id) {
     $.get(window.location.origin + "/get/edit/address/" + id, function (data) {
+        $("#order_id").val(data.id)
         $("#new-payment-method").val(data.payment.payment_method)
         $("#new-delivery-client-phone").val(data.address.phone)
         $("#new-delivery-location").val(data.address.location_id)
@@ -764,79 +745,80 @@ $('#update-address').on('click', function () {
         neighborhood: $('#new-delivery-neighborhood').val(),
         reference: $('#new-delivery-reference').val(),
     }
-    // bootbox.confirm({
-    //     title: 'Realmente deseja alterar o endereço de entrega?',
-    //     message: "Certifique-se que o endereço esta correto, o estabelecimento cobrará uma nova taxa de entrega em caso de erros.",
-    //     centerVertical: true,
-    //     buttons: {
-    //         cancel: {
-    //             label: "CANCELAR",
-    //             className: 'btn-secondary rounded-pill',
-    //         },
-    //         confirm: {
-    //             label: "SALVAR",
-    //             className: 'btn-accent rounded-pill',
+    bootbox.confirm({
+        title: 'Realmente deseja alterar o endereço de entrega?',
+        message: "Certifique-se que o endereço esta correto, o estabelecimento cobrará uma nova taxa de entrega em caso de erros.",
+        centerVertical: true,
+        buttons: {
+            cancel: {
+                label: "CANCELAR",
+                className: 'btn-secondary rounded-pill',
+            },
+            confirm: {
+                label: "SALVAR",
+                className: 'btn-accent rounded-pill',
 
-    //         }
-    //     },
-    //     callback: function (action) {
-    //         if (action) {
-    //             $.ajax({
-    //                 headers: {
-    //                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //                 },
-    //                 data: {
-    //                     payment: $('#new-payment-method').val(),
-    //                     address: address
-    //                 },
-    //                 type: "PUT",
-    //                 url: window.location.origin + "/put/update/address",
-    //                 success: function (response) {
-    //                     if (!response.error) {
-    //                         let dialog = bootbox.dialog({
-    //                             message: '<p class="text-center"><i class="m-l-24 fs-50 text-success fa-solid fa-check fa-beat-fade"></i></p><p class="text-center">' + response.message + '</p>',
-    //                             size: 'small',
-    //                             centerVertical: true,
-    //                         });
-    //                         $('#client-cart-table').DataTable().clear().draw()
-    //                         $('#orders-table').DataTable().clear().draw()
-    //                         count_orders()
-    //                         $('#set-address-modal').modal('hide');
-    //                         setTimeout(() => {
-    //                             dialog.modal('hide');
-    //                         }, 2000);
+            }
+        },
+        callback: function (action) {
+            if (action) {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        id: $("#order_id").val(),
+                        payment: $('#new-payment-method').val(),
+                        address: address
+                    },
+                    type: "PUT",
+                    url: window.location.origin + "/put/update/order",
+                    success: function (response) {
+                        if (!response.error) {
+                            let dialog = bootbox.dialog({
+                                message: '<p class="text-center"><i class="m-l-24 fs-50 text-success fa-solid fa-check fa-beat-fade"></i></p><p class="text-center">' + response.message + '</p>',
+                                size: 'small',
+                                centerVertical: true,
+                            });
+                            $('#client-cart-table').DataTable().clear().draw()
+                            $('#orders-table').DataTable().clear().draw()
+                            count_orders()
+                            $('#update-address-modal').modal('hide');
+                            setTimeout(() => {
+                                dialog.modal('hide');
+                            }, 2000);
 
-    //                     } else {
-    //                         let dialog = bootbox.dialog({
-    //                             message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">' + response.message + '</p>',
-    //                             size: 'small',
-    //                             centerVertical: true,
-    //                             closeButton: false
-    //                         });
-    //                         $('#client-cart-table').DataTable().clear().draw()
-    //                         $('#orders-table').DataTable().clear().draw()
+                        } else {
+                            let dialog = bootbox.dialog({
+                                message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">' + response.message + '</p>',
+                                size: 'small',
+                                centerVertical: true,
+                                closeButton: false
+                            });
+                            $('#client-cart-table').DataTable().clear().draw()
+                            $('#orders-table').DataTable().clear().draw()
 
-    //                         setTimeout(() => {
-    //                             dialog.modal('hide');
-    //                         }, 2000);
-    //                     }
+                            setTimeout(() => {
+                                dialog.modal('hide');
+                            }, 2000);
+                        }
 
-    //                 },
-    //                 error: function () {
-    //                     let dialog = bootbox.dialog({
-    //                         message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">ERRO NA REDE</p>',
-    //                         size: 'small',
-    //                         centerVertical: true,
-    //                         closeButton: false
-    //                     });
-    //                     setTimeout(() => {
-    //                         dialog.modal('hide');
-    //                     }, 2000);
-    //                 }
-    //             });
-    //         }
-    //     }
-    // });
+                    },
+                    error: function () {
+                        let dialog = bootbox.dialog({
+                            message: '<p class="text-center mb-0"><i class="fs-50 text-danger fa-solid fa-times fa-beat-fade"></i></p><p class="text-center mb-0">ERRO NA REDE</p>',
+                            size: 'small',
+                            centerVertical: true,
+                            closeButton: false
+                        });
+                        setTimeout(() => {
+                            dialog.modal('hide');
+                        }, 2000);
+                    }
+                });
+            }
+        }
+    });
 });
 // SELEÇAO DE ENDEREÇO
 $('#select-address').on('change', function (event) {
